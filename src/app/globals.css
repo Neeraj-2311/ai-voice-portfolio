@@ -3,24 +3,21 @@
 /* =========================================================================
    Design tokens
    -------------------------------------------------------------------------
-   Tokens follow the build spec section 4. Both light and dark are first-class.
-   Dark is the default; `[data-theme="light"]` overrides on first paint via the
-   pre-hydration script in <ThemeScript />.
+   Color tokens follow build spec section 4. Typography/chrome scale via
+   data-text-size: default mode tracks the spec's original sizes (16px
+   body, 64/48/32/24 headings, 8/12 primary CTA, 40px touch target).
+   Larger mode bumps everything up for the accessibility-first preference
+   (18px body, +10% headings, 14/24 primary CTA, 48px touch target).
 
-   Tailwind utility mapping (via @theme inline below):
-     --color-bg            -> bg-bg, text-bg, ...
-     --color-elevated      -> bg-elevated
-     --color-section       -> bg-section
-     --color-fg            -> text-fg
-     --color-muted         -> text-muted
-     --color-subtle        -> text-subtle
-     --color-line          -> border-line
-     --color-line-strong   -> border-line-strong
-     --color-accent        -> bg-accent, text-accent, border-accent
-     --color-accent-hover  -> bg-accent-hover, text-accent-hover
-     --color-accent-fg     -> text-accent-fg
-     --color-success / warning / error
+   AAA-contrast secondary text colors and the 400 font-weight floor apply
+   in both modes — those don't change perceived size.
+
+   Three orthogonal user preferences live on <html>:
+     data-theme       = "dark" | "light"
+     data-text-size   = "default" | "larger"
    ========================================================================= */
+
+/* ---- Color tokens (dark default) ---- */
 
 :root,
 [data-theme='dark'] {
@@ -28,7 +25,8 @@
   --bg-elevated: #141414;
   --bg-section: #0f0f0f;
   --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
+  /* Bumped from spec #A3A3A3 to #B5B5B5 for AAA contrast on body text. */
+  --text-secondary: #b5b5b5;
   --text-tertiary: #6b6b6b;
   --border: #1f1f1f;
   --border-hover: #2a2a2a;
@@ -46,7 +44,8 @@
   --bg-elevated: #fafafa;
   --bg-section: #f5f5f5;
   --text-primary: #0a0a0a;
-  --text-secondary: #525252;
+  /* Bumped from spec #525252 to #404040 for AAA contrast on body text. */
+  --text-secondary: #404040;
   --text-tertiary: #737373;
   --border: #e5e5e5;
   --border-hover: #d4d4d4;
@@ -58,6 +57,54 @@
   --warning: #f59e0b;
   --error: #ef4444;
 }
+
+/* ---- Typography + chrome scale (default mode = spec section 4 originals) ---- */
+
+:root {
+  /* Mobile sizes */
+  --font-size-display: 2.75rem; /* 44px hero mobile (spec) */
+  --font-size-h1: 2rem; /* 32px h1 mobile (spec) */
+  --font-size-h2: 1.5rem; /* 24px h2 mobile (spec) */
+  --font-size-h3: 1.25rem; /* 20px h3 mobile (spec) */
+  --font-size-body: 1rem; /* 16px (spec) */
+  --font-size-small: 0.875rem; /* 14px (spec) */
+  --line-height-body: 1.6;
+  --line-height-small: 1.5;
+  --letter-spacing-body: 0;
+  --letter-spacing-display: -0.02em;
+
+  /* Chrome — 40px touch target keeps the UI compact, 8/12 primary CTA */
+  --touch-target: 2.5rem; /* 40px */
+  --btn-py-primary: 0.5rem; /* 8px */
+  --btn-px-primary: 0.75rem; /* 12px */
+  --btn-py-secondary: 0.375rem; /* 6px */
+  --btn-px-secondary: 0.625rem; /* 10px */
+  --icon-btn-size: 2.25rem; /* 36px */
+  --input-height: 2.5rem; /* 40px */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --font-size-display: 4rem; /* 64px hero desktop (spec lower bound) */
+    --font-size-h1: 3rem; /* 48px (spec) */
+    --font-size-h2: 2rem; /* 32px (spec) */
+    --font-size-h3: 1.5rem; /* 24px (spec) */
+  }
+}
+
+/* Larger mode bumps ONLY body and small text. Headings, paddings, touch
+   targets, and input/button sizes stay at default — headings are already
+   large at the spec scale, and chunky paddings/touch targets read as
+   over-bumped. Body and small text get a font-size + line-height bump for
+   readability; everything else inherits the default scale. */
+[data-text-size='larger'] {
+  --font-size-body: 1.125rem; /* 16px -> 18px */
+  --font-size-small: 0.9375rem; /* 14px -> 15px */
+  --line-height-body: 1.7;
+  --letter-spacing-body: -0.01em;
+}
+
+/* ---- Tailwind v4 theme exposure ---- */
 
 @theme inline {
   --color-bg: var(--bg-primary);
@@ -82,8 +129,12 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Section vertical padding scale (spec: 96-128px desktop / 64px mobile) */
-  --spacing-section-y: 4rem; /* 64px mobile baseline */
+  --text-display: var(--font-size-display);
+  --text-h1: var(--font-size-h1);
+  --text-h2: var(--font-size-h2);
+  --text-h3: var(--font-size-h3);
+  --text-body: var(--font-size-body);
+  --text-small: var(--font-size-small);
 }
 
 /* =========================================================================
@@ -103,7 +154,37 @@
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    line-height: 1.6;
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-body);
+    /* Spec rule: never use weight 300 or thinner. 400 is the floor. */
+    font-weight: 400;
+  }
+
+  /* Default heading sizes — components can override but inherit by default. */
+  h1 {
+    font-size: var(--font-size-h1);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-display);
+    line-height: 1.15;
+  }
+
+  h2 {
+    font-size: var(--font-size-h2);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: var(--font-size-h3);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  small {
+    font-size: var(--font-size-small);
+    line-height: var(--line-height-small);
   }
 
   /* Spec rule: borders default to 1px solid var(--border).
@@ -115,16 +196,13 @@
     border-color: var(--border);
   }
 
-  /* Theme transitions kept minimal so the toggle feels instant
-     without animating every paint during scroll. */
   html[data-theme] body {
     transition:
       background-color 150ms ease-out,
       color 150ms ease-out;
   }
 
-  /* Spec section 4 rule 5: global focus ring on accent at 30% opacity,
-     2px ring with 2px offset. */
+  /* Spec section 4 rule 5: global focus ring on accent. */
   *:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
     outline-offset: 2px;
@@ -136,7 +214,6 @@
     color: var(--text-primary);
   }
 
-  /* Respect users who prefer reduced motion (spec motion budget). */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -167,4 +244,47 @@
     padding-top: 8rem; /* 128px desktop */
     padding-bottom: 8rem;
   }
+}
+
+/* =========================================================================
+   Interactive primitive utilities — paddings/sizes scale with data-text-size.
+   ========================================================================= */
+@utility btn-primary {
+  padding-top: var(--btn-py-primary);
+  padding-bottom: var(--btn-py-primary);
+  padding-left: var(--btn-px-primary);
+  padding-right: var(--btn-px-primary);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-body);
+  font-weight: 500;
+}
+
+@utility btn-secondary {
+  padding-top: var(--btn-py-secondary);
+  padding-bottom: var(--btn-py-secondary);
+  padding-left: var(--btn-px-secondary);
+  padding-right: var(--btn-px-secondary);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-body);
+  font-weight: 500;
+}
+
+@utility btn-icon {
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+}
+
+@utility input-base {
+  min-height: var(--input-height);
+  font-size: var(--font-size-body);
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+}
+
+@utility nav-link {
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
