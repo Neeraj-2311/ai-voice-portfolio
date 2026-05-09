@@ -1,26 +1,170 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =========================================================================
+   Design tokens
+   -------------------------------------------------------------------------
+   Tokens follow the build spec section 4. Both light and dark are first-class.
+   Dark is the default; `[data-theme="light"]` overrides on first paint via the
+   pre-hydration script in <ThemeScript />.
+
+   Tailwind utility mapping (via @theme inline below):
+     --color-bg            -> bg-bg, text-bg, ...
+     --color-elevated      -> bg-elevated
+     --color-section       -> bg-section
+     --color-fg            -> text-fg
+     --color-muted         -> text-muted
+     --color-subtle        -> text-subtle
+     --color-line          -> border-line
+     --color-line-strong   -> border-line-strong
+     --color-accent        -> bg-accent, text-accent, border-accent
+     --color-accent-hover  -> bg-accent-hover, text-accent-hover
+     --color-accent-fg     -> text-accent-fg
+     --color-success / warning / error
+   ========================================================================= */
+
+:root,
+[data-theme='dark'] {
+  --bg-primary: #0a0a0a;
+  --bg-elevated: #141414;
+  --bg-section: #0f0f0f;
+  --text-primary: #f5f5f5;
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #6b6b6b;
+  --border: #1f1f1f;
+  --border-hover: #2a2a2a;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-foreground: #ffffff;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+}
+
+[data-theme='light'] {
+  --bg-primary: #ffffff;
+  --bg-elevated: #fafafa;
+  --bg-section: #f5f5f5;
+  --text-primary: #0a0a0a;
+  --text-secondary: #525252;
+  --text-tertiary: #737373;
+  --border: #e5e5e5;
+  --border-hover: #d4d4d4;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-foreground: #ffffff;
+  --accent-glow: rgba(99, 102, 241, 0.1);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg-primary);
+  --color-elevated: var(--bg-elevated);
+  --color-section: var(--bg-section);
+
+  --color-fg: var(--text-primary);
+  --color-muted: var(--text-secondary);
+  --color-subtle: var(--text-tertiary);
+
+  --color-line: var(--border);
+  --color-line-strong: var(--border-hover);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Section vertical padding scale (spec: 96-128px desktop / 64px mobile) */
+  --spacing-section-y: 4rem; /* 64px mobile baseline */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* =========================================================================
+   Base layer
+   ========================================================================= */
+
+@layer base {
+  html {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* Spec rule: borders default to 1px solid var(--border).
+     (Overrides spec section 4 rule 6 — sub-pixel borders render
+     inconsistently across browsers and high-DPI displays.) */
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  /* Theme transitions kept minimal so the toggle feels instant
+     without animating every paint during scroll. */
+  html[data-theme] body {
+    transition:
+      background-color 150ms ease-out,
+      color 150ms ease-out;
+  }
+
+  /* Spec section 4 rule 5: global focus ring on accent at 30% opacity,
+     2px ring with 2px offset. */
+  *:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--accent-glow);
+    color: var(--text-primary);
+  }
+
+  /* Respect users who prefer reduced motion (spec motion budget). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================================================================
+   Section padding utility — spec 6.x sections need consistent vertical room.
+   ========================================================================= */
+@utility section-y {
+  padding-top: 4rem; /* 64px mobile */
+  padding-bottom: 4rem;
+}
+@media (min-width: 768px) {
+  .section-y {
+    padding-top: 6rem; /* 96px tablet */
+    padding-bottom: 6rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-y {
+    padding-top: 8rem; /* 128px desktop */
+    padding-bottom: 8rem;
+  }
 }
