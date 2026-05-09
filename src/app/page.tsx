@@ -1,4 +1,5 @@
 import { CaseStudies } from '@/components/sections/CaseStudies';
+import { Demos } from '@/components/sections/Demos';
 import { Experience } from '@/components/sections/Experience';
 import { Hero } from '@/components/sections/Hero';
 import { Services } from '@/components/sections/Services';
@@ -10,6 +11,7 @@ export default function Home() {
       <Services />
       <Experience />
       <CaseStudies />
+      <Demos />
     </>
   );
 }
