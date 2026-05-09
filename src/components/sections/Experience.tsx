@@ -24,7 +24,7 @@ export function Experience() {
               <li
                 id={role.anchor}
                 data-highlight-id={role.id}
-                className="border-line relative grid gap-6 border-l-2 pb-20 pl-6 pt-2 first:pt-0 last:pb-2 md:grid-cols-[200px_1fr] md:gap-10 md:pb-28 md:pl-10"
+                className="border-line relative grid gap-6 border-l-2 pb-28 pl-6 pt-2 first:pt-0 last:pb-4 md:grid-cols-[200px_1fr] md:gap-10 md:pb-36 md:pl-10"
               >
                 <span
                   aria-hidden="true"
