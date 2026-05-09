@@ -16,13 +16,13 @@ export function TextSizeToggle({ className }: { className?: string }) {
       aria-pressed={isLarger}
       title={label}
       className={[
-        'btn-icon border-line text-fg hover:border-line-strong hover:text-accent aria-pressed:border-accent aria-pressed:text-accent inline-flex items-center justify-center rounded-lg border transition-colors',
+        'btn-icon text-muted hover:text-fg hover:bg-fg/10 aria-pressed:bg-fg/10 aria-pressed:text-accent inline-flex items-center justify-center rounded-lg transition-colors',
         className ?? '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
-      <ALargeSmall className="h-5 w-5" aria-hidden="true" />
+      <ALargeSmall className="h-4 w-4" aria-hidden="true" />
     </button>
   );
 }

@@ -7,7 +7,7 @@ export type Theme = 'light' | 'dark';
 export const THEME_STORAGE_KEY = 'neeraj-theme';
 
 /**
- * Inline script body — runs synchronously in <head> before paint, so the
+ * Inline script body. Runs synchronously in <head> before paint, so the
  * correct theme is applied before React hydrates and there is no FOUC.
  *
  * Stays as a string (rather than a real function) because it's injected
@@ -50,7 +50,7 @@ export function useTheme(): {
   const theme = useSyncExternalStore<Theme>(
     subscribeTheme,
     readTheme,
-    () => 'dark', // SSR snapshot — must match the dark default rendered server-side
+    () => 'dark', // SSR snapshot must match the dark default rendered server-side.
   );
 
   const setTheme = (next: Theme) => {

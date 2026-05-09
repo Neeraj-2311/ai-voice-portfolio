@@ -10,7 +10,7 @@ export const hireEngagements: HireEngagement[] = [
     title: 'Discovery call',
     summary: 'Free 30-minute call to scope your project and align on fit.',
     description:
-      'For founders and teams figuring out whether voice AI, an agent, or a full-stack build is the right next step. We talk through your problem, constraints, and budget. You leave with a clear recommendation — engaging me or not.',
+      'For founders and teams figuring out whether voice AI, an agent, or a full-stack build is the right next step. We talk through your problem, constraints, and budget. You leave with a clear recommendation, engaging me or not.',
     bullets: [
       'Free, 30 minutes, video call',
       'Scoped problem statement and approach options',
@@ -28,7 +28,7 @@ export const hireEngagements: HireEngagement[] = [
     summary:
       'Voice AI builds, agent development, and full-stack AI products delivered end-to-end.',
     description:
-      'Fixed-scope engagements for production AI work — voice agents with telephony, agentic backends, full-stack web apps with AI features. Includes architecture, implementation, evals, and a clean handoff with documentation.',
+      'Fixed-scope engagements for production AI work: voice agents with telephony, agentic backends, full-stack web apps with AI features. Includes architecture, implementation, evals, and a clean handoff with documentation.',
     bullets: [
       'Voice agents with LiveKit / Azure AI Foundry',
       'Agentic backends with FastAPI / Next.js',

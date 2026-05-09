@@ -7,7 +7,7 @@ export type TextSize = 'default' | 'larger';
 export const TEXT_SIZE_STORAGE_KEY = 'neeraj-text-size';
 
 /**
- * Inline script body — runs synchronously in <body> head before paint, so
+ * Inline script body. Runs synchronously in <body> head before paint, so
  * the saved text-size preference is applied before React hydrates.
  *
  * Stays as a string (rather than a real function) because it's injected

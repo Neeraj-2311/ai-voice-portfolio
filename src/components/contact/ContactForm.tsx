@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Calendar, CheckCircle2, Mail, Phone } from 'lucide-react';
+import { AlertCircle, Calendar, CheckCircle2, Loader2, Mail, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
 import { type FieldError, type Path, useForm, useWatch } from 'react-hook-form';
@@ -14,13 +14,9 @@ import type { Intent } from '@/types/content';
 import { IntentPicker } from './IntentPicker';
 
 export interface ContactFormProps {
-  /** Initial intent (e.g. when CTA is "Invite me to your event"). */
   initialIntent?: Intent;
-  /** Optional pre-fill of any string field. */
   prefill?: Partial<Record<keyof ContactFormValues, string>>;
-  /** Density variant — modal uses compact, inline section uses default. */
   variant?: 'default' | 'compact';
-  /** Called after a successful submission so the modal can close. */
   onSuccess?: () => void;
 }
 
@@ -38,7 +34,7 @@ export function ContactForm({
   const {
     register,
     handleSubmit,
-    setValue,
+    getValues,
     control,
     reset,
     setError,
@@ -53,15 +49,22 @@ export function ContactForm({
     mode: 'onBlur',
   });
 
-  // useWatch subscribes via context — safer for React 19 concurrent features
-  // than calling form.watch() during render (the latter triggers the
-  // react-hooks/incompatible-library warning).
   const intent = useWatch({ control, name: 'intent' });
+
+  const handleIntentChange = (next: Intent) => {
+    const { name, email, message } = getValues();
+    reset({ ...contactDefaultValues, intent: next, name, email, message });
+  };
 
   const onSubmit = handleSubmit((data) => {
     setSubmitStatus({ type: 'idle' });
     startTransition(async () => {
-      const result = await submitContactAction(data);
+      // Hold the spinner for ~1.5s so the loading state is perceivable
+      // even when the action returns instantly (no Resend configured).
+      const [result] = await Promise.all([
+        submitContactAction(data),
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+      ]);
       if (result.ok) {
         setSubmitStatus({ type: 'success' });
         reset({ ...contactDefaultValues, intent });
@@ -83,7 +86,7 @@ export function ContactForm({
     return (
       <div className="text-fg flex flex-col items-center gap-3 py-8 text-center">
         <CheckCircle2 className="text-success h-10 w-10" aria-hidden="true" />
-        <h3 className="text-h3 font-medium">Thanks — your message is on the way</h3>
+        <h3 className="text-h3 font-medium">Thanks. Your message is on the way.</h3>
         <p className="text-muted">I&apos;ll reply from {site.email} within a few days.</p>
         <Button
           variant="ghost"
@@ -97,14 +100,14 @@ export function ContactForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5" aria-busy={isPending}>
+    <form onSubmit={onSubmit} className="space-y-5" aria-busy={isPending}>
+      <fieldset disabled={isPending} className="space-y-5">
       <IntentPicker
         value={intent}
-        onChange={(next) => setValue('intent', next, { shouldValidate: false })}
+        onChange={handleIntentChange}
         compact={variant === 'compact'}
       />
 
-      {/* Honeypot — visually hidden, never tab-stop. */}
       <div aria-hidden="true" className="sr-only">
         <label>
           Leave this field empty
@@ -122,6 +125,7 @@ export function ContactForm({
           <input
             type="text"
             autoComplete="name"
+            placeholder="Andrej Karpathy"
             {...register('name')}
             className={inputClass(!!errors.name)}
           />
@@ -131,6 +135,7 @@ export function ContactForm({
             type="email"
             autoComplete="email"
             inputMode="email"
+            placeholder="andrej@gpu-poor.dev"
             {...register('email')}
             className={inputClass(!!errors.email)}
           />
@@ -143,6 +148,7 @@ export function ContactForm({
             <input
               type="text"
               autoComplete="organization"
+              placeholder="Stealth AI startup (or OpenAI, if you're hiring)"
               {...register('company')}
               className={inputClass(!!errors.company)}
             />
@@ -150,7 +156,7 @@ export function ContactForm({
           <Field label="Project type" error={errors.projectType} required>
             <input
               type="text"
-              placeholder="Voice agent / AI build / Full-stack"
+              placeholder="Replace our IVR with a voice agent"
               {...register('projectType')}
               className={inputClass(!!errors.projectType)}
             />
@@ -158,7 +164,7 @@ export function ContactForm({
           <Field label="Timeline" error={errors.timeline}>
             <input
               type="text"
-              placeholder="ASAP / 1–2 months / Q2"
+              placeholder="Yesterday, ideally"
               {...register('timeline')}
               className={inputClass(!!errors.timeline)}
             />
@@ -166,7 +172,7 @@ export function ContactForm({
           <Field label="Budget range" error={errors.budgetRange}>
             <input
               type="text"
-              placeholder="Optional"
+              placeholder="$50k–$150k, or open if you ship"
               {...register('budgetRange')}
               className={inputClass(!!errors.budgetRange)}
             />
@@ -179,6 +185,7 @@ export function ContactForm({
           <Field label="What you want help with" error={errors.helpWith} required>
             <textarea
               rows={3}
+              placeholder="Break into AI eng without a CS degree. Or: ship my first voice agent without crying."
               {...register('helpWith')}
               className={inputClass(!!errors.helpWith)}
             />
@@ -187,7 +194,7 @@ export function ContactForm({
             <Field label="Your level" error={errors.level}>
               <input
                 type="text"
-                placeholder="Student / 1 yr / 3+ yrs"
+                placeholder="Self-taught, 2 yrs shipping LLM apps"
                 {...register('level')}
                 className={inputClass(!!errors.level)}
               />
@@ -195,7 +202,7 @@ export function ContactForm({
             <Field label="Preferred format" error={errors.preferredFormat}>
               <input
                 type="text"
-                placeholder="30 min / 60 min / Text follow-up"
+                placeholder="60-min architecture deep dive"
                 {...register('preferredFormat')}
                 className={inputClass(!!errors.preferredFormat)}
               />
@@ -210,6 +217,7 @@ export function ContactForm({
             <Field label="Event name" error={errors.eventName} required>
               <input
                 type="text"
+                placeholder="AI Engineer Summit 2026"
                 {...register('eventName')}
                 className={inputClass(!!errors.eventName)}
               />
@@ -217,14 +225,15 @@ export function ContactForm({
             <Field label="Organizing institution" error={errors.organizer} required>
               <input
                 type="text"
+                autoComplete="organization"
+                placeholder="Y Combinator / IIT Delhi"
                 {...register('organizer')}
                 className={inputClass(!!errors.organizer)}
               />
             </Field>
             <Field label="Event date" error={errors.eventDate} required>
               <input
-                type="text"
-                placeholder="DD MMM YYYY"
+                type="date"
                 {...register('eventDate')}
                 className={inputClass(!!errors.eventDate)}
               />
@@ -246,7 +255,7 @@ export function ContactForm({
             <Field label="Location" error={errors.eventLocation}>
               <input
                 type="text"
-                placeholder="City, country (or 'Online')"
+                placeholder="Mission Bay, SF (or Online)"
                 {...register('eventLocation')}
                 className={inputClass(!!errors.eventLocation)}
               />
@@ -254,7 +263,8 @@ export function ContactForm({
             <Field label="Expected audience size" error={errors.audienceSize}>
               <input
                 type="text"
-                placeholder="50 / 100 / 500+"
+                inputMode="numeric"
+                placeholder="Sold out, 400 builders"
                 {...register('audienceSize')}
                 className={inputClass(!!errors.audienceSize)}
               />
@@ -263,7 +273,7 @@ export function ContactForm({
           <Field label="Topic of interest" error={errors.topic}>
             <input
               type="text"
-              placeholder="Voice AI / RAG / AI careers"
+              placeholder="Why voice AI is going to eat phone calls"
               {...register('topic')}
               className={inputClass(!!errors.topic)}
             />
@@ -272,14 +282,13 @@ export function ContactForm({
       )}
 
       <Field
-        label={
-          intent === 'speaking' ? 'More about the event' : 'Message'
-        }
+        label={intent === 'speaking' ? 'More about the event' : 'Message'}
         error={errors.message}
         required
       >
         <textarea
           rows={variant === 'compact' ? 4 : 5}
+          placeholder={messagePlaceholder(intent)}
           {...register('message')}
           className={inputClass(!!errors.message)}
         />
@@ -296,13 +305,24 @@ export function ContactForm({
       )}
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Button type="submit" variant="primary" disabled={isPending} aria-disabled={isPending}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isPending}
+          aria-disabled={isPending}
+          leadingIcon={
+            isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            ) : null
+          }
+        >
           {isPending ? 'Sending…' : 'Send message'}
         </Button>
         <p className="text-subtle text-small">
           I usually reply within a few days. For something urgent, email me directly.
         </p>
       </div>
+      </fieldset>
 
       <DirectAlternatives />
     </form>
@@ -377,17 +397,26 @@ function DirectAlternatives() {
   );
 }
 
-/* -------------------------------------------------------------------------
-   Helpers
-   ----------------------------------------------------------------------- */
+function messagePlaceholder(intent: Intent): string {
+  switch (intent) {
+    case 'hire':
+      return "We're Series A. Customers call 8 times a day asking when their order will ship. Help us build a voice agent that actually understands intent.";
+    case 'mentorship':
+      return "Two years into a frontend role at a fintech. Want to pivot into voice AI by end of year. Where do I even start?";
+    case 'speaking':
+      return '45-min keynote, Q&A, 400 attendees. Travel and hotel covered, plus a respectable honorarium. Recording goes on YouTube.';
+    case 'other':
+      return "I'm building a thing. Wanted to say hi.";
+  }
+}
 
 function inputClass(hasError: boolean) {
   return [
-    'input-base bg-bg text-fg placeholder:text-subtle border w-full rounded-md transition-colors',
-    'focus-visible:border-accent',
+    'input-base bg-bg text-fg placeholder:text-subtle w-full rounded-md border transition-colors',
+    'focus-visible:outline-none focus-visible:ring-2',
     hasError
-      ? 'border-error focus-visible:border-error border-[1.5px]'
-      : 'border-line hover:border-line-strong',
+      ? 'border-error focus-visible:ring-error/20 border-[1.5px]'
+      : 'border-line hover:border-line-strong focus-visible:border-accent focus-visible:ring-accent/20',
   ].join(' ');
 }
 
@@ -403,13 +432,12 @@ function Field({ label, error, required, children }: FieldProps) {
   const errorId = `${id}-error`;
   const child = children as React.ReactElement<Record<string, unknown>>;
 
-  // Inject id + aria-describedby + aria-invalid + aria-required onto the
-  // single child input/textarea/select. Saves ~3 lines per field.
   const enhanced = {
     ...child,
     props: {
       ...child.props,
       id,
+      required: required || undefined,
       'aria-invalid': error ? true : undefined,
       'aria-required': required || undefined,
       'aria-describedby': error ? errorId : undefined,

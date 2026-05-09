@@ -5,7 +5,7 @@ export default function Home() {
       className="bg-bg text-fg flex min-h-[70vh] flex-col items-center justify-center"
     >
       <div className="section-y mx-auto w-full max-w-5xl px-6 text-center">
-        <p className="text-muted text-small">Neeraj — portfolio scaffolding</p>
+        <p className="text-muted text-small">Neeraj · portfolio scaffolding</p>
         <h1 className="text-display mt-4 font-semibold text-balance">
           Voice AI &amp; full-stack engineer
         </h1>

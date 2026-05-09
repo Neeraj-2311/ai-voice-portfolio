@@ -2,7 +2,7 @@ import type { ExperienceRole } from '@/types/content';
 
 /**
  * Three roles per spec 6.4. Bullet points are placeholders pending
- * resume content from Neeraj — current bullets summarise widely-known
+ * resume content from Neeraj. Current bullets summarise widely-known
  * scope from the spec but should be replaced with concrete impact
  * statements before launch.
  */
@@ -19,7 +19,7 @@ export const experience: ExperienceRole[] = [
       'Build production voice AI agents with LiveKit and Azure AI Foundry, targeting sub-second response latency for enterprise voice workflows.',
       'Own the agent orchestration layer: turn detection, barge-in handling, tool calling, and post-call analytics.',
       'Ship full-stack features across the customer dashboard (Next.js) and the agent runtime (FastAPI / Python).',
-      '[TODO: Neeraj] Concrete impact bullet — e.g. metric, named project, or scale.',
+      '[TODO: Neeraj] Concrete impact bullet (e.g. metric, named project, or scale).',
     ],
     tech: ['LiveKit', 'Azure AI Foundry', 'TypeScript', 'Python', 'FastAPI', 'Next.js'],
     keyAchievement: '[TODO: Neeraj] Headline achievement at IntellifyAI',

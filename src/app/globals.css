@@ -10,7 +10,7 @@
    (18px body, +10% headings, 14/24 primary CTA, 48px touch target).
 
    AAA-contrast secondary text colors and the 400 font-weight floor apply
-   in both modes — those don't change perceived size.
+   in both modes (those don't change perceived size).
 
    Three orthogonal user preferences live on <html>:
      data-theme       = "dark" | "light"
@@ -73,7 +73,7 @@
   --letter-spacing-body: 0;
   --letter-spacing-display: -0.02em;
 
-  /* Chrome — 40px touch target keeps the UI compact, 8/12 primary CTA */
+  /* Chrome: 40px touch target keeps the UI compact, 8/12 primary CTA. */
   --touch-target: 2.5rem; /* 40px */
   --btn-py-primary: 0.5rem; /* 8px */
   --btn-px-primary: 0.75rem; /* 12px */
@@ -93,7 +93,7 @@
 }
 
 /* Larger mode bumps ONLY body and small text. Headings, paddings, touch
-   targets, and input/button sizes stay at default — headings are already
+   targets, and input/button sizes stay at default. Headings are already
    large at the spec scale, and chunky paddings/touch targets read as
    over-bumped. Body and small text get a font-size + line-height bump for
    readability; everything else inherits the default scale. */
@@ -161,7 +161,7 @@
     font-weight: 400;
   }
 
-  /* Default heading sizes — components can override but inherit by default. */
+  /* Default heading sizes. Components can override but inherit by default. */
   h1 {
     font-size: var(--font-size-h1);
     font-weight: 600;
@@ -188,7 +188,7 @@
   }
 
   /* Spec rule: borders default to 1px solid var(--border).
-     (Overrides spec section 4 rule 6 — sub-pixel borders render
+     (Overrides spec section 4 rule 6: sub-pixel borders render
      inconsistently across browsers and high-DPI displays.) */
   *,
   *::before,
@@ -214,6 +214,17 @@
     color: var(--text-primary);
   }
 
+  /* Form-disabled visual feedback. Used while a Server Action is pending.
+     The form wraps fields in <fieldset disabled> so the browser blocks
+     interaction natively; this rule layers on the visual state. */
+  fieldset:disabled {
+    opacity: 0.6;
+  }
+  fieldset:disabled :where(input, textarea, select, button) {
+    cursor: not-allowed;
+  }
+
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -227,8 +238,33 @@
 }
 
 /* =========================================================================
-   Section padding utility — spec 6.x sections need consistent vertical room.
+   Section padding utility. Spec 6.x sections need consistent vertical room.
    ========================================================================= */
+/* Native date / time picker indicator. Outside @layer base so it isn't
+   beaten by Tailwind utilities applied to the input. The icon is dark by
+   default. Invert it in dark mode and tighten the hit area. */
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator,
+input[type='month']::-webkit-calendar-picker-indicator,
+input[type='week']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 4px;
+  border-radius: 4px;
+}
+input[type='date']::-webkit-calendar-picker-indicator:hover,
+input[type='time']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+[data-theme='dark'] input[type='date']::-webkit-calendar-picker-indicator,
+[data-theme='dark'] input[type='time']::-webkit-calendar-picker-indicator,
+[data-theme='dark'] input[type='datetime-local']::-webkit-calendar-picker-indicator,
+[data-theme='dark'] input[type='month']::-webkit-calendar-picker-indicator,
+[data-theme='dark'] input[type='week']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 @utility section-y {
   padding-top: 4rem; /* 64px mobile */
   padding-bottom: 4rem;
@@ -247,7 +283,7 @@
 }
 
 /* =========================================================================
-   Interactive primitive utilities — paddings/sizes scale with data-text-size.
+   Interactive primitive utilities. Paddings/sizes scale with data-text-size.
    ========================================================================= */
 @utility btn-primary {
   padding-top: var(--btn-py-primary);

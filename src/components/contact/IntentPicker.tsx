@@ -6,16 +6,9 @@ import type { Intent } from '@/types/content';
 interface IntentPickerProps {
   value: Intent;
   onChange: (intent: Intent) => void;
-  /** Hides the helper description below the pills. */
   compact?: boolean;
 }
 
-/**
- * 4-pill intent selector. Uses radio-group semantics so screen readers
- * announce it as "Hire, 1 of 4" rather than as four unrelated buttons.
- * Active state combines accent fill + bold weight + aria-checked, never
- * color alone.
- */
 export function IntentPicker({ value, onChange, compact }: IntentPickerProps) {
   return (
     <div>

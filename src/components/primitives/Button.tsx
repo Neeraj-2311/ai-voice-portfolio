@@ -6,9 +6,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 interface BaseProps {
   variant?: ButtonVariant;
   className?: string;
-  /** Optional Lucide icon node placed before the label. */
   leadingIcon?: ReactNode;
-  /** Optional Lucide icon node placed after the label (e.g. ArrowRight). */
   trailingIcon?: ReactNode;
   children: ReactNode;
 }
@@ -21,7 +19,6 @@ type ButtonAsButton = BaseProps &
 type ButtonAsLink = BaseProps &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps | 'href'> & {
     href: string;
-    /** Forces an external <a> with target="_blank" + rel="noreferrer". */
     external?: boolean;
   };
 
@@ -41,15 +38,6 @@ function variantClasses(variant: ButtonVariant) {
 const baseClasses =
   'inline-flex items-center justify-center gap-2 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60';
 
-/**
- * Button primitive. Renders a <button> by default; if `href` is provided
- * renders a Next.js <Link> (or a raw <a> for external) with identical
- * styling. Sizing/padding comes from the btn-primary / btn-secondary CSS
- * utilities so default vs. larger text-size both work automatically.
- *
- * Disabled state is signalled via opacity + cursor-not-allowed AND
- * aria-disabled — never color alone.
- */
 export function Button(props: ButtonProps) {
   const { variant = 'primary', className, leadingIcon, trailingIcon, children } = props;
   const cls = [baseClasses, variantClasses(variant), className ?? ''].filter(Boolean).join(' ');

@@ -58,7 +58,7 @@ export const contactFormSchema = z
     topic: z.string().trim().max(200).optional(),
 
     // anti-spam
-    website: z.string().max(0).optional(), // honeypot — must be empty
+    website: z.string().max(0).optional(), // honeypot, must be empty
   })
   .superRefine((data, ctx) => {
     const required = (field: keyof typeof data, label: string) => {

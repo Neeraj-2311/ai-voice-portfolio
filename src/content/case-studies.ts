@@ -38,7 +38,7 @@ export const caseStudies: CaseStudy[] = [
     slug: 'third-project',
     title: '[TODO: Neeraj] Third case study',
     summary:
-      'Third case study placeholder — Neeraj will replace this with a real project once chosen.',
+      'Third case study placeholder. Neeraj will replace this with a real project once chosen.',
     cover: '/images/case-studies/third-project.svg',
     coverAlt: 'Third case study cover placeholder',
     heroMetric: { value: '[TODO]', label: '[TODO]' },

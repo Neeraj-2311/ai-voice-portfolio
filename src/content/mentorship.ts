@@ -2,7 +2,7 @@ import type { MentorshipSession, Testimonial } from '@/types/content';
 
 /**
  * Three concrete session offerings per spec 6.8. Pricing is `null`
- * until Neeraj sets it — UI shows a "Pricing on request" treatment.
+ * until Neeraj sets it. UI shows a "Pricing on request" treatment.
  */
 export const mentorshipSessions: MentorshipSession[] = [
   {
@@ -36,7 +36,7 @@ export const mentorshipSessions: MentorshipSession[] = [
     price: null, // [TODO: Neeraj] price
     audience: 'Early-career devs',
     summary:
-      'Honest review of your portfolio site, GitHub, and resume — with concrete edits, not generic advice.',
+      'Honest review of your portfolio site, GitHub, and resume, with concrete edits, not generic advice.',
     description:
       'Send your portfolio URL, GitHub, and resume in advance. In the session we go line-by-line: what to keep, what to cut, what story to tell, and which projects to write up. Async follow-up notes after.',
     calEventSlug: '[TODO]-portfolio-review',
@@ -45,7 +45,7 @@ export const mentorshipSessions: MentorshipSession[] = [
 
 /**
  * Social proof for the mentorship section. Placeholders until Neeraj
- * collects real testimonials — the UI hides the row entirely if the
+ * collects real testimonials. The UI hides the row entirely if the
  * array is empty after filtering placeholders.
  */
 export const mentorshipTestimonials: Testimonial[] = [

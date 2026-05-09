@@ -11,7 +11,7 @@ export type ContactActionResult =
  * Server Action for the contact form. Re-validates with the same Zod
  * schema the client uses, then dispatches the message via Resend if
  * RESEND_API_KEY is configured. Otherwise logs the submission server-side
- * and returns success — useful for previews and for the period before
+ * and returns success. Useful for previews and for the period before
  * Neeraj wires up Resend.
  */
 export async function submitContactAction(input: unknown): Promise<ContactActionResult> {
@@ -29,7 +29,7 @@ export async function submitContactAction(input: unknown): Promise<ContactAction
 
   const data = parsed.data;
 
-  // Honeypot — silently succeed for bots so they don't retry.
+  // Honeypot: silently succeed for bots so they don't retry.
   if (data.website && data.website.length > 0) {
     return { ok: true };
   }
@@ -39,10 +39,10 @@ export async function submitContactAction(input: unknown): Promise<ContactAction
   const toAddress = process.env.RESEND_TO ?? site.email;
 
   if (!apiKey || !fromAddress) {
-    // Resend not configured yet — log so the developer can verify the form
+    // Resend not configured yet. Log so the developer can verify the form
     // wiring works end-to-end without secrets. Step 12 (integrations) wires
     // Resend properly; until then this branch keeps the UX functional.
-    console.info('[contact] Resend not configured — form submission logged:', {
+    console.info('[contact] Resend not configured. Form submission logged:', {
       intent: data.intent,
       name: data.name,
       email: data.email,

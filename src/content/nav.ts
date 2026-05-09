@@ -13,7 +13,7 @@ export const navLinks: NavLink[] = [
   { href: '/speaking', label: 'Speaking', match: '/speaking' },
 ];
 
-/** Footer link groups — broader than primary nav. */
+/** Footer link groups. Broader than primary nav. */
 export const footerLinkGroups: { title: string; links: NavLink[] }[] = [
   {
     title: 'Sections',

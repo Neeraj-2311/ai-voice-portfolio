@@ -10,30 +10,15 @@ import { navLinks } from '@/content/nav';
 import { site } from '@/content/site';
 import { openContactModal } from '@/lib/contact-modal-event';
 
-/**
- * Sticky global navigation. Renders on every route. Spec section 6.1:
- *   - Left: wordmark
- *   - Center: nav links (smooth-scroll on homepage, route on others)
- *   - Right: theme toggle, text-size toggle, primary Contact button
- *   - Mobile: hamburger; Contact button stays visible
- *
- * The Contact button dispatches `open-contact-modal` (handled by the modal
- * mounted lower in the tree) — never scrolls. This keeps the "1 click to
- * contact from anywhere" promise even on case-study sub-pages.
- */
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close the mobile sheet on route change. The set-state-in-effect lint
-  // rule flags this, but reacting to a navigation by collapsing the sheet
-  // is the canonical use case — there is no parent prop to derive from.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [pathname]);
 
-  // Close on Escape, lock body scroll while open.
   useEffect(() => {
     if (!mobileOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -65,7 +50,7 @@ export function Nav() {
         {/* Wordmark */}
         <Link
           href="/"
-          aria-label={`${site.name} — home`}
+          aria-label={`${site.name}, home`}
           className="text-fg hover:text-accent text-h3 font-semibold tracking-tight transition-colors"
         >
           {site.shortName}
@@ -107,26 +92,23 @@ export function Nav() {
             Contact
           </button>
 
-          {/* Mobile menu trigger — hamburger expands the nav, Contact stays
-              visible separately so the 1-click-to-contact rule still holds */}
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav-panel"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            className="btn-icon border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center justify-center rounded-lg border transition-colors md:hidden"
+            className="btn-icon text-muted hover:text-fg hover:bg-fg/10 inline-flex items-center justify-center rounded-lg transition-colors md:hidden"
           >
             {mobileOpen ? (
-              <CloseIcon className="h-5 w-5" aria-hidden="true" />
+              <CloseIcon className="h-4 w-4" aria-hidden="true" />
             ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
+              <Menu className="h-4 w-4" aria-hidden="true" />
             )}
           </button>
         </div>
       </nav>
 
-      {/* Mobile sheet — contains the nav links + a full-width contact CTA. */}
       {mobileOpen && (
         <div
           id="mobile-nav-panel"

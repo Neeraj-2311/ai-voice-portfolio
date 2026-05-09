@@ -1,9 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  /** When true, the card lifts 2px on hover with an accent-tinted border.
-   *  Reserved for clickable cards (case studies, services). Static
-   *  containers leave it off. */
   interactive?: boolean;
   children: ReactNode;
 }
@@ -25,7 +22,6 @@ export function Card({ interactive, className, children, ...rest }: CardProps) {
   );
 }
 
-/** Slot helpers — keep cards composable without exporting a dozen subcomponents. */
 export function CardHeader({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={['flex items-start gap-3', className ?? ''].filter(Boolean).join(' ')} {...rest}>

@@ -15,16 +15,16 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={label}
       title={label}
       className={[
-        'btn-icon border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center justify-center rounded-lg border transition-colors',
+        'btn-icon text-muted hover:text-fg hover:bg-fg/10 inline-flex items-center justify-center rounded-lg transition-colors',
         className ?? '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
       {isDark ? (
-        <Sun className="h-5 w-5" aria-hidden="true" />
+        <Sun className="h-4 w-4" aria-hidden="true" />
       ) : (
-        <Moon className="h-5 w-5" aria-hidden="true" />
+        <Moon className="h-4 w-4" aria-hidden="true" />
       )}
     </button>
   );
