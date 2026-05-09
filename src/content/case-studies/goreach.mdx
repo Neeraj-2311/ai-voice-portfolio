@@ -1,0 +1,33 @@
+## Problem
+
+[TODO: Neeraj] What does GoReach do, who is it for, and what was painful
+before it existed? One paragraph that a stranger can understand.
+
+## Approach
+
+[TODO: Neeraj] How did you split the problem into the smallest shippable
+agent loop, plus the surrounding product UX?
+
+- Research and outreach were one workflow, not two tools stitched together.
+- Memory carried across sessions so the agent picked up where it left off.
+- Human-in-the-loop reviews on every external action.
+
+## Architecture
+
+[TODO: Neeraj] System diagram + brief tour of the key services.
+
+## Tech decisions
+
+- **Next.js App Router** for the product surface.
+- **Node.js + agent runtime** for the orchestration layer.
+- **MongoDB** for unstructured research artefacts; relational store for users.
+- **LLM tooling layer** abstracted to swap providers without touching product code.
+
+## Outcome
+
+[TODO: Neeraj] Numbers if you can share them. Active users, sequences sent,
+reply rate, time saved.
+
+## Lessons
+
+[TODO: Neeraj] What did the build teach you that you'll carry forward?

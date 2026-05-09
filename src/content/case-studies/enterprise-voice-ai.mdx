@@ -1,0 +1,38 @@
+## Problem
+
+[TODO: Neeraj] Describe the customer-facing problem you tackled at IntellifyAI.
+Anonymise where needed (e.g. "a regulated UK enterprise serving N customers").
+Make the stakes concrete: cost of bad calls, queue size, support hours lost.
+
+## Approach
+
+[TODO: Neeraj] Two or three paragraphs on how you framed the build. What did
+you have to learn, what did you reject, what was the smallest thing that
+proved the approach?
+
+- Latency-first design with sub-second response budget.
+- Real-time STT, LLM, and TTS pipelines orchestrated through LiveKit.
+- Eval harness wired into CI so regressions show up before production.
+
+## Architecture
+
+[TODO: Neeraj] Drop in a system diagram (SVG / image) and walk the reader
+through the call path: telephony, edge, agent, tool calls, observability.
+
+## Tech decisions
+
+- **LiveKit** for transport. [TODO: why this and not the alternatives.]
+- **Azure AI Foundry** for the model layer. [TODO: privacy / region note.]
+- **FastAPI + WebSocket** for the agent control plane.
+- **Postgres + pgvector** for retrieval over the customer corpus.
+
+## Outcome
+
+[TODO: Neeraj] Concrete metrics. Latency, deflection rate, customer
+satisfaction, hours saved. If a number is sensitive, give a range or a
+relative improvement.
+
+## Lessons
+
+[TODO: Neeraj] One or two paragraphs on what you would do differently and
+the patterns you'll reach for next time.
