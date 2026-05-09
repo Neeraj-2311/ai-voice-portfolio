@@ -1,9 +1,7 @@
 import type { SiteConfig } from '@/types/content';
 
-/**
- * Site-wide configuration. URL is read from env so the same build runs
- * across preview / production without code changes.
- */
+const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'hello@example.com';
+
 export const site: SiteConfig = {
   name: 'Neeraj',
   shortName: 'Neeraj',
@@ -11,7 +9,7 @@ export const site: SiteConfig = {
   description:
     'Voice AI and full-stack engineer. I build production voice agents, agentic systems, and full-stack AI products. Available for hire, mentorship, and speaking.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-  email: 'admin@goreach.in', // [TODO: Neeraj] confirm this is the right inbound email
+  email: siteEmail,
   location: 'London, UK',
   current: {
     role: 'Full Stack Engineer',
@@ -30,7 +28,7 @@ export const site: SiteConfig = {
       href: 'https://x.com/neeraj', // [TODO: Neeraj] update
       icon: 'Twitter',
     },
-    { label: 'Email', href: 'mailto:admin@goreach.in', icon: 'Mail' },
+    { label: 'Email', href: `mailto:${siteEmail}`, icon: 'Mail' },
   ],
   cal: {
     username: null, // [TODO: Neeraj] cal.com username
