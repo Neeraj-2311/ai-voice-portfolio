@@ -240,6 +240,23 @@
 /* =========================================================================
    Section padding utility. Spec 6.x sections need consistent vertical room.
    ========================================================================= */
+/* Hero signature waveform animation. */
+.hero-waveform-bar {
+  animation: hero-waveform-pulse 2.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+@keyframes hero-waveform-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
 /* Native date / time picker indicator. Outside @layer base so it isn't
    beaten by Tailwind utilities applied to the input. The icon is dark by
    default. Invert it in dark mode and tighten the hit area. */
