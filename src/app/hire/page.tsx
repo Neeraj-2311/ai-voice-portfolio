@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Check, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, FileText, Mail, ShieldCheck } from 'lucide-react';
 import { CalEmbed } from '@/components/booking/CalEmbed';
+import { LinkedinIcon } from '@/components/primitives/BrandIcon';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
@@ -87,7 +88,7 @@ export default function HirePage() {
               <ShieldCheck className="text-accent h-4 w-4" aria-hidden="true" />
               {hireTrustLine}
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button
                 href="#book"
                 variant="primary"
@@ -95,6 +96,34 @@ export default function HirePage() {
               >
                 Book a discovery call
               </Button>
+              <Button
+                href={`mailto:${site.email}?subject=Hiring%20enquiry`}
+                variant="secondary"
+                leadingIcon={<Mail className="h-4 w-4" />}
+              >
+                Email instead
+              </Button>
+              <Button
+                href="/resume"
+                variant="ghost"
+                leadingIcon={<FileText className="h-4 w-4" />}
+                data-voice-action="download-resume"
+              >
+                Resume
+              </Button>
+              {site.socials
+                .filter((s) => s.icon === 'Linkedin')
+                .map((s) => (
+                  <Button
+                    key={s.href}
+                    href={s.href}
+                    external
+                    variant="ghost"
+                    leadingIcon={<LinkedinIcon className="h-4 w-4" />}
+                  >
+                    LinkedIn
+                  </Button>
+                ))}
             </div>
           </SectionReveal>
         </div>
