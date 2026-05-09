@@ -24,11 +24,11 @@ export function Experience() {
               <li
                 id={role.anchor}
                 data-highlight-id={role.id}
-                className="border-line relative grid gap-6 border-l-2 py-8 pl-6 first:pt-0 last:pb-0 md:grid-cols-[200px_1fr] md:gap-10 md:pl-10"
+                className="border-line relative grid gap-6 border-l-2 pb-14 pl-6 pt-2 first:pt-0 last:pb-0 md:grid-cols-[200px_1fr] md:gap-10 md:pb-20 md:pl-10"
               >
                 <span
                   aria-hidden="true"
-                  className="bg-accent absolute -left-[7px] top-10 h-3 w-3 rounded-full ring-4 ring-bg first:top-2 md:top-2"
+                  className="bg-accent absolute -left-[7px] top-2 h-3 w-3 rounded-full ring-4 ring-bg"
                 />
 
                 <div>
