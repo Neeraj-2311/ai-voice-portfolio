@@ -1,13 +1,9 @@
-import { TextSizeToggle } from '@/components/layout/TextSizeToggle';
-import { ThemeToggle } from '@/components/layout/ThemeToggle';
-
 export default function Home() {
   return (
-    <main className="bg-bg text-fg flex min-h-dvh flex-col items-center justify-center">
-      <div className="absolute top-6 right-6 flex gap-2">
-        <ThemeToggle />
-        <TextSizeToggle />
-      </div>
+    <section
+      id="hero"
+      className="bg-bg text-fg flex min-h-[70vh] flex-col items-center justify-center"
+    >
       <div className="section-y mx-auto w-full max-w-5xl px-6 text-center">
         <p className="text-muted text-small">Neeraj — portfolio scaffolding</p>
         <h1 className="text-display mt-4 font-semibold text-balance">
@@ -31,6 +27,6 @@ export default function Home() {
           </button>
         </div>
       </div>
-    </main>
+    </section>
   );
 }
