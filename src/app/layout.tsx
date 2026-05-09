@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
 import { ThemeScript } from '@/components/layout/ThemeScript';
@@ -99,6 +100,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <VoiceCTADock />
+        <ContactModal />
       </body>
     </html>
   );
