@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next';
+import { cookies } from 'next/headers';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
-import { ThemeScript } from '@/components/layout/ThemeScript';
 import { VoiceCTADock } from '@/components/voice/VoiceCTADock';
 import { site } from '@/content/site';
+import { THEME_STORAGE_KEY, TEXT_SIZE_STORAGE_KEY } from '@/lib/storage-keys';
 import './globals.css';
 
 const geistSans = Geist({
@@ -75,19 +76,27 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get(THEME_STORAGE_KEY)?.value;
+  const textSizeCookie = cookieStore.get(TEXT_SIZE_STORAGE_KEY)?.value;
+  const theme = themeCookie === 'light' ? 'light' : 'dark';
+  const textSize = textSizeCookie === 'larger' ? 'larger' : 'default';
+
   return (
     <html
       lang="en"
+      data-theme={theme}
+      data-text-size={textSize}
+      style={{ colorScheme: theme }}
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth`}
       suppressHydrationWarning
     >
       <body className="bg-bg text-fg flex min-h-full flex-col antialiased">
-        <ThemeScript />
         <a
           href="#main-content"
           className="bg-accent text-accent-fg sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"

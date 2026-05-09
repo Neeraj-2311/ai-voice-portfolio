@@ -1,27 +1,11 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { TEXT_SIZE_STORAGE_KEY } from './storage-keys';
 
 export type TextSize = 'default' | 'larger';
 
-export const TEXT_SIZE_STORAGE_KEY = 'neeraj-text-size';
-
-/**
- * Inline script body. Runs synchronously in <body> head before paint, so
- * the saved text-size preference is applied before React hydrates.
- *
- * Stays as a string (rather than a real function) because it's injected
- * via dangerouslySetInnerHTML. Keep it dependency-free and ES2017-safe.
- */
-export const textSizeInitScript = `(() => {
-  try {
-    const stored = localStorage.getItem(${JSON.stringify(TEXT_SIZE_STORAGE_KEY)});
-    const size = stored === 'larger' ? 'larger' : 'default';
-    document.documentElement.setAttribute('data-text-size', size);
-  } catch {
-    document.documentElement.setAttribute('data-text-size', 'default');
-  }
-})();`;
+export { TEXT_SIZE_STORAGE_KEY };
 
 function readTextSize(): TextSize {
   const value = document.documentElement.getAttribute('data-text-size');
@@ -53,8 +37,9 @@ export function useTextSize(): {
     try {
       localStorage.setItem(TEXT_SIZE_STORAGE_KEY, next);
     } catch {
-      // Storage may be unavailable (Safari private mode, etc.).
+      // Storage may be unavailable. Cookie below is the authoritative store.
     }
+    document.cookie = `${TEXT_SIZE_STORAGE_KEY}=${next}; path=/; max-age=31536000; samesite=lax`;
   };
 
   return {
