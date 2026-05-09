@@ -1,0 +1,44 @@
+import type { ServiceItem } from '@/types/content';
+
+/**
+ * Three equal-weight services. Spec section 6.3.
+ * iconName values must exist in the icon map at src/lib/icons.ts.
+ */
+export const services: ServiceItem[] = [
+  {
+    id: 'services-voice',
+    anchor: 'services',
+    iconName: 'AudioLines',
+    title: 'Voice AI engineering',
+    summary:
+      'Production voice agents with sub-second latency. Real-time orchestration, telephony, and enterprise observability.',
+    description:
+      'I build production voice agents end-to-end: real-time STT/LLM/TTS pipelines, turn detection, barge-in, telephony integration, and observability. Stack centres on LiveKit and Azure AI Foundry, with custom orchestration for sub-second latency at scale.',
+    tags: ['LiveKit', 'Azure AI Foundry', 'Realtime', 'Telephony'],
+    cta: { label: 'Learn more', href: '/hire#voice' },
+  },
+  {
+    id: 'services-agents',
+    anchor: 'services',
+    iconName: 'Workflow',
+    title: 'AI agents & full-stack',
+    summary:
+      'Agentic systems and RAG pipelines wrapped in production-grade web apps. Next.js, FastAPI, evals included.',
+    description:
+      'Agent design, tool-use orchestration, RAG pipelines with hybrid retrieval, evaluation harnesses, and the full-stack web/API surface to ship them. TypeScript and Python, Next.js and FastAPI.',
+    tags: ['Agents', 'RAG', 'Next.js', 'FastAPI'],
+    cta: { label: 'Learn more', href: '/hire' },
+  },
+  {
+    id: 'services-mentorship',
+    anchor: 'services',
+    iconName: 'GraduationCap',
+    title: 'Mentorship & sessions',
+    summary:
+      '1:1 sessions for AI builders, hackathon mentoring, college talks, and bootcamp workshops.',
+    description:
+      'Career coaching for students breaking into AI, architecture reviews for engineers building voice agents, and event sessions for colleges, bootcamps, and hackathons.',
+    tags: ['1:1 sessions', 'Hackathons', 'Workshops', 'Talks'],
+    cta: { label: 'See sessions', href: '/mentorship' },
+  },
+];
