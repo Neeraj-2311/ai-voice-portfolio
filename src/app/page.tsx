@@ -1,6 +1,11 @@
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
+
 export default function Home() {
   return (
     <main className="bg-bg text-fg flex min-h-dvh flex-col items-center justify-center">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <div className="section-y mx-auto w-full max-w-2xl px-6 text-center">
         <p className="text-muted text-sm">Neeraj — portfolio scaffolding</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
