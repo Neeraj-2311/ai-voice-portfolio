@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
+import { PlausibleAnalytics } from '@/components/seo/PlausibleAnalytics';
 import { VoiceCTADock } from '@/components/voice/VoiceCTADock';
 import { site } from '@/content/site';
 import { THEME_STORAGE_KEY, TEXT_SIZE_STORAGE_KEY } from '@/lib/storage-keys';
@@ -52,16 +53,11 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} · Voice AI & Full-Stack Engineer`,
     description: site.description,
-    // OG image generation (next/og) will replace this with a generated route
-    // in the SEO step. Leaving the URL static for now keeps social cards
-    // working from first deploy.
-    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: site.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${site.name} · Voice AI & Full-Stack Engineer`,
     description: site.description,
-    images: ['/og-default.png'],
   },
   robots: { index: true, follow: true },
   category: 'technology',
@@ -110,6 +106,7 @@ export default async function RootLayout({
         <Footer />
         <VoiceCTADock />
         <ContactModal />
+        <PlausibleAnalytics />
       </body>
     </html>
   );

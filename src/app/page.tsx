@@ -1,3 +1,4 @@
+import { PersonJsonLd } from '@/components/seo/PersonJsonLd';
 import { CaseStudies } from '@/components/sections/CaseStudies';
 import { Contact } from '@/components/sections/Contact';
 import { Demos } from '@/components/sections/Demos';
@@ -12,6 +13,7 @@ import { Speaking } from '@/components/sections/Speaking';
 export default function Home() {
   return (
     <>
+      <PersonJsonLd />
       <Hero />
       <Services />
       <Experience />
