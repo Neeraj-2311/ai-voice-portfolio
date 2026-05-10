@@ -13,6 +13,14 @@ import { openContactModal } from '@/lib/contact-modal-event';
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -40,7 +48,12 @@ export function Nav() {
 
   return (
     <header
-      className="bg-bg/85 border-line sticky top-0 z-40 w-full border-b backdrop-blur-md"
+      className={[
+        'sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors',
+        scrolled
+          ? 'bg-bg/90 border-line shadow-[0_1px_0_0_var(--border)]'
+          : 'bg-bg/70 border-transparent',
+      ].join(' ')}
       role="banner"
     >
       <nav
