@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Check, FileText, Mail, ShieldCheck } from 'lucide-react';
-import { CalEmbed } from '@/components/booking/CalEmbed';
+import { ArrowRight, FileText, Mail, ShieldCheck } from 'lucide-react';
+import { BookCallButton } from '@/components/booking/BookCallButton';
 import { LinkedinIcon } from '@/components/primitives/BrandIcon';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
-import { hireEngagements, hireTrustLine } from '@/content/hire';
+import { hireEngagementTypes, hireSection, hireTrustLine } from '@/content/hire';
 import { site } from '@/content/site';
 
 export const metadata: Metadata = {
   title: 'Hire',
   description:
-    'Engagement models for voice AI, agent development, and full-stack AI builds. Discovery call, project-based work, or fractional advisory.',
+    'Voice AI builds, agentic backends, and full-stack AI work. Book a 30-minute call to figure out fit.',
   alternates: { canonical: '/hire' },
 };
 
@@ -41,7 +41,7 @@ const process = [
 const faq = [
   {
     q: 'What are your rates?',
-    a: 'Project-based pricing for fixed-scope builds, weekly retainer for fractional / advisory. Discovery call covers what suits your engagement.',
+    a: 'Project-based pricing for fixed-scope builds, weekly retainer for fractional / advisory. We figure out what suits your engagement on the call.',
   },
   {
     q: 'Typical timelines?',
@@ -53,7 +53,7 @@ const faq = [
   },
   {
     q: 'GDPR and data handling?',
-    a: 'I have shipped enterprise platforms with GDPR compliance and security hardening (data minimisation, audit logs, encryption-at-rest, restricted PII). Happy to walk through your specific requirements on the discovery call.',
+    a: 'I have shipped enterprise platforms with GDPR compliance and security hardening (data minimisation, audit logs, encryption-at-rest, restricted PII). Happy to walk through your specific requirements on the call.',
   },
   {
     q: 'Locations and timezones?',
@@ -61,41 +61,35 @@ const faq = [
   },
   {
     q: 'Equity / retainer hybrid?',
-    a: 'Open to it for early-stage AI startups with a clear thesis. Discuss on the discovery call.',
+    a: 'Open to it for early-stage AI startups with a clear thesis. Discuss on the call.',
   },
 ];
 
 export default function HirePage() {
-  const bookingSlug = site.cal.events.find((e) => e.id === 'discovery')?.eventSlug ?? '';
-  const calLink = site.cal.username ? `${site.cal.username}/${bookingSlug}` : '[TODO]';
-
   return (
     <div className="bg-bg">
       <header className="section-y">
         <div className="mx-auto w-full max-w-4xl px-4 md:px-6">
           <SectionReveal>
             <p className="text-accent text-small font-medium uppercase tracking-wide">
-              For founders &amp; companies
+              {hireSection.eyebrow}
             </p>
-            <h1 className="mt-3 text-balance">
-              Building voice AI, agents, or AI products? Let&apos;s talk.
-            </h1>
+            <h1 className="mt-3 text-balance">{hireSection.heading}</h1>
             <p className="text-muted mt-5 max-w-2xl text-pretty text-h3 font-normal">
-              I work with teams that ship. Pick the engagement that matches where you are
-              and we&apos;ll take it from there.
+              {hireSection.sub}
             </p>
-            <p className="text-muted mt-4 inline-flex items-center gap-2 text-small">
-              <ShieldCheck className="text-accent h-4 w-4" aria-hidden="true" />
-              {hireTrustLine}
+            <p className="text-muted mt-4 inline-flex items-start gap-2 text-small">
+              <ShieldCheck className="text-accent mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{hireTrustLine}</span>
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                href="#book"
+              <BookCallButton
+                intent="hire"
                 variant="primary"
                 trailingIcon={<ArrowRight className="h-4 w-4" />}
               >
-                Book a discovery call
-              </Button>
+                {hireSection.primaryCtaLabel}
+              </BookCallButton>
               <Button
                 href={`mailto:${site.email}?subject=Hiring%20enquiry`}
                 variant="secondary"
@@ -125,6 +119,7 @@ export default function HirePage() {
                   </Button>
                 ))}
             </div>
+            <p className="text-subtle mt-3 text-small">{hireSection.primaryCtaSubline}</p>
           </SectionReveal>
         </div>
       </header>
@@ -133,27 +128,19 @@ export default function HirePage() {
         aria-labelledby="engagements-title"
         className="section-y bg-section"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+        <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
           <SectionReveal>
-            <h2 id="engagements-title">Engagement models.</h2>
+            <h2 id="engagements-title">{hireSection.engagementsHeading}.</h2>
           </SectionReveal>
           <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3">
-            {hireEngagements.map((engagement, index) => (
-              <SectionReveal key={engagement.id} delay={index * 0.05}>
+            {hireEngagementTypes.map((type, index) => (
+              <SectionReveal key={type.id} delay={index * 0.05}>
                 <Card
-                  data-highlight-id={`hire-${engagement.id}`}
+                  data-highlight-id={`hire-${type.id}`}
                   className="flex h-full flex-col"
                 >
-                  <h3 className="text-fg">{engagement.title}</h3>
-                  <p className="text-muted mt-2 text-pretty">{engagement.description}</p>
-                  <ul className="mt-5 grow space-y-2">
-                    {engagement.bullets.map((b, i) => (
-                      <li key={i} className="text-muted flex items-start gap-2 text-small">
-                        <Check className="text-accent mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <h3 className="text-fg">{type.title}</h3>
+                  <p className="text-muted mt-2 text-pretty">{type.description}</p>
                 </Card>
               </SectionReveal>
             ))}
@@ -181,30 +168,7 @@ export default function HirePage() {
         </ol>
       </section>
 
-      <section
-        id="book"
-        aria-labelledby="book-title"
-        className="section-y bg-section"
-      >
-        <div className="mx-auto w-full max-w-4xl px-4 md:px-6">
-          <SectionReveal>
-            <h2 id="book-title" className="text-balance">
-              Book a discovery call.
-            </h2>
-            <p className="text-muted mt-3 max-w-2xl">
-              Free, 30 minutes, video call. I&apos;ll come prepared if you share a one-paragraph
-              context note when booking.
-            </p>
-          </SectionReveal>
-          <SectionReveal delay={0.1}>
-            <div className="mt-8">
-              <CalEmbed calLink={calLink} label="Open discovery calendar" />
-            </div>
-          </SectionReveal>
-        </div>
-      </section>
-
-      <section aria-labelledby="faq-title" className="section-y">
+      <section aria-labelledby="faq-title" className="section-y bg-section">
         <div className="mx-auto w-full max-w-3xl px-4 md:px-6">
           <SectionReveal>
             <h2 id="faq-title">Frequently asked.</h2>
@@ -212,7 +176,7 @@ export default function HirePage() {
           <ul className="mt-10 space-y-4 md:mt-12">
             {faq.map((item, i) => (
               <SectionReveal key={i} delay={i * 0.03}>
-                <details className="group/faq border-line bg-elevated rounded-xl border p-5 md:p-6">
+                <details className="group/faq border-line bg-bg rounded-xl border p-5 md:p-6">
                   <summary className="text-fg flex cursor-pointer items-center justify-between gap-4 text-pretty font-medium">
                     {item.q}
                     <span

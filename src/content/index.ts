@@ -9,9 +9,10 @@ export { experience } from './experience';
 export { caseStudies } from './case-studies';
 export { skillGroups } from './skills';
 export {
-  mentorshipSessions,
+  mentorshipSection,
+  mentorshipTopics,
   mentorshipTestimonials,
   mentorshipCredibility,
 } from './mentorship';
 export { speakingTopics, speakingFormats, pastEvents } from './speaking';
-export { hireEngagements, hireTrustLine } from './hire';
+export { hireSection, hireEngagementTypes, hireTrustLine } from './hire';

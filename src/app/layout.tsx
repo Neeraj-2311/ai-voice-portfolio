@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { CalProvider } from '@/components/booking/CalProvider';
 import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
@@ -106,6 +107,7 @@ export default async function RootLayout({
         <Footer />
         <VoiceCTADock />
         <ContactModal />
+        <CalProvider />
         <PlausibleAnalytics />
       </body>
     </html>

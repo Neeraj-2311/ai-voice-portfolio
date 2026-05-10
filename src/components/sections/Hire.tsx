@@ -1,40 +1,35 @@
-import { ArrowRight, Check, FileText, Mail, ShieldCheck } from 'lucide-react';
+import { ArrowRight, FileText, Mail, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { BookCallButton } from '@/components/booking/BookCallButton';
 import { LinkedinIcon } from '@/components/primitives/BrandIcon';
-import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
-import { hireEngagements, hireTrustLine } from '@/content/hire';
+import { hireEngagementTypes, hireSection, hireTrustLine } from '@/content/hire';
 import { site } from '@/content/site';
 
 export function Hire() {
   return (
     <section id="hire" aria-labelledby="hire-title" className="section-y">
-      <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+      <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">
-            For founders &amp; companies
+            {hireSection.eyebrow}
           </p>
           <h2 id="hire-title" className="mt-3 text-balance">
-            Building voice AI, agents, or AI products? Let&apos;s talk.
+            {hireSection.heading}
           </h2>
-          <p className="text-muted mt-4 max-w-2xl text-pretty">
-            I work with teams that ship. Pick the engagement that matches where you are
-            and we&apos;ll take it from there.
-          </p>
-          <p className="text-muted mt-3 inline-flex items-center gap-2 text-small">
-            <ShieldCheck className="text-accent h-4 w-4" aria-hidden="true" />
-            {hireTrustLine}
+          <p className="text-muted mt-4 max-w-2xl text-pretty">{hireSection.sub}</p>
+          <p className="text-muted mt-3 inline-flex items-start gap-2 text-small">
+            <ShieldCheck className="text-accent mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>{hireTrustLine}</span>
           </p>
         </SectionReveal>
 
         <SectionReveal delay={0.05}>
           <div className="border-line bg-elevated mt-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 md:mt-12 md:p-6">
             <div className="min-w-0">
-              <p className="text-fg font-medium">Just want the basics?</p>
-              <p className="text-muted mt-1 text-small">
-                Skip the calendar. Email me, grab the resume, or reach me on LinkedIn.
-              </p>
+              <p className="text-fg font-medium">{hireSection.quickContact.title}</p>
+              <p className="text-muted mt-1 text-small">{hireSection.quickContact.body}</p>
             </div>
             <ul className="flex flex-wrap items-center gap-2">
               <li>
@@ -75,42 +70,36 @@ export function Hire() {
           </div>
         </SectionReveal>
 
-        <p className="text-subtle mt-8 text-small uppercase tracking-wide md:mt-10">
-          Or pick an engagement
-        </p>
+        <SectionReveal delay={0.1}>
+          <div className="mt-10 flex flex-col items-start gap-3 md:mt-12">
+            <BookCallButton
+              intent="hire"
+              variant="primary"
+              trailingIcon={<ArrowRight className="h-4 w-4" />}
+            >
+              {hireSection.primaryCtaLabel}
+            </BookCallButton>
+            <p className="text-subtle text-small">{hireSection.primaryCtaSubline}</p>
+          </div>
+        </SectionReveal>
 
-        <div className="mt-4 grid gap-5 md:grid-cols-3">
-          {hireEngagements.map((engagement, index) => (
-            <SectionReveal key={engagement.id} delay={index * 0.05}>
+        <SectionReveal delay={0.15}>
+          <h3 className="text-fg mt-16 text-h3 font-medium md:mt-20">
+            {hireSection.engagementsHeading}
+          </h3>
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {hireEngagementTypes.map((type) => (
               <Card
-                interactive
-                data-highlight-id={`hire-${engagement.id}`}
+                key={type.id}
+                data-highlight-id={`hire-${type.id}`}
                 className="flex h-full flex-col"
               >
-                <h3 className="text-fg">{engagement.title}</h3>
-                <p className="text-muted mt-2 text-pretty">{engagement.summary}</p>
-                <ul className="mt-5 grow space-y-2">
-                  {engagement.bullets.map((bullet, i) => (
-                    <li key={i} className="text-muted flex items-start gap-2 text-small">
-                      <Check className="text-accent mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <Button
-                    href={engagement.cta.href}
-                    variant={engagement.id === 'discovery' ? 'primary' : 'secondary'}
-                    data-voice-action={engagement.cta.voiceAction}
-                    trailingIcon={<ArrowRight className="h-4 w-4" />}
-                  >
-                    {engagement.cta.label}
-                  </Button>
-                </div>
+                <h4 className="text-fg font-medium">{type.title}</h4>
+                <p className="text-muted mt-2 text-pretty text-small">{type.description}</p>
               </Card>
-            </SectionReveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </SectionReveal>
       </div>
     </section>
   );

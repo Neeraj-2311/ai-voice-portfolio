@@ -85,17 +85,9 @@ export interface SkillGroup {
   skills: { name: string; note?: string }[];
 }
 
-export interface MentorshipSession {
+export interface MentorshipTopic {
   id: string;
-  title: string;
-  durationMinutes: number;
-  /** Null when price is still [TODO: Neeraj]. */
-  price: string | null;
-  audience: string;
-  summary: string;
-  description: string;
-  /** Cal.com event slug, falls back to generic booking link. */
-  calEventSlug?: string;
+  label: string;
 }
 
 export interface SpeakingTopic {
@@ -112,13 +104,10 @@ export interface SpeakingEvent {
   url?: string;
 }
 
-export interface HireEngagement {
+export interface HireEngagementType {
   id: string;
   title: string;
-  summary: string;
   description: string;
-  bullets: string[];
-  cta: { label: string; href: string; voiceAction?: string };
 }
 
 export interface Testimonial {
@@ -144,7 +133,6 @@ export interface SiteConfig {
   socials: SocialLink[];
   cal: {
     username: string | null;
-    events: { id: string; eventSlug: string; label: string }[];
   };
 }
 

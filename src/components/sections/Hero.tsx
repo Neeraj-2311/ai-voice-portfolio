@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/primitives/Button';
+import { BookCallButton } from '@/components/booking/BookCallButton';
 import { OpenContactSpeakingButton } from '@/components/sections/OpenContactSpeakingButton';
 import { HeroWaveform } from './HeroWaveform';
 import { site } from '@/content/site';
@@ -35,17 +35,16 @@ export function Hero() {
         <p className="text-muted mt-5 text-small">{site.mostRecentLine}</p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Button
-            href="#hire"
+          <BookCallButton
+            intent="hire"
             variant="primary"
-            data-voice-action="open-hire-discovery"
             trailingIcon={<ArrowRight className="h-4 w-4" />}
           >
             Hire me
-          </Button>
-          <Button href="#mentorship" variant="secondary">
+          </BookCallButton>
+          <BookCallButton intent="mentor" variant="secondary">
             Book mentorship
-          </Button>
+          </BookCallButton>
         </div>
 
         <p className="text-muted mt-6 text-small">

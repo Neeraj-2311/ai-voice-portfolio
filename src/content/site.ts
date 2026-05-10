@@ -32,24 +32,6 @@ export const site: SiteConfig = {
     { label: 'Email', href: `mailto:${siteEmail}`, icon: 'Mail' },
   ],
   cal: {
-    username: null, // [TODO: Neeraj] cal.com username
-    events: [
-      { id: 'discovery', eventSlug: '[TODO]-discovery-call', label: 'Discovery call (30 min)' },
-      {
-        id: 'mentorship-roadmap',
-        eventSlug: '[TODO]-ai-career-roadmap',
-        label: 'AI career roadmap (30 min)',
-      },
-      {
-        id: 'mentorship-voice',
-        eventSlug: '[TODO]-voice-agent-review',
-        label: 'Voice agent architecture review (60 min)',
-      },
-      {
-        id: 'mentorship-portfolio',
-        eventSlug: '[TODO]-portfolio-review',
-        label: 'Portfolio & resume review (60 min)',
-      },
-    ],
+    username: process.env.NEXT_PUBLIC_CAL_USERNAME ?? null,
   },
 };
