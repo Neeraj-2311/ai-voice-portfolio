@@ -14,6 +14,7 @@ export function ContactModal() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [intent, setIntent] = useState<Intent>('hire');
   const [prefill, setPrefill] = useState<Partial<Record<keyof ContactFormValues, string>>>({});
+  const [openCount, setOpenCount] = useState(0);
 
   const close = useCallback(() => {
     const dialog = dialogRef.current;
@@ -23,8 +24,9 @@ export function ContactModal() {
   useEffect(() => {
     const handler = (event: Event) => {
       const detail = (event as CustomEvent<OpenContactModalDetail>).detail ?? {};
-      if (detail.intent) setIntent(detail.intent);
+      setIntent(detail.intent ?? 'hire');
       setPrefill(detail.prefill ?? {});
+      setOpenCount((n) => n + 1);
       const dialog = dialogRef.current;
       if (!dialog) return;
       if (!dialog.open) dialog.showModal();
@@ -66,6 +68,7 @@ export function ContactModal() {
       </div>
       <div className="max-h-[75vh] overflow-y-auto px-6 py-6">
         <ContactForm
+          key={openCount}
           initialIntent={intent}
           prefill={prefill}
           variant="compact"
