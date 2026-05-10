@@ -64,4 +64,4 @@ export const hireEngagements: HireEngagement[] = [
  * "Built enterprise platforms with GDPR compliance and security hardening".
  */
 export const hireTrustLine =
-  'Built enterprise platforms with GDPR compliance and security hardening.';
+  'Just shipped an enterprise voice AI platform with GDPR compliance and security hardening. Available from 6 May 2026.';

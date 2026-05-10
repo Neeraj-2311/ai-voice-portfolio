@@ -1,4 +1,4 @@
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/primitives/Button';
 import { OpenContactSpeakingButton } from '@/components/sections/OpenContactSpeakingButton';
 import { HeroWaveform } from './HeroWaveform';
@@ -14,18 +14,13 @@ export function Hero() {
       <HeroWaveform />
 
       <div className="relative z-20 mx-auto w-full max-w-5xl px-6 text-center">
-        <p className="text-muted text-small inline-flex items-center gap-2">
+        <span className="border-accent/30 bg-accent/10 text-fg inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small">
           <span
             aria-hidden="true"
             className="bg-success inline-block h-2 w-2 rounded-full"
           />
-          Currently building voice AI at {site.current.company}
-          <span aria-hidden="true" className="text-subtle">
-            ·
-          </span>
-          <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-          {site.location}
-        </p>
+          {site.availability}
+        </span>
 
         <h1 className="text-display mt-6 font-semibold tracking-tight text-balance">
           {site.name}
@@ -36,6 +31,8 @@ export function Hero() {
           <br className="hidden sm:block" />
           I build agentic systems for enterprise.
         </p>
+
+        <p className="text-muted mt-5 text-small">{site.mostRecentLine}</p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Button

@@ -25,6 +25,13 @@ export function Contact() {
             <ContactForm />
           </div>
         </SectionReveal>
+
+        <SectionReveal delay={0.15}>
+          <p className="text-subtle mt-8 text-center text-small">
+            Just want to say hi or share something interesting? My DMs on LinkedIn and X are
+            open.
+          </p>
+        </SectionReveal>
       </div>
     </section>
   );

@@ -6,12 +6,12 @@ import type { SpeakingEvent, SpeakingTopic } from '@/types/content';
  * lives directly in the Speaking section component.
  */
 export const speakingTopics: SpeakingTopic[] = [
-  { id: 'voice-ai', label: 'Voice AI' },
-  { id: 'agents', label: 'Agentic systems' },
-  { id: 'fullstack-ai', label: 'Full-stack AI' },
-  { id: 'careers', label: 'AI careers' },
-  { id: 'rag', label: 'RAG architecture' },
-  { id: 'open-source-voice', label: 'Open-source voice infra' },
+  { id: 'voice-ai', label: 'Voice AI: what production-grade actually means' },
+  { id: 'agents', label: 'Agentic systems and the eval problem' },
+  { id: 'fullstack-ai', label: 'Full-stack AI: shipping LLM products end-to-end' },
+  { id: 'careers', label: 'Breaking into AI as a developer' },
+  { id: 'rag', label: 'RAG architecture in practice' },
+  { id: 'open-source-voice', label: 'Open-source voice infrastructure with LiveKit' },
 ];
 
 export const speakingFormats: { id: string; label: string }[] = [

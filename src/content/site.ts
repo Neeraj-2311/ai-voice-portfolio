@@ -11,10 +11,11 @@ export const site: SiteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   email: siteEmail,
   location: 'London, UK',
+  availability: 'Available from 7 May 2026 · open to full-time, fractional, and contract',
+  mostRecentLine: 'Most recently shipped a production voice AI platform at IntellifyAI · London.',
   current: {
-    role: 'Full Stack Engineer',
+    role: 'Full Stack Engineer (Contract)',
     company: 'IntellifyAI',
-    // [TODO: Neeraj] companyUrl
   },
   socials: [
     { label: 'GitHub', href: 'https://github.com/Neeraj-2311', icon: 'Github' },

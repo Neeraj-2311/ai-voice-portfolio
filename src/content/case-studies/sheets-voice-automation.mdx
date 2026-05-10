@@ -1,0 +1,23 @@
+## The problem
+
+A small team needed to call hundreds of contacts to qualify leads, gather a few structured fields per call, and update their CRM. They didn't have headcount for it, and existing dialer tools didn't have good voice agents. Existing voice agent tools didn't integrate cleanly with where their data actually lived (Google Sheets).
+
+## The approach
+
+I built a thin automation layer that treats Google Sheets as the source of truth for the contact list and the destination for outcomes. A Python worker reads the sheet, queues calls through a telephony provider, hands each call to a voice agent (LLM with structured output prompt), and writes the parsed result, qualified or not or callback, back to the sheet in real time.
+
+The voice agent is given the contact's row context as a system prompt, so it opens the call with their name and reason for calling. It runs through a short script, listens for objections, and ends with a structured handoff that the worker parses into sheet columns. Failures (no answer, voicemail, hung up) are logged with reason codes so the team can re-target manually.
+
+## Tech decisions worth noting
+
+- **Google Sheets as the database.** Terrible at scale, perfect for a 200-row campaign and zero onboarding for the team.
+- **Voice agent given strict structured output.** It must end every call by emitting JSON, which the worker parses. No LLM-judges-the-call ambiguity.
+- **Cron-driven worker rather than a UI.** Fewer moving parts, easy to debug, runs reliably.
+
+## Outcome
+
+[TODO: Neeraj] What the campaign achieved. Calls placed, conversion rate, time saved vs. manual dialing, or just "ran X campaigns successfully".
+
+## What I learned
+
+The voice agent quality matters less than people think for cold calls. What matters is the structured output and the recovery path when things go off-script. Most engineering time went into handling failure modes (silence, wrong number, gatekeeper) rather than improving the conversation itself.

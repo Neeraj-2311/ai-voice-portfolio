@@ -134,14 +134,14 @@ export interface SiteConfig {
   shortName: string;
   tagline: string;
   description: string;
-  /** Resolved at runtime from env, never hardcoded. */
   url: string;
   email: string;
   phone?: string;
   location: string;
+  availability: string;
+  mostRecentLine: string;
   current: { role: string; company: string; companyUrl?: string };
   socials: SocialLink[];
-  /** Cal.com booking config. Slugs filled in once Neeraj provides them. */
   cal: {
     username: string | null;
     events: { id: string; eventSlug: string; label: string }[];

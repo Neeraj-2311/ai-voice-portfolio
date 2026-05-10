@@ -1,38 +1,24 @@
-## Problem
+## The problem
 
-[TODO: Neeraj] Describe the customer-facing problem you tackled at IntellifyAI.
-Anonymise where needed (e.g. "a regulated UK enterprise serving N customers").
-Make the stakes concrete: cost of bad calls, queue size, support hours lost.
+A London-based enterprise needed a voice agent platform that could handle real customer workflows, not just demo-quality voice, with three constraints most off-the-shelf solutions fail on: GDPR-grade data isolation across tenants, sub-second latency on the response loop, and the ability to plug into an existing CRM and telephony stack without rewriting either.
 
-## Approach
+## The approach
 
-[TODO: Neeraj] Two or three paragraphs on how you framed the build. What did
-you have to learn, what did you reject, what was the smallest thing that
-proved the approach?
+I architected the backend from scratch with the founder, then led the build. The core is a Python orchestration engine on LiveKit that handles the realtime media, with Azure AI Foundry powering the LLM layer and a RAG retrieval system over per-tenant knowledge bases. Telephony, CRM, and tool-calling are wired into the same agent loop so context flows in one direction across a call.
 
-- Latency-first design with sub-second response budget.
-- Real-time STT, LLM, and TTS pipelines orchestrated through LiveKit.
-- Eval harness wired into CI so regressions show up before production.
+Multi-tenancy is enforced at the data, runtime, and deployment layers. Each tenant gets isolated retrieval indexes, runtime workers, and audit trails. Deployment is automated through dynamically generated Python scripts that provision and update Azure infrastructure per tenant, so onboarding a new customer doesn't require manual ops work.
 
-## Architecture
+## Tech decisions worth noting
 
-[TODO: Neeraj] Drop in a system diagram (SVG / image) and walk the reader
-through the call path: telephony, edge, agent, tool calls, observability.
-
-## Tech decisions
-
-- **LiveKit** for transport. [TODO: why this and not the alternatives.]
-- **Azure AI Foundry** for the model layer. [TODO: privacy / region note.]
-- **FastAPI + WebSocket** for the agent control plane.
-- **Postgres + pgvector** for retrieval over the customer corpus.
+- **LiveKit over building on raw WebRTC.** The realtime primitives and turn-taking are battle-tested, and the open-source posture meant we could self-host where needed for compliance.
+- **Azure AI Foundry for the LLM layer.** Aligned with the customer's existing cloud, simplifying procurement and security review.
+- **Python for the agent runtime.** The agentic and RAG ecosystems are stronger in Python, and latency was good enough at our scale.
+- **TypeScript for the dashboard.** Separate codebase, clean API boundary, faster UI iteration.
 
 ## Outcome
 
-[TODO: Neeraj] Concrete metrics. Latency, deflection rate, customer
-satisfaction, hours saved. If a number is sensitive, give a range or a
-relative improvement.
+[TODO: Neeraj] Anonymised outcome metrics. Examples: "achieved X ms median latency", "deployed to N tenants", "supports M concurrent calls per tenant", or qualitative wins like "passed enterprise security review on first pass".
 
-## Lessons
+## What I learned
 
-[TODO: Neeraj] One or two paragraphs on what you would do differently and
-the patterns you'll reach for next time.
+The hardest engineering wasn't the model layer. It was making the orchestration deterministic enough to debug. Voice agents fail in ways text agents don't (silence, partial speech, barge-in mid-tool-call), and the eval harness for these failure modes is something the open-source ecosystem still hasn't solved. Building one in-house was where most of the senior engineering time went.

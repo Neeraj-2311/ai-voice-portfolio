@@ -1,28 +1,22 @@
 import type { ExperienceRole } from '@/types/content';
 
-/**
- * Three roles per spec 6.4. Bullet points are placeholders pending
- * resume content from Neeraj. Current bullets summarise widely-known
- * scope from the spec but should be replaced with concrete impact
- * statements before launch.
- */
 export const experience: ExperienceRole[] = [
   {
     id: 'intellifyai',
     anchor: 'exp-intellifyai',
     company: 'IntellifyAI',
-    title: 'Full Stack Engineer',
+    title: 'Full Stack Engineer (Contract)',
     start: 'Sep 2025',
-    end: 'Present',
-    location: 'London, UK',
+    end: 'May 2026',
+    location: 'London, UK · Remote',
     bullets: [
-      'Build production voice AI agents with LiveKit and Azure AI Foundry, targeting sub-second response latency for enterprise voice workflows.',
-      'Own the agent orchestration layer: turn detection, barge-in handling, tool calling, and post-call analytics.',
-      'Ship full-stack features across the customer dashboard (Next.js) and the agent runtime (FastAPI / Python).',
-      '[TODO: Neeraj] Concrete impact bullet (e.g. metric, named project, or scale).',
+      'Architected and led the backend of an enterprise voice AI platform from zero, defining system design with the founder around multi-tenancy, GDPR compliance, and security hardening.',
+      'Built the voice agent runtime in Python on LiveKit, integrating Azure AI Foundry, RAG retrieval, CRM, and telephony into one orchestration layer with sub-second response latency.',
+      'Designed the agentic decision and tool-use layer that lets a single agent route across customer workflows without losing context across turns.',
+      'Engineered automated cloud deployment in Python via dynamic script generation, streamlining CI/CD across Azure environments for multiple enterprise tenants.',
+      'Led a small team of senior engineers and shipped the platform to production for global enterprise clients before contract end.',
     ],
-    tech: ['LiveKit', 'Azure AI Foundry', 'TypeScript', 'Python', 'FastAPI', 'Next.js'],
-    keyAchievement: '[TODO: Neeraj] Headline achievement at IntellifyAI',
+    tech: ['LiveKit', 'Azure AI Foundry', 'TypeScript', 'Python', 'FastAPI', 'Next.js', 'Docker'],
   },
   {
     id: 'mindcraft',
@@ -31,15 +25,14 @@ export const experience: ExperienceRole[] = [
     title: 'Fullstack AI Developer',
     start: 'Feb 2025',
     end: 'Sep 2025',
-    location: 'Gurgaon, India',
+    location: 'Gurgaon, India · Remote',
     bullets: [
-      'Built agentic AI products on top of LLM toolchains, including RAG pipelines and prompt-orchestration layers.',
-      'Shipped full-stack features (Next.js, Node.js, MongoDB) with an emphasis on developer ergonomics.',
-      '[TODO: Neeraj] Specific product, feature, or outcome bullet.',
-      '[TODO: Neeraj] Tech-leadership or architecture bullet.',
+      'Built and shipped real-time conversational AI agents with multi-step workflows, contributing across the full product lifecycle from concept to live deployment.',
+      'Developed backend automation integrating Google Workspace (Gmail, Sheets) for user onboarding, with secure third-party API handoffs.',
+      'Owned full-stack feature delivery on Next.js, Node.js, and Firebase, from data model to UI to monitoring.',
+      '[TODO: Neeraj] One bullet on a specific product or measurable outcome (e.g. "shipped X feature that increased Y by Z" or "built core flow used by N customers").',
     ],
-    tech: ['Next.js', 'Node.js', 'MongoDB', 'LLMs', 'RAG'],
-    keyAchievement: '[TODO: Neeraj] Headline achievement at Mindcraft Labs',
+    tech: ['Next.js', 'Node.js', 'TypeScript', 'Firebase', 'LLMs', 'RAG', 'APIs'],
   },
   {
     id: 'menrva',
@@ -48,13 +41,13 @@ export const experience: ExperienceRole[] = [
     title: 'Front-end Developer Intern',
     start: 'Oct 2023',
     end: 'Jan 2025',
-    location: 'Bangalore, India',
+    location: 'Bangalore, India · Remote',
     bullets: [
-      'Built and maintained customer-facing web applications using React, TypeScript, and modern CSS.',
-      'Owned UI feature delivery from Figma to production, including responsive design and accessibility.',
-      '[TODO: Neeraj] Specific shipped feature or measurable improvement.',
+      'Delivered agile React development for product interfaces, integrating AI services via APIs with full user-management flows.',
+      'Owned UI feature delivery from Figma to production, including responsive layouts and accessibility.',
+      'Collaborated directly with the founder and leadership on front-end strategy, contributing to project delivery and product decisions.',
+      'Awarded Best Intern of the Quarter (Oct–Dec 2023).',
     ],
     tech: ['React', 'TypeScript', 'CSS', 'Firebase'],
-    keyAchievement: '[TODO: Neeraj] Headline achievement at Menrva',
   },
 ];

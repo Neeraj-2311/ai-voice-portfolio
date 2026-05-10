@@ -9,7 +9,8 @@ import type { ComponentType } from 'react';
 const mdxModules: Record<string, () => Promise<{ default: ComponentType }>> = {
   'enterprise-voice-ai': () => import('@/content/case-studies/enterprise-voice-ai.mdx'),
   goreach: () => import('@/content/case-studies/goreach.mdx'),
-  'third-project': () => import('@/content/case-studies/third-project.mdx'),
+  'sheets-voice-automation': () =>
+    import('@/content/case-studies/sheets-voice-automation.mdx'),
 };
 
 export function generateStaticParams() {
