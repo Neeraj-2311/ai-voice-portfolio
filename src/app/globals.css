@@ -258,6 +258,56 @@
   }
 }
 
+/* Voice tour: target highlight pulse and CTA attention animations. */
+[data-voice-highlight-active='true'] {
+  animation: voice-highlight-ring 1.5s ease-out forwards;
+  border-radius: 16px;
+}
+@keyframes voice-highlight-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 0 10px var(--accent-glow);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.animate-voice-pill-pulse {
+  animation: voice-pill-pulse 1.6s ease-out 1;
+}
+@keyframes voice-pill-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+  60% {
+    box-shadow: 0 0 0 18px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.animate-voice-cta-pulse-once {
+  animation: voice-cta-pulse-once 1.4s ease-out 1;
+}
+@keyframes voice-cta-pulse-once {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+  40% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 12px rgba(99, 102, 241, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
 /* Native date / time picker indicator. Outside @layer base so it isn't
    beaten by Tailwind utilities applied to the input. The icon is dark by
    default. Invert it in dark mode and tighten the hit area. */

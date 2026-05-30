@@ -6,7 +6,7 @@ import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
 import { PlausibleAnalytics } from '@/components/seo/PlausibleAnalytics';
-import { VoiceCTADock } from '@/components/voice/VoiceCTADock';
+import { VoiceSystem } from '@/components/voice/VoiceSystem';
 import { site } from '@/content/site';
 import { THEME_STORAGE_KEY, TEXT_SIZE_STORAGE_KEY } from '@/lib/storage-keys';
 import './globals.css';
@@ -105,7 +105,7 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
-        <VoiceCTADock />
+        <VoiceSystem />
         <ContactModal />
         <CalProvider />
         <PlausibleAnalytics />

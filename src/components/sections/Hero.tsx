@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import { BookCallButton } from '@/components/booking/BookCallButton';
 import { OpenContactSpeakingButton } from '@/components/sections/OpenContactSpeakingButton';
+import { HeroVoiceCTA } from '@/components/voice/HeroVoiceCTA';
 import { HeroWaveform } from './HeroWaveform';
 import { site } from '@/content/site';
 
@@ -45,6 +46,7 @@ export function Hero() {
           <BookCallButton intent="mentor" variant="secondary">
             Book mentorship
           </BookCallButton>
+          <HeroVoiceCTA />
         </div>
 
         <p className="text-muted mt-6 text-small">
