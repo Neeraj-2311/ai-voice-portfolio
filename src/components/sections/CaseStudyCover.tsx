@@ -7,6 +7,7 @@
  *   enterprise-voice-ai      layered horizontal waveform + node dots
  *   goreach                  document line stack + cursor caret
  *   sheets-voice-automation  small grid + flow arrow + handset glyph
+ *   talk-to-my-portfolio     microphone + radiating sound waves + listening agent node
  *
  * The covers are pure SVG, no JS animation. The CaseStudies wrapper
  * scales them subtly on hover for a "card responds" feel.
@@ -24,6 +25,8 @@ export function CaseStudyCover({ slug }: CoverProps) {
       return <GoReachCover />;
     case 'sheets-voice-automation':
       return <SheetsCover />;
+    case 'talk-to-my-portfolio':
+      return <TalkToPortfolioCover />;
     default:
       return <GenericCover />;
   }
@@ -211,6 +214,85 @@ function SheetsCover() {
         fill="none"
       >
         <path d="M2 6 L2 16 a4 4 0 0 0 4 4 L8 20 a2 2 0 0 0 2 -2 L10 14 a2 2 0 0 0 -1.4 -1.9 L6.5 11 a12 12 0 0 1 0 -2 L8.6 8 a2 2 0 0 0 1.4 -1.9 L10 2 a2 2 0 0 0 -2 -2 L6 0 a4 4 0 0 0 -4 4 L2 6 z" />
+      </g>
+    </ViewportWrap>
+  );
+}
+
+function TalkToPortfolioCover() {
+  // Microphone on the left (you talk), radiating sound waves through the
+  // middle (voice travels), agent node on the right holding a mini
+  // waveform (portfolio hears and responds). Reads as "talk to the
+  // portfolio and it listens" rather than a generic interface diagram.
+  const waveOriginX = 92;
+  const waveCy = 90;
+  const agentCx = 250;
+  const agentCy = 90;
+  const innerBars = [
+    { dx: -14, h: 10 },
+    { dx: -7, h: 18 },
+    { dx: 0, h: 24 },
+    { dx: 7, h: 16 },
+    { dx: 14, h: 10 },
+  ];
+
+  return (
+    <ViewportWrap>
+      {/* microphone */}
+      <g
+        transform="translate(54 90)"
+        stroke="var(--accent)"
+        strokeWidth="2.5"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="-9" y="-26" width="18" height="32" rx="9" />
+        <path d="M -16 -4 A 16 16 0 0 0 16 -4" />
+        <line x1="0" y1="12" x2="0" y2="24" />
+        <line x1="-8" y1="24" x2="8" y2="24" />
+      </g>
+
+      {/* radiating sound waves opening to the right */}
+      {[24, 40, 56, 72].map((r, i) => (
+        <path
+          key={i}
+          d={`M ${waveOriginX} ${waveCy - r} A ${r} ${r} 0 0 1 ${waveOriginX} ${waveCy + r}`}
+          stroke="var(--accent)"
+          strokeOpacity={0.55 - i * 0.1}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      ))}
+
+      {/* listening agent node on the right with internal mini waveform */}
+      <g transform={`translate(${agentCx} ${agentCy})`}>
+        <circle
+          r="36"
+          fill="none"
+          stroke="var(--accent)"
+          strokeOpacity="0.45"
+          strokeWidth="1.5"
+        />
+        <circle
+          r="28"
+          fill="var(--accent)"
+          fillOpacity="0.08"
+        />
+        {innerBars.map((b, i) => (
+          <line
+            key={i}
+            x1={b.dx}
+            y1={-b.h / 2}
+            x2={b.dx}
+            y2={b.h / 2}
+            stroke="var(--accent)"
+            strokeOpacity="0.9"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        ))}
       </g>
     </ViewportWrap>
   );

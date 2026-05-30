@@ -4,6 +4,8 @@ export const mentorshipSection = {
   eyebrow: 'For students & devs',
   heading: 'Want a second pair of eyes on your AI work?',
   sub: 'Free 30-minute calls. Bring a real problem and we will dig in.',
+  whyMeLine:
+    "I ship voice agents enterprises pay for. That means I can tell you which parts of the AI stack actually matter in production, and which tutorials are wasting your weekends.",
   topicsHeading: 'What we can dig into',
   primaryCtaLabel: 'Book a 30-min call',
   secondaryLine:
@@ -13,19 +15,19 @@ export const mentorshipSection = {
 export const mentorshipTopics: MentorshipTopic[] = [
   {
     id: 'roadmap',
-    label: 'AI career roadmap. What to build, what to learn, what to ignore.',
+    label: 'AI career roadmap: what to build, what to skip, what hiring managers actually look for.',
   },
   {
     id: 'voice-architecture',
-    label: 'Voice agent architecture review. Latency, eval, observability, scale.',
+    label: 'Voice agent architecture: latency budgets, eval harnesses, observability, multi-tenant scale.',
   },
   {
     id: 'portfolio',
-    label: 'Portfolio / resume feedback. Concrete edits, not generic advice.',
+    label: 'Portfolio and resume teardown: concrete edits, line by line.',
   },
   {
     id: 'open',
-    label: "Whatever you're stuck on.",
+    label: "Whatever you're stuck on. Bring the actual problem.",
   },
 ];
 

@@ -5,14 +5,14 @@ const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'hello@example.com';
 export const site: SiteConfig = {
   name: 'Neeraj',
   shortName: 'Neeraj',
-  tagline: 'Voice AI & full-stack engineer building agentic systems for enterprise.',
+  tagline: 'Voice agents that ship to enterprise, not just demos.',
   description:
-    'Voice AI and full-stack engineer. I build production voice agents, agentic systems, and full-stack AI products. Available for hire, mentorship, and speaking.',
+    'Voice AI engineer in London. Production agents with sub-second latency, GDPR-grade tenant isolation, and the full-stack to back them up. Available for hire, mentorship, and speaking.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   email: siteEmail,
   location: 'London, UK',
   availability: 'Open to full-time, fractional, and contract',
-  mostRecentLine: 'Most recently shipped a production voice AI platform at IntellifyAI · London.',
+  mostRecentLine: 'Shipped an enterprise voice AI platform at IntellifyAI, 1.2s median full-turn latency, multi-tenant on LiveKit and Azure AI Foundry.',
   current: {
     role: 'Full Stack Engineer (Contract)',
     company: 'IntellifyAI',

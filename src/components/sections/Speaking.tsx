@@ -1,17 +1,24 @@
 'use client';
 
 import { ArrowRight, Mic } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
 import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
-import { pastEvents, speakingFormats, speakingTopics } from '@/content/speaking';
+import {
+  pastEvents,
+  speakingFormats,
+  speakingSection,
+  speakingTopics,
+} from '@/content/speaking';
 import { openContactModal } from '@/lib/contact-modal-event';
 
 const isPlaceholder = (s: string) => s.includes('[TODO');
 
 export function Speaking() {
   const visiblePast = pastEvents.filter((e) => !isPlaceholder(e.name));
+  const banner = speakingSection.banner;
 
   return (
     <section
@@ -23,20 +30,59 @@ export function Speaking() {
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">
-            For event organizers
+            {speakingSection.eyebrow}
           </p>
           <h2 id="speaking-title" className="mt-3 text-balance">
-            Invite me to speak, mentor, or judge.
+            {speakingSection.heading}
           </h2>
-          <p className="text-muted mt-4 max-w-2xl text-pretty">
-            Hackathons, bootcamps, college sessions, AI workshops, founder panels. I bring
-            real production experience and an opinionated take on what&apos;s next in voice
-            and agents.
-          </p>
+          <p className="text-muted mt-4 max-w-2xl text-pretty">{speakingSection.sub}</p>
+        </SectionReveal>
+
+        {banner && (
+          <SectionReveal delay={0.05}>
+            <figure className="border-line mt-10 overflow-hidden rounded-2xl border md:mt-12">
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: '3 / 2' }}
+              >
+                <Image
+                  src={banner.src}
+                  alt={banner.alt}
+                  fill
+                  sizes="(min-width: 1024px) 80vw, 100vw"
+                  priority={false}
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+              {banner.caption ? (
+                <figcaption className="text-subtle bg-bg border-line border-t px-4 py-3 text-small">
+                  {banner.caption}
+                </figcaption>
+              ) : null}
+            </figure>
+          </SectionReveal>
+        )}
+
+        <SectionReveal delay={0.1}>
+          <div className="border-line bg-elevated mt-10 rounded-2xl border p-6 md:mt-12 md:p-8">
+            <p className="text-fg text-pretty">{speakingSection.whyMeLine}</p>
+            <ul className="mt-5 grid gap-3 md:grid-cols-3">
+              {speakingSection.whatIBring.map((line, i) => (
+                <li key={i} className="text-muted flex items-start gap-2 text-small">
+                  <span
+                    aria-hidden="true"
+                    className="bg-accent/40 mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+                  />
+                  <span className="text-pretty">{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </SectionReveal>
 
         <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-2">
-          <SectionReveal delay={0.05}>
+          <SectionReveal delay={0.15}>
             <h3 className="text-fg text-small font-medium uppercase tracking-wide">
               Formats I take
             </h3>
@@ -56,7 +102,7 @@ export function Speaking() {
             </ul>
           </SectionReveal>
 
-          <SectionReveal delay={0.1}>
+          <SectionReveal delay={0.2}>
             <h3 className="text-fg text-small font-medium uppercase tracking-wide">
               Topics
             </h3>
@@ -74,7 +120,7 @@ export function Speaking() {
         </div>
 
         {visiblePast.length > 0 && (
-          <SectionReveal delay={0.15}>
+          <SectionReveal delay={0.25}>
             <div className="mt-12">
               <h3 className="text-fg text-small font-medium uppercase tracking-wide">
                 Past events
@@ -96,7 +142,7 @@ export function Speaking() {
           </SectionReveal>
         )}
 
-        <SectionReveal delay={0.2}>
+        <SectionReveal delay={0.3}>
           <div className="border-line mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-6 md:p-8">
             <div>
               <h3 className="text-fg inline-flex items-center gap-2">

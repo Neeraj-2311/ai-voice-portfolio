@@ -1,23 +1,23 @@
 ## The problem
 
-LinkedIn content tools generate generic AI slop. The output sounds nothing like the person posting it, and most teams either give up after a week or end up rewriting everything anyway. The real problem isn't generation. It's matching voice. And matching voice is a retrieval problem before it's a generation problem.
+LinkedIn content tools generate generic AI slop. The output sounds nothing like the person posting it, and most teams either give up after a week or end up rewriting everything anyway. The real problem isn't generation. It's matching voice. And matching voice is a retrieval problem before it is a generation problem.
 
 ## The approach
 
-GoReach treats every user's past writing as the source of truth. The system ingests your writing samples, builds a personal RAG index over them, and uses that index to ground every generation in your actual phrasing, sentence rhythm, and topic preferences. Prompts are layered: a base writer prompt, a voice-matching prompt grounded in retrieved samples, and a topic-specific prompt for the post angle.
+GoReach treats every user's past writing as the source of truth. The system ingests writing samples, builds a personal RAG index over them, and grounds every generation in the user's actual phrasing, sentence rhythm, and topic preferences. Prompts are layered: a base writer prompt, a voice-matching prompt grounded in retrieved samples, and a topic-specific prompt for the post angle.
 
-The full stack is mine end-to-end: Next.js on the front, FastAPI on the back, AWS for infra, GitHub Actions for CI/CD with Docker. CI/CD ships changes to production on every merge to main with no manual steps.
+The full stack is mine end-to-end. Next.js on the front, FastAPI on the back, AWS for infra, GitHub Actions for CI/CD with Docker. Every merge to main ships to production with no manual steps.
 
 ## Tech decisions worth noting
 
-- **FastAPI over Next.js API routes for the AI layer.** Easier to scale the inference and retrieval workloads independently of the UI.
-- **RAG over fine-tuning for voice matching.** Cheaper to update, easier to debug, and the retrieved context is visible in the output for trust.
+- **Chose FastAPI over Next.js API routes for the AI layer.** Scales inference and retrieval workloads independently of the UI.
+- **Picked RAG over fine-tuning for voice matching.** Cheaper to update, easier to debug, and the retrieved context is visible in the output for trust.
 - **Self-hosted on AWS rather than a managed AI platform.** Full control over latency, cost, and data flow.
 
 ## Outcome
 
-[TODO: Neeraj] Traction metrics. Sign-ups, posts generated, active users, retention, etc. Even early numbers are fine: "live since July 2025, X users, Y posts generated".
+Live since 28 April 2026. 102+ users, 300+ posts generated, with an LLM eval and user feedback loop driving prompt and pipeline iteration week over week. Still actively building, not feature-frozen.
 
 ## What I learned
 
-The hardest part of building a personalisation product is not the model. It's the cold-start problem. Users land with no writing samples and want quality output immediately. We solved it with a guided "writing sample" onboarding that asks for three short paragraphs in their voice. The flow took longer to design than the rest of the generation pipeline.
+The hardest part of building a personalisation product is not the model. It's the cold-start problem. Users land with no writing samples and want quality output immediately. Solved it with a guided onboarding that asks for three short paragraphs in their voice. That flow took longer to design than the rest of the generation pipeline.
