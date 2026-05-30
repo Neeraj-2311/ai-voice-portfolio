@@ -172,6 +172,31 @@ export function VoiceSystem() {
     return () => window.clearTimeout(t);
   }, [initialPulse]);
 
+  // Global "press / to talk" shortcut. Ignore the key while a field is
+  // focused or any modifier is held, so we don't break form typing or
+  // browser search.
+  const sessionStateRef = useRef(session.state);
+  useEffect(() => {
+    sessionStateRef.current = session.state;
+  }, [session.state]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+      const target = e.target as HTMLElement | null;
+      if (
+        target?.matches('input, textarea, select, [contenteditable="true"]')
+      ) {
+        return;
+      }
+      if (sessionStateRef.current !== 'idle') return;
+      e.preventDefault();
+      void session.start(textMode);
+      setInitialPulse(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [session, textMode]);
+
   const uiState =
     feedbackPayload != null
       ? 'thank-you'

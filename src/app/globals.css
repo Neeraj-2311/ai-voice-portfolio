@@ -241,20 +241,28 @@
 /* =========================================================================
    Section padding utility. Spec 6.x sections need consistent vertical room.
    ========================================================================= */
-/* Hero signature waveform animation. */
-.hero-waveform-bar {
-  animation: hero-waveform-pulse 2.4s ease-in-out infinite;
-  transform-origin: center bottom;
+/* Hero CTA-area pulse-wave strip. Each bar pulses scaleY on a loop;
+   staggered delays in the JSX make a phantom traveling wave across
+   the fixed-position bars. transform-origin center so the pulse
+   appears mirrored (bar grows out and shrinks back symmetrically). */
+.hero-wave-bar {
+  animation: hero-wave-pulse 1.6s ease-in-out infinite;
+  transform-origin: center;
 }
-@keyframes hero-waveform-pulse {
+@keyframes hero-wave-pulse {
   0%,
   100% {
-    transform: scaleY(0.4);
-    opacity: 0.45;
+    transform: scaleY(0.32);
+    opacity: 0.55;
   }
   50% {
     transform: scaleY(1);
     opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-wave-bar {
+    animation: none;
   }
 }
 

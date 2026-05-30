@@ -11,7 +11,7 @@ export const site: SiteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   email: siteEmail,
   location: 'London, UK',
-  availability: 'Available from 7 May 2026 · open to full-time, fractional, and contract',
+  availability: 'Open to full-time, fractional, and contract',
   mostRecentLine: 'Most recently shipped a production voice AI platform at IntellifyAI · London.',
   current: {
     role: 'Full Stack Engineer (Contract)',
