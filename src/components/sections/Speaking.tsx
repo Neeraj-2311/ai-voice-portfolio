@@ -4,6 +4,7 @@ import { ArrowRight, Mic } from 'lucide-react';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { pastEvents, speakingFormats, speakingTopics } from '@/content/speaking';
 import { openContactModal } from '@/lib/contact-modal-event';
 
@@ -16,8 +17,9 @@ export function Speaking() {
     <section
       id="speaking"
       aria-labelledby="speaking-title"
-      className="section-y bg-section"
+      className="section-y bg-section relative isolate overflow-hidden"
     >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">

@@ -4,12 +4,18 @@ import { BookCallButton } from '@/components/booking/BookCallButton';
 import { LinkedinIcon } from '@/components/primitives/BrandIcon';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { hireEngagementTypes, hireSection, hireTrustLine } from '@/content/hire';
 import { site } from '@/content/site';
 
 export function Hire() {
   return (
-    <section id="hire" aria-labelledby="hire-title" className="section-y">
+    <section
+      id="hire"
+      aria-labelledby="hire-title"
+      className="section-y relative isolate overflow-hidden"
+    >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">

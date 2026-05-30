@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { CaseStudyCover } from '@/components/sections/CaseStudyCover';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
 import { TechBadge } from '@/components/primitives/TechBadge';
 import { caseStudies } from '@/content/case-studies';
@@ -10,8 +11,9 @@ export function CaseStudies() {
     <section
       id="case-studies"
       aria-labelledby="case-studies-title"
-      className="section-y"
+      className="section-y relative isolate overflow-hidden"
     >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">

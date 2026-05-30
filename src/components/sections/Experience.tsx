@@ -1,6 +1,7 @@
 import { Briefcase, MapPin } from 'lucide-react';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
 import { TechBadge } from '@/components/primitives/TechBadge';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { experience } from '@/content/experience';
 
 export function Experience() {
@@ -8,8 +9,9 @@ export function Experience() {
     <section
       id="experience"
       aria-labelledby="experience-title"
-      className="section-y bg-section"
+      className="section-y bg-section relative isolate overflow-hidden"
     >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">Track record</p>

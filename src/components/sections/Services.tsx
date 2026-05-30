@@ -2,12 +2,18 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardBody, CardHeader, CardTitle } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { services } from '@/content/services';
 import { getIcon } from '@/lib/icons';
 
 export function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="section-y">
+    <section
+      id="services"
+      aria-labelledby="services-title"
+      className="section-y relative isolate overflow-hidden"
+    >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">What I do</p>

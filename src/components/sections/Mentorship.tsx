@@ -2,6 +2,7 @@ import { Check, Sparkles } from 'lucide-react';
 import { BookCallButton } from '@/components/booking/BookCallButton';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import {
   mentorshipCredibility,
   mentorshipSection,
@@ -19,8 +20,9 @@ export function Mentorship() {
     <section
       id="mentorship"
       aria-labelledby="mentorship-title"
-      className="section-y bg-section"
+      className="section-y bg-section relative isolate overflow-hidden"
     >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">

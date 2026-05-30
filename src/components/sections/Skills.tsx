@@ -1,10 +1,16 @@
 import { SectionReveal } from '@/components/primitives/SectionReveal';
 import { TechBadge } from '@/components/primitives/TechBadge';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { skillGroups } from '@/content/skills';
 
 export function Skills() {
   return (
-    <section id="skills" aria-labelledby="skills-title" className="section-y">
+    <section
+      id="skills"
+      aria-labelledby="skills-title"
+      className="section-y relative isolate overflow-hidden"
+    >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">Stack</p>

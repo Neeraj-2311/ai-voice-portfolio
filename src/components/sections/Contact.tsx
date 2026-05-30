@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
+import { CursorSpotlight } from '@/components/sections/CursorSpotlight';
 import { site } from '@/content/site';
 
 export function Contact() {
@@ -8,8 +9,9 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="section-y bg-section"
+      className="section-y bg-section relative isolate overflow-hidden"
     >
+      <CursorSpotlight />
       <div className="mx-auto w-full max-w-3xl px-4 md:px-6">
         <SectionReveal>
           <p className="text-accent text-small font-medium uppercase tracking-wide">Get in touch</p>
