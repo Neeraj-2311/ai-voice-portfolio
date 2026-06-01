@@ -273,21 +273,21 @@ export default function SpeakingPage() {
         )}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/85"
+          className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65"
         />
 
         <div className="relative mx-auto w-full max-w-3xl px-4 md:px-6">
           <SectionReveal>
-            <div className="rounded-2xl p-6 text-center md:p-10">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-center shadow-2xl backdrop-blur-xl md:p-10">
               <h2 className="text-balance text-white">Got an event in mind?</h2>
-              <p className="mt-3 mx-auto max-w-2xl text-pretty text-white/80">
+              <p className="mt-3 mx-auto max-w-2xl text-pretty text-white/85">
                 Share format, audience, date, and any travel constraints. I&apos;ll get back
                 within a few days.
               </p>
               <div className="mt-6 inline-flex">
                 <OpenContactSpeakingButton />
               </div>
-              <p className="mt-3 inline-flex items-center gap-1 text-small text-white/60">
+              <p className="mt-3 inline-flex items-center gap-1 text-small text-white/65">
                 Opens the contact form pre-filled with the speaking intent.
                 <ArrowRight className="h-3 w-3" aria-hidden="true" />
               </p>

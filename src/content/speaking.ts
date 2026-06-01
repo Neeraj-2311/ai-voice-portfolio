@@ -34,20 +34,23 @@ export const speakingSection = {
    */
   gallery: [
     {
-      src: '/images/speaking/stage-banner.jpg',
-      alt: 'Neeraj on stage facing an audience',
-      format: 'in-person',
-    },
-    // Temporary placeholders so the 3-column collage is filled.
-    // Replace with real event / webinar photos as they are added.
-    {
-      src: '/images/speaking/stage-banner.jpg',
-      alt: '',
+      src: '/images/speaking/img1.png',
+      alt: 'Speaking session moment',
       format: 'in-person',
     },
     {
-      src: '/images/speaking/stage-banner.jpg',
-      alt: '',
+      src: '/images/speaking/img2.png',
+      alt: 'Speaking session moment',
+      format: 'in-person',
+    },
+    {
+      src: '/images/speaking/img3.png',
+      alt: 'Speaking session moment',
+      format: 'in-person',
+    },
+    {
+      src: '/images/speaking/img4.jpg',
+      alt: 'Speaking session moment',
       format: 'in-person',
     },
   ] as Array<{ src: string; alt: string; caption?: string; format?: 'in-person' | 'virtual' }>,
