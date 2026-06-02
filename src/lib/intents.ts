@@ -22,11 +22,10 @@ export const intents: Intent[] = ['hire', 'mentorship', 'speaking', 'other'];
 
 export const contactFormSchema = z.object({
   intent: z.enum(['hire', 'mentorship', 'speaking', 'other']),
-  name: z.string().trim().min(2, 'Please enter your name').max(100),
-  email: z.string().trim().email('Please enter a valid email'),
+  name: z.string().min(2, 'Please enter your name').max(100),
+  email: z.email('Please enter a valid email'),
   message: z
     .string()
-    .trim()
     .min(10, 'Please share at least a short message')
     .max(2000, 'Please keep this under 2000 characters'),
   /** Honeypot. Must remain empty. */

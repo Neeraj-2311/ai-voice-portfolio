@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
-import { type FieldError, type Path, useForm, useWatch } from 'react-hook-form';
+import { type FieldError, type Path, useForm, useWatch, Controller } from 'react-hook-form';
 import { AnimatePresence, motion } from 'framer-motion';
 import { submitContactAction } from '@/actions/contact';
 import { LinkedinIcon, XIcon } from '@/components/primitives/BrandIcon';
@@ -36,7 +36,6 @@ export function ContactForm({
   const {
     register,
     handleSubmit,
-    getValues,
     control,
     reset,
     setError,
@@ -51,19 +50,16 @@ export function ContactForm({
     mode: 'onBlur',
   });
 
-  const intent = useWatch({ control, name: 'intent' });
-
-  const handleIntentChange = (next: Intent) => {
-    const { name, email, message } = getValues();
-    reset({ ...contactDefaultValues, intent: next, name, email, message });
-  };
+  const watchedIntent = useWatch({ control, name: 'intent' });
+  const intent: Intent = watchedIntent ?? initialIntent ?? 'hire';
 
   const onSubmit = handleSubmit((data) => {
     setErrorMessage(null);
     setPhase('launching');
+    const payload = { ...data, intent: data.intent ?? 'hire' };
     startTransition(async () => {
       const [result] = await Promise.all([
-        submitContactAction(data),
+        submitContactAction(payload),
         // Hold the rocket animation so it always plays in full.
         new Promise((resolve) => setTimeout(resolve, 1600)),
       ]);
@@ -128,26 +124,20 @@ export function ContactForm({
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             <fieldset disabled={isPending} className="space-y-5">
-              <IntentPicker
-                value={intent}
-                onChange={handleIntentChange}
-                compact={variant === 'compact'}
+              <Controller
+                name="intent"
+                control={control}
+                render={({ field }) => (
+                  <IntentPicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    compact={variant === 'compact'}
+                  />
+                )}
               />
 
               <input
-                type="text"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  left: '-10000px',
-                  top: 'auto',
-                  width: '1px',
-                  height: '1px',
-                  opacity: 0,
-                  pointerEvents: 'none',
-                }}
+                type="hidden"
                 {...register('website')}
               />
 
@@ -181,6 +171,7 @@ export function ContactForm({
                   className={inputClass(!!errors.message)}
                 />
               </Field>
+
 
               {errorMessage && (
                 <p
