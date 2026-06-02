@@ -6,9 +6,9 @@ An enterprise voice AI platform needed to do three things that most off-the-shel
 
 ## The approach
 
-I architected the backend from zero with the founder, then led a small team of senior engineers through the build. The main platform is a Node.js and Express service in TypeScript handling business logic, RBAC, admin tooling, and tenant management. The voice agent runtime is a separate Python service on LiveKit handling realtime media and turn-taking, with Azure AI Foundry behind the LLM and retrieval calls. Tool-use and external integrations run on a single shared runtime so context stays coherent across a call.
+I architected the backend from zero with the founder, then led a small team of senior engineers through the build. The main platform is a Node.js and Express service in TypeScript handling business logic, RBAC, admin tooling, and tenant management. The voice agent runtime is a separate Python service on LiveKit handling realtime media and turn-taking, with Azure AI Foundry behind the LLM and retrieval calls. Tools and external integrations all run on a single shared runtime so the agent's context stays coherent across a call.
 
-Multi-tenancy is enforced end to end and verified under load. Onboarding a tenant is automated rather than a manual ops job. Access control sits on top of all of this as an RBAC layer I designed and built independently, so every action across the platform passes through a role and permission check before it reaches data or tools.
+I enforced multi-tenancy end to end across the platform. Tenant onboarding is automated rather than a manual ops job, with a per-tenant Azure rollout I built in Python so each new customer is a repeatable pipeline. On top of all of this sits the RBAC layer I designed and built independently, so every action across the platform passes through a role and permission check before it reaches data or tools.
 
 ## Tech decisions worth noting
 
@@ -20,11 +20,33 @@ Multi-tenancy is enforced end to end and verified under load. Onboarding a tenan
 
 ## Outcome
 
-- Shipped to enterprise production before contract end.
-- Held ~1.2s median full-turn latency end to end (STT, LLM, TTS, VAD combined), with sub-second numbers on individual stages.
-- Load tested at roughly 10 concurrent tenants with isolation verified across data, runtime, and deployment.
-- Met the enterprise security bar with the multi-tenant model and RBAC layer intact.
+- We shipped to enterprise production before contract end.
+- The platform held ~1.2s median full-turn latency end to end (STT, LLM, TTS, VAD combined), with sub-second numbers on individual stages.
+- The testing team load-tested the platform at roughly 10 concurrent tenants and verified isolation across data, runtime, and deployment.
+- It met the enterprise security bar with the multi-tenant model and RBAC layer intact.
+- I led the senior engineering team through delivery, then guided them after launch so they could own the platform once I rolled off.
+
+<figure>
+  <img
+    src="/images/case-studies/voice-1.png"
+    alt="A horizontal stacked bar visualising a 1.2 second voice conversational turn budget, broken into four labelled segments left to right: STT, LLM, TTS, VAD. A timeline above the bar marks 0 ms on the left and 1200 ms on the right. To the right of the bar, a bold 1.2s label with the caption 'median full-turn latency'."
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>The full-turn latency budget, broken down across STT, LLM, TTS, and VAD.</figcaption>
+</figure>
 
 ## What I learned
 
-The hardest engineering was not the model layer. It was making the orchestration deterministic enough to debug. Voice agents fail in ways text agents do not: silence, partial speech, barge-in mid-tool-call, network jitter that looks like a user hanging up. Off-the-shelf eval tooling does not cover these failure modes yet, so a meaningful chunk of senior engineering time goes into closing that gap. That is what made the difference between a demo and something an enterprise will actually run.
+The hardest engineering for me was not the model layer. It was making the orchestration deterministic enough to debug. Voice agents fail in ways text agents do not: silence, partial speech, barge-in mid-tool-call, network jitter that looks like a user hanging up. Off-the-shelf eval tooling does not cover these failure modes yet, so a meaningful chunk of my engineering time went into closing that gap. That is what made the difference between a demo and something an enterprise will actually run.
+
+<figure>
+  <img
+    src="/images/case-studies/voice-2.png"
+    alt="A diagram of multi-tenant isolation. Three labelled rounded rectangles arranged horizontally for Tenant A, Tenant B, and Tenant C, each visually separated to emphasise isolation. Above all three, a single horizontal bar labelled RBAC layer spans the full width with a small lock icon. Below all three, a foundation labelled 'Per-tenant Azure deployment, automated rollout'."
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>RBAC on top, isolated tenants in the middle, automated per-tenant Azure rollout underneath.</figcaption>
+</figure>
+

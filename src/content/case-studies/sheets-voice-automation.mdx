@@ -1,27 +1,62 @@
+Customer records lived in Google Sheets. The automation had to start there.
+
 ## The context
 
-Built at Mindcraft as one of three voice automation flows I shipped there, alongside a wider portfolio of Python scripts, Node microservices, and low-code workflows aimed at cutting operational time. The voice agent itself ran on a whitelabel platform (ElevenLabs / Retell). The engineering story is the orchestration around it.
+I built this at Mindcraft Labs for a client whose support team ran their entire customer record system from a Google Sheets workbook. Pending payments, incomplete purchases, follow-ups, post-call notes. Everything sat in one workbook the team had already shaped to fit their process. Moving it to a CRM was off the table. They wanted automation that met them where they already worked.
+
+This was one of three voice AI platforms I built at Mindcraft, each whitelabelled and customised for a different client's internal process. The other two platforms ran on Retell AI; this one ran on ElevenLabs. Sheets-to-call was an add-on automation I layered onto the ElevenLabs platform, not a separate product. The engineering story is the orchestration around the voice agent, not the agent itself.
 
 ## The problem
 
-A small team needed to call hundreds of contacts to qualify leads, gather a few structured fields per call, and update their CRM. They didn't have headcount for it. Off-the-shelf dialers lacked decent voice agents, and the voice agent platforms didn't integrate cleanly with where the data actually lived: Google Sheets.
+The team had hundreds of customers in the sheet flagged for follow-up. Pending payments. Purchases that never closed. Feedback to collect after a recent interaction. Doing this manually meant a support person opened the workbook, picked rows, dialled each number, ran a short script, and typed the outcome back into the row.
+
+The bottleneck was not the conversation. It was the cost of one person sitting on the phone all day to keep the sheet up to date.
 
 ## The approach
 
-Built a thin orchestration layer that treats Google Sheets as the source of truth for the contact list and the destination for outcomes. A Python worker reads the sheet, queues calls through a telephony provider, hands each call to the whitelabel voice agent with the contact's row context injected as a system prompt, then captures the structured outcome and writes it back to the sheet in real time.
+I built a thin Python orchestration layer that treats the sheet as both the source of truth and the destination for outcomes. A new row added to the tracked sheet triggers the flow: read the row, push the customer ID and contextual fields into the call initiation payload, hand the call off to the whitelabel voice agent, and wait for the post-call webhook.
 
-The agent opens the call with the contact's name and reason for calling, runs through a short script, listens for objections, and ends with a structured handoff that the worker parses into sheet columns. Failures (no answer, voicemail, hung up, gatekeeper) are logged with reason codes so the team can re-target manually.
+When the call ends, the platform fires a webhook with the structured data the agent captured: confirmations, final amounts, agreed dates, anything the script asked for. My worker parses the payload, matches the customer ID back to the original row, and writes each field into the correct column. I save a short summary and the full transcript alongside for transparency and audit.
+
+I handle failures explicitly. If the JSON breaks or the agent fumbles a field, the status column is marked and the row is held for human intervention rather than overwritten with bad data. The transcript and summary stay attached so a human can verify in seconds.
+
+Calls run in parallel. The team adds rows, the calls happen, the sheet fills in. The workflow shifts from dialling to reviewing.
+
+<figure>
+  <img
+    src="/images/case-studies/sheets-1.png"
+    alt='A diagram showing a Google Sheets workbook on the left feeding rows into a voice agent labeled "Voice agent (Retell / ElevenLabs)" in the centre, which emits a JSON webhook payload on the right that flows back into the same workbook updating the row columns. A thin glowing customer ID thread runs through all four stages.'
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>Customer ID is the contract end to end. For this client I used ElevenLabs; the pattern is platform-agnostic.</figcaption>
+</figure>
 
 ## Tech decisions worth noting
 
-- **Used Google Sheets as the database.** Terrible at scale, perfect for a 200-row campaign and zero onboarding for the team.
-- **Constrained the voice agent to strict structured output.** Every call ends by emitting JSON the worker parses. No LLM-judges-the-call ambiguity.
-- **Ran a cron-driven worker rather than a UI.** Fewer moving parts, easy to debug, runs reliably overnight.
+- **Google Sheets as the database, deliberately.** Terrible at scale, perfect for a few-hundred-row campaign. Zero migration, zero retraining. The team kept their workflow and gained the automation on top of it.
+- **Customer ID as the join key end to end.** Every call is initiated with the customer ID injected into the agent's session context. The webhook returns it. That single ID is the contract between sheet, agent, and writeback. No fuzzy matching on names or phone numbers, no rows getting crossed. This was the failure mode that mattered most, and the ID-as-contract design is what made it disappear.
+- **Strict structured output from the agent.** Every call ends by emitting a JSON object with the fields the worker expects. The conversation is free-form. The handoff is rigid.
+- **Explicit failure path with human review.** Bad JSON does not get retried into the sheet. It marks status, preserves the transcript, and waits for a human. Data correctness beats automation coverage.
+- **Whitelabel voice platform over building from scratch.** ElevenLabs already gave the client what they needed at the call layer. Building the voice runtime ourselves would have been engineering effort for no client value. The interesting work was the orchestration around it.
 
 ## Outcome
 
-Handled ~100 calls in a single bulk campaign, cutting a multi-day manual dialing process into an overnight batch. Operators stopped touching the dialer and started reviewing a sheet of structured outcomes the next morning. Reused the same orchestration pattern across two further Mindcraft automation flows.
+Calls now run in parallel as rows are added. The team's day shifted from making calls to reviewing rows the next morning. A support role's worth of dialling time was absorbed into the automation. The same orchestration pattern I built here, sheet as source plus voice agent plus structured webhook back, became a template I reused across other Mindcraft automation work for adjacent clients.
 
 ## What I learned
 
-For cold calls, voice agent quality matters less than people think. What matters is the structured output contract and the recovery path when things go off-script. Most engineering time went into handling failure modes, silence, wrong number, gatekeeper, rather than improving the conversation itself.
+For re-engagement calling, voice quality matters less than people expect. What actually matters is the contract between the agent and the system holding the data. Identity has to be carried end to end. Failure has to be loud and recoverable. Transparency has to be free.
+
+The other thing the project sharpened: a lot of operational teams have a workflow that already works, just slowly. They do not want a new tool. They want the slow part replaced and the rest left alone. At Mindcraft my role was Full Stack AI Developer, previously titled Augmented Developer, and a lot of that work was exactly this shape: full-stack product when needed, but more often converting a complex manual workflow into a simple AI-driven process without making the team relearn anything. Sheets-to-call is the cleanest example of that pattern.
+
+<figure>
+  <img
+    src="/images/case-studies/sheets-2.png"
+    alt="A Google Sheets workbook viewed at an angle with multiple rows highlighted in purple. Six handset icons fan out to the right, representing parallel calls. Two rows already show green checkmarks under a Completed column, indicating outcomes have written back."
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>Rows go out, structured outcomes come back. The team reviews instead of dials.</figcaption>
+</figure>
+

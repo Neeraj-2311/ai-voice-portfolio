@@ -7,6 +7,7 @@ import { caseStudies } from '@/content/case-studies';
 import type { ComponentType } from 'react';
 
 const mdxModules: Record<string, () => Promise<{ default: ComponentType }>> = {
+  'talk-to-my-portfolio': () => import('@/content/case-studies/talk-to-my-portfolio.mdx'),
   'enterprise-voice-ai': () => import('@/content/case-studies/enterprise-voice-ai.mdx'),
   goreach: () => import('@/content/case-studies/goreach.mdx'),
   'sheets-voice-automation': () =>
