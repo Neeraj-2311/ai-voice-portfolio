@@ -400,3 +400,55 @@ input[type='time']::-webkit-calendar-picker-indicator:hover {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
+
+/* Case study cover hover animations.
+   Animations are defined-but-paused by default. The parent `.group:hover`
+   on the card link flips animation-play-state to running, so motion only
+   plays during interaction. */
+
+.cover-anim {
+  animation-play-state: paused;
+}
+
+.group:hover .cover-anim {
+  animation-play-state: running;
+}
+
+@keyframes cover-bar-pulse {
+  0%, 100% { transform: scaleY(0.55); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes cover-cursor-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0.15; }
+}
+
+@keyframes cover-arrow-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@keyframes cover-handset-shake {
+  0%, 100% { transform: rotate(0deg); }
+  20%, 60% { transform: rotate(-9deg); }
+  40%, 80% { transform: rotate(9deg); }
+}
+
+@keyframes cover-wave-emit {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.08; }
+}
+
+@keyframes cover-cell-flow {
+  0%, 100% { fill: var(--text-secondary); fill-opacity: 0.18; }
+  15%, 35% { fill: var(--accent); fill-opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-anim,
+  .group:hover .cover-anim {
+    animation-play-state: paused !important;
+    animation: none !important;
+  }
+}

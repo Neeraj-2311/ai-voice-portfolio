@@ -18,7 +18,7 @@ export const hireEngagementTypes: HireEngagementType[] = [
     id: 'project',
     title: 'Voice AI from spec to production',
     description:
-      'Take a voice agent from whiteboard to enterprise-ready. LiveKit, Azure AI Foundry, FastAPI, Next.js. Sub-second stage latency, tenant isolation, eval harness, observability, handoff docs. Delivered, not demoed.',
+      'Take a voice agent from whiteboard to enterprise-ready. LiveKit, Azure AI Foundry, Node.js, FastAPI, Next.js. Sub-second stage latency, tenant isolation, eval harness, observability, handoff docs. Delivered, not demoed.',
   },
   {
     id: 'fractional',

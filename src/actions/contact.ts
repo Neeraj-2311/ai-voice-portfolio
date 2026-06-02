@@ -74,32 +74,12 @@ export async function submitContactAction(input: unknown): Promise<ContactAction
 }
 
 function formatPlainText(data: ContactFormValues): string {
-  const lines: string[] = [
+  return [
     `Intent: ${data.intent}`,
     `Name: ${data.name}`,
     `Email: ${data.email}`,
     '',
-  ];
-
-  if (data.intent === 'hire') {
-    if (data.company) lines.push(`Company: ${data.company}`);
-    if (data.projectType) lines.push(`Project type: ${data.projectType}`);
-    if (data.timeline) lines.push(`Timeline: ${data.timeline}`);
-    if (data.budgetRange) lines.push(`Budget: ${data.budgetRange}`);
-  } else if (data.intent === 'mentorship') {
-    if (data.helpWith) lines.push(`What they want help with: ${data.helpWith}`);
-    if (data.level) lines.push(`Level: ${data.level}`);
-    if (data.preferredFormat) lines.push(`Preferred format: ${data.preferredFormat}`);
-  } else if (data.intent === 'speaking') {
-    if (data.eventName) lines.push(`Event: ${data.eventName}`);
-    if (data.organizer) lines.push(`Organizer: ${data.organizer}`);
-    if (data.eventDate) lines.push(`Date: ${data.eventDate}`);
-    if (data.eventFormat) lines.push(`Format: ${data.eventFormat}`);
-    if (data.eventLocation) lines.push(`Location: ${data.eventLocation}`);
-    if (data.audienceSize) lines.push(`Audience size: ${data.audienceSize}`);
-    if (data.topic) lines.push(`Topic: ${data.topic}`);
-  }
-
-  lines.push('', 'Message:', data.message);
-  return lines.join('\n');
+    'Message:',
+    data.message,
+  ].join('\n');
 }

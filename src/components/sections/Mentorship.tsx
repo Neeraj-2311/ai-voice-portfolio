@@ -34,7 +34,13 @@ export function Mentorship() {
           <p className="text-muted mt-4 max-w-2xl text-pretty">{mentorshipSection.sub}</p>
         </SectionReveal>
 
-        <SectionReveal delay={0.05}>
+        <SectionReveal delay={0.04}>
+          <blockquote className="border-accent mt-8 max-w-2xl border-l-2 py-1 pl-5 md:mt-10">
+            <p className="text-fg text-pretty">{mentorshipSection.whyMeLine}</p>
+          </blockquote>
+        </SectionReveal>
+
+        <SectionReveal delay={0.08}>
           <div className="mt-10 md:mt-12">
             <p className="text-fg text-small font-medium uppercase tracking-wide">
               {mentorshipSection.topicsHeading}
@@ -57,11 +63,20 @@ export function Mentorship() {
           </div>
         </SectionReveal>
 
-        <SectionReveal delay={0.1}>
+        <SectionReveal delay={0.12}>
           <div className="mt-10 flex flex-col items-start gap-3 md:mt-12">
-            <BookCallButton intent="mentor" variant="primary">
-              {mentorshipSection.primaryCtaLabel}
-            </BookCallButton>
+            <div className="flex flex-wrap items-center gap-3">
+              <BookCallButton intent="mentor" variant="primary">
+                {mentorshipSection.primaryCtaLabel}
+              </BookCallButton>
+              <span className="bg-accent/10 text-accent inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-small font-medium">
+                <span
+                  aria-hidden="true"
+                  className="bg-accent inline-block h-1.5 w-1.5 rounded-full"
+                />
+                Free
+              </span>
+            </div>
             <p className="text-subtle text-small max-w-2xl text-pretty">
               {mentorshipSection.secondaryLine}
             </p>
@@ -69,7 +84,7 @@ export function Mentorship() {
         </SectionReveal>
 
         {visibleTestimonials.length > 0 && (
-          <SectionReveal delay={0.15}>
+          <SectionReveal delay={0.16}>
             <div className="mt-16 grid gap-5 md:grid-cols-2">
               {visibleTestimonials.map((t) => (
                 <Card key={t.id}>

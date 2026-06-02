@@ -6,7 +6,7 @@ An enterprise voice AI platform needed to do three things that most off-the-shel
 
 ## The approach
 
-I architected the backend from zero with the founder, then led a small team of senior engineers through the build. The runtime is a Python orchestration layer on LiveKit handling realtime media and turn-taking, with Azure AI Foundry behind the LLM and retrieval calls. Tool-use and external integrations run on a single shared runtime so context stays coherent across a call.
+I architected the backend from zero with the founder, then led a small team of senior engineers through the build. The main platform is a Node.js and Express service in TypeScript handling business logic, RBAC, admin tooling, and tenant management. The voice agent runtime is a separate Python service on LiveKit handling realtime media and turn-taking, with Azure AI Foundry behind the LLM and retrieval calls. Tool-use and external integrations run on a single shared runtime so context stays coherent across a call.
 
 Multi-tenancy is enforced end to end and verified under load. Onboarding a tenant is automated rather than a manual ops job. Access control sits on top of all of this as an RBAC layer I designed and built independently, so every action across the platform passes through a role and permission check before it reaches data or tools.
 
@@ -14,8 +14,8 @@ Multi-tenancy is enforced end to end and verified under load. Onboarding a tenan
 
 - **LiveKit over raw WebRTC.** Realtime primitives and turn-taking are battle-tested, and the deployment model fit the security posture we needed.
 - **Azure AI Foundry for the LLM layer.** Aligned with the cloud enterprise buyers already trust, which keeps procurement and security review tractable.
-- **Python for the agent runtime.** Strongest agentic and RAG ecosystem, and latency budgets held at the scale we needed.
-- **TypeScript and Next.js for the dashboard.** Clean API boundary, faster UI iteration, separate deploy cadence from the agent runtime.
+- **TypeScript end to end above the agent runtime.** Node.js and Express for the main platform, Next.js for the dashboard. One language for business logic, RBAC, admin, and UI.
+- **Python kept tight on the agent runtime and pipelines.** Strongest agentic and RAG ecosystem for the voice layer, and the right fit for the deployment automation. Latency budgets held at the scale we needed.
 - **Docker everywhere.** Same image, same behaviour, from local to staging to per-tenant production.
 
 ## Outcome

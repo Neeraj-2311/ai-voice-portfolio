@@ -13,11 +13,14 @@ export function Skills() {
       <CursorSpotlight />
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         <SectionReveal>
-          <p className="text-accent text-small font-medium uppercase tracking-wide">Stack</p>
+          <p className="text-accent text-small font-medium uppercase tracking-wide">
+            Stack
+          </p>
           <h2 id="skills-title" className="mt-3 text-balance">
             Tools I reach for.
           </h2>
           <p className="text-muted mt-4 max-w-2xl text-pretty">
+            TypeScript on Node and Next.js for product, Python for AI, RAG, and voice.
             Hover any badge for a quick note on how I&apos;ve used it.
           </p>
         </SectionReveal>

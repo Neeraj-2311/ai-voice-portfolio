@@ -51,6 +51,10 @@ export interface ServiceItem {
   description: string;
   tags: string[];
   cta?: { label: string; href: string };
+  /** When true, the section component renders this as the asymmetric feature card. */
+  featured?: boolean;
+  /** Optional proof-pill highlights surfaced on the featured card. */
+  highlights?: string[];
 }
 
 export interface ExperienceRole {

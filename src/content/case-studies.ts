@@ -20,7 +20,7 @@ export const caseStudies: CaseStudy[] = [
     cover: '/images/case-studies/enterprise-voice-ai.svg',
     coverAlt: 'Enterprise voice AI case study cover',
     heroMetric: { value: '1.2s', label: 'median full-turn latency' },
-    tech: ['LiveKit', 'Azure AI Foundry', 'TypeScript', 'Python', 'FastAPI'],
+    tech: ['TypeScript', 'Node.js', 'Express', 'Next.js', 'LiveKit', 'Azure AI Foundry', 'Python'],
     status: 'published',
   },
   {
@@ -31,7 +31,7 @@ export const caseStudies: CaseStudy[] = [
     cover: '/images/case-studies/goreach.svg',
     coverAlt: 'GoReach case study cover',
     heroMetric: { value: '300+ posts', label: 'generated to date' },
-    tech: ['Next.js', 'FastAPI', 'LLMs', 'RAG', 'AWS', 'GitHub Actions'],
+    tech: ['TypeScript', 'Next.js', 'Node.js', 'Python', 'RAG', 'AWS'],
     status: 'placeholder',
   },
   {

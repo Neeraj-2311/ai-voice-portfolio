@@ -1,6 +1,6 @@
 import type { SiteConfig } from '@/types/content';
 
-const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'hello@example.com';
+const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'neeraj.aideveloper@gmail.com';
 
 export const site: SiteConfig = {
   name: 'Neeraj',
@@ -18,20 +18,19 @@ export const site: SiteConfig = {
     company: 'IntellifyAI',
   },
   socials: [
-    { label: 'GitHub', href: 'https://github.com/Neeraj-2311', icon: 'Github' },
     {
       label: 'LinkedIn',
-      href: 'https://linkedin.com/in/neeraj', // [TODO: Neeraj] update
+      href: 'https://www.linkedin.com/in/neeraj-ai-guy/',
       icon: 'Linkedin',
     },
     {
       label: 'X',
-      href: 'https://x.com/neeraj', // [TODO: Neeraj] update
+      href: 'https://x.com/NeerajGoesAi',
       icon: 'Twitter',
     },
     { label: 'Email', href: `mailto:${siteEmail}`, icon: 'Mail' },
   ],
   cal: {
-    username: process.env.NEXT_PUBLIC_CAL_USERNAME ?? null,
+    username: process.env.NEXT_PUBLIC_CAL_USERNAME ?? "hineeraj",
   },
 };

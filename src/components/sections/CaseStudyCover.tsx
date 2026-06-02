@@ -84,6 +84,12 @@ function VoiceAICover() {
           strokeOpacity={b.alpha}
           strokeWidth="2"
           strokeLinecap="round"
+          className="cover-anim origin-center"
+          style={{
+            transformBox: 'fill-box',
+            animation: 'cover-bar-pulse 1.4s ease-in-out infinite',
+            animationDelay: `${(i * 0.05) % 0.9}s`,
+          }}
         />
       ))}
       {/* node dots evoking endpoints / participants */}
@@ -135,6 +141,10 @@ function GoReachCover() {
         height="20"
         rx="1.5"
         fill="var(--accent)"
+        className="cover-anim"
+        style={{
+          animation: 'cover-cursor-blink 0.95s steps(2, end) infinite',
+        }}
       />
       {/* subtle accent underline at the top hinting "agent stream" */}
       <line
@@ -160,17 +170,20 @@ function SheetsCover() {
   const cellH = 22;
   const gridX = 38;
   const gridY = 44;
-  const highlighted = new Set(['1,0', '2,1', '3,0', '0,2', '4,3']);
   const cells: { x: number; y: number; r: number; c: number }[] = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       cells.push({ x: gridX + c * cellW, y: gridY + r * cellH, r, c });
     }
   }
+  // Initial static highlights so the cover does not read as a flat grid
+  // when the card is not hovered. The animation overrides these on hover,
+  // sweeping the accent fill from cell to cell across the grid.
+  const seedHighlighted = new Set(['1,0', '2,1', '3,0', '0,2', '4,3']);
   return (
     <ViewportWrap>
       {cells.map((cell, i) => {
-        const hot = highlighted.has(`${cell.c},${cell.r}`);
+        const hot = seedHighlighted.has(`${cell.c},${cell.r}`);
         return (
           <rect
             key={i}
@@ -181,39 +194,58 @@ function SheetsCover() {
             rx="2"
             fill={hot ? 'var(--accent)' : 'var(--text-secondary)'}
             fillOpacity={hot ? 0.75 : 0.2}
+            className="cover-anim"
+            style={{
+              animation: 'cover-cell-flow 2s ease-in-out infinite',
+              animationDelay: `${i * 0.1}s`,
+            }}
           />
         );
       })}
-      {/* arrow */}
-      <line
-        x1={gridX + cols * cellW - 4}
-        y1="90"
-        x2="252"
-        y2="90"
-        stroke="var(--accent)"
-        strokeOpacity="0.9"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <polyline
-        points="246,82 256,90 246,98"
-        fill="none"
-        stroke="var(--accent)"
-        strokeOpacity="0.9"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* handset glyph (stylized) */}
+      {/* arrow (pulses on hover) */}
       <g
-        transform="translate(262 70)"
-        stroke="var(--accent)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
+        className="cover-anim"
+        style={{ animation: 'cover-arrow-pulse 1.2s ease-in-out infinite' }}
       >
-        <path d="M2 6 L2 16 a4 4 0 0 0 4 4 L8 20 a2 2 0 0 0 2 -2 L10 14 a2 2 0 0 0 -1.4 -1.9 L6.5 11 a12 12 0 0 1 0 -2 L8.6 8 a2 2 0 0 0 1.4 -1.9 L10 2 a2 2 0 0 0 -2 -2 L6 0 a4 4 0 0 0 -4 4 L2 6 z" />
+        <line
+          x1={gridX + cols * cellW - 4}
+          y1="90"
+          x2="252"
+          y2="90"
+          stroke="var(--accent)"
+          strokeOpacity="0.9"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <polyline
+          points="246,82 256,90 246,98"
+          fill="none"
+          stroke="var(--accent)"
+          strokeOpacity="0.9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      {/* handset glyph (rings on hover) */}
+      <g transform="translate(262 70)">
+        <g
+          className="cover-anim origin-center"
+          style={{
+            transformBox: 'fill-box',
+            animation: 'cover-handset-shake 1.4s ease-in-out infinite',
+          }}
+        >
+          <g
+            stroke="var(--accent)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          >
+            <path d="M2 6 L2 16 a4 4 0 0 0 4 4 L8 20 a2 2 0 0 0 2 -2 L10 14 a2 2 0 0 0 -1.4 -1.9 L6.5 11 a12 12 0 0 1 0 -2 L8.6 8 a2 2 0 0 0 1.4 -1.9 L10 2 a2 2 0 0 0 -2 -2 L6 0 a4 4 0 0 0 -4 4 L2 6 z" />
+          </g>
+        </g>
       </g>
     </ViewportWrap>
   );
@@ -263,6 +295,11 @@ function TalkToPortfolioCover() {
           strokeWidth="2"
           fill="none"
           strokeLinecap="round"
+          className="cover-anim"
+          style={{
+            animation: 'cover-wave-emit 1.8s ease-in-out infinite',
+            animationDelay: `${i * 0.22}s`,
+          }}
         />
       ))}
 
@@ -291,6 +328,12 @@ function TalkToPortfolioCover() {
             strokeOpacity="0.9"
             strokeWidth="2.5"
             strokeLinecap="round"
+            className="cover-anim origin-center"
+            style={{
+              transformBox: 'fill-box',
+              animation: 'cover-bar-pulse 1.4s ease-in-out infinite',
+              animationDelay: `${i * 0.11}s`,
+            }}
           />
         ))}
       </g>

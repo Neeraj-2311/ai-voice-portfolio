@@ -2,6 +2,7 @@
 
 import { ArrowRight, Mic } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { SectionReveal } from '@/components/primitives/SectionReveal';
@@ -43,7 +44,7 @@ export function Speaking() {
             <figure className="border-line mt-10 overflow-hidden rounded-2xl border md:mt-12">
               <div
                 className="relative w-full"
-                style={{ aspectRatio: '3 / 2' }}
+                style={{ aspectRatio: '16 / 9' }}
               >
                 <Image
                   src={banner.src}
@@ -64,37 +65,40 @@ export function Speaking() {
           </SectionReveal>
         )}
 
-        <SectionReveal delay={0.1}>
-          <div className="border-line bg-elevated mt-10 rounded-2xl border p-6 md:mt-12 md:p-8">
+        <SectionReveal delay={0.08}>
+          <blockquote className="border-accent mt-10 border-l-2 py-1 pl-5 md:mt-12">
             <p className="text-fg text-pretty">{speakingSection.whyMeLine}</p>
-            <ul className="mt-5 grid gap-3 md:grid-cols-3">
-              {speakingSection.whatIBring.map((line, i) => (
-                <li key={i} className="text-muted flex items-start gap-2 text-small">
-                  <span
-                    aria-hidden="true"
-                    className="bg-accent/40 mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
-                  />
-                  <span className="text-pretty">{line}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          </blockquote>
+          <ul className="mt-6 grid gap-6 md:grid-cols-3 md:gap-10">
+            {speakingSection.whatIBring.map((line, i) => (
+              <li
+                key={i}
+                className="text-muted flex items-start gap-2.5 text-small"
+              >
+                <span
+                  aria-hidden="true"
+                  className="bg-accent mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+                />
+                <span className="text-pretty">{line}</span>
+              </li>
+            ))}
+          </ul>
         </SectionReveal>
 
         <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-2">
-          <SectionReveal delay={0.15}>
+          <SectionReveal delay={0.12}>
             <h3 className="text-fg text-small font-medium uppercase tracking-wide">
               Formats I take
             </h3>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-2.5">
               {speakingFormats.map((format) => (
                 <li
                   key={format.id}
-                  className="text-muted inline-flex items-center gap-2"
+                  className="text-muted flex items-center gap-3"
                 >
                   <span
                     aria-hidden="true"
-                    className="bg-accent/40 inline-block h-1.5 w-1.5 rounded-full"
+                    className="bg-accent/40 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
                   />
                   {format.label}
                 </li>
@@ -102,7 +106,7 @@ export function Speaking() {
             </ul>
           </SectionReveal>
 
-          <SectionReveal delay={0.2}>
+          <SectionReveal delay={0.16}>
             <h3 className="text-fg text-small font-medium uppercase tracking-wide">
               Topics
             </h3>
@@ -119,8 +123,23 @@ export function Speaking() {
           </SectionReveal>
         </div>
 
+        <SectionReveal delay={0.2}>
+          <div className="mt-8">
+            <Link
+              href="/speaking"
+              className="text-accent hover:text-accent-hover inline-flex items-center gap-1 text-small font-medium transition-colors"
+            >
+              See sample abstracts, logistics, and past events
+              <ArrowRight
+                className="h-3.5 w-3.5 transition-transform hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
+        </SectionReveal>
+
         {visiblePast.length > 0 && (
-          <SectionReveal delay={0.25}>
+          <SectionReveal delay={0.24}>
             <div className="mt-12">
               <h3 className="text-fg text-small font-medium uppercase tracking-wide">
                 Past events
@@ -142,7 +161,7 @@ export function Speaking() {
           </SectionReveal>
         )}
 
-        <SectionReveal delay={0.3}>
+        <SectionReveal delay={0.28}>
           <div className="border-line mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-6 md:p-8">
             <div>
               <h3 className="text-fg inline-flex items-center gap-2">

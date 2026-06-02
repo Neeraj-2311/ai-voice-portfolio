@@ -6,11 +6,12 @@ LinkedIn content tools generate generic AI slop. The output sounds nothing like 
 
 GoReach treats every user's past writing as the source of truth. The system ingests writing samples, builds a personal RAG index over them, and grounds every generation in the user's actual phrasing, sentence rhythm, and topic preferences. Prompts are layered: a base writer prompt, a voice-matching prompt grounded in retrieved samples, and a topic-specific prompt for the post angle.
 
-The full stack is mine end-to-end. Next.js on the front, FastAPI on the back, AWS for infra, GitHub Actions for CI/CD with Docker. Every merge to main ships to production with no manual steps.
+The full stack is mine end to end. Next.js on the front, Node.js on the back, and a separate Python service for the RAG and generation layer. AWS for infra, GitHub Actions for CI/CD with Docker. Every merge to main ships to production with no manual steps.
 
 ## Tech decisions worth noting
 
-- **Chose FastAPI over Next.js API routes for the AI layer.** Scales inference and retrieval workloads independently of the UI.
+- **Split the AI layer into its own Python service.** Lets retrieval and generation scale independently of the Node.js API and the UI, and keeps each language doing what it does best.
+- **TypeScript on the main app, Python only for AI.** Same language across frontend and Node API, faster iteration on product surface, Python pulled in only where it earns its place.
 - **Picked RAG over fine-tuning for voice matching.** Cheaper to update, easier to debug, and the retrieved context is visible in the output for trust.
 - **Self-hosted on AWS rather than a managed AI platform.** Full control over latency, cost, and data flow.
 
