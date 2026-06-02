@@ -84,22 +84,21 @@ export default function SpeakingPage() {
             <h1 className="mt-3 text-balance">
               Invite me to speak, mentor, or judge.
             </h1>
-            <p className="text-muted mt-5 max-w-2xl text-pretty text-h3 font-normal">
+            <p className="text-muted mt-4 max-w-2xl text-pretty text-h3 font-normal sm:mt-5">
               Hackathons, bootcamps, college sessions, AI workshops, founder panels.
               Production voice and agent experience plus an opinionated take on what
               ships next.
             </p>
-            <div className="mt-8 inline-flex">
+            <div className="mt-6 inline-flex sm:mt-8">
               <OpenContactSpeakingButton />
             </div>
           </SectionReveal>
 
           {banner && (
             <SectionReveal delay={0.05}>
-              <figure className="border-line mt-10 overflow-hidden rounded-2xl border md:mt-14">
+              <figure className="border-line mt-8 overflow-hidden rounded-2xl border sm:mt-10 md:mt-14">
                 <div
-                  className="relative w-full"
-                  style={{ aspectRatio: '3 / 2' }}
+                  className="relative w-full aspect-[5/3] sm:aspect-[3/2]"
                 >
                   <Image
                     src={banner.src}
@@ -125,17 +124,17 @@ export default function SpeakingPage() {
         aria-labelledby="formats-title"
         className="section-y mx-auto w-full max-w-6xl px-4 md:px-6"
       >
-        <div className="grid gap-12 md:grid-cols-2">
+        <div className="grid gap-8 sm:gap-10 md:grid-cols-2 md:gap-12">
           <SectionReveal>
             <h2 id="formats-title" className="text-h3">
               Formats I take
             </h2>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
               {speakingFormats.map((f) => (
-                <li key={f.id} className="text-muted inline-flex items-center gap-2">
+                <li key={f.id} className="text-muted flex items-center gap-2.5 text-small sm:text-base">
                   <span
                     aria-hidden="true"
-                    className="bg-accent/40 inline-block h-1.5 w-1.5 rounded-full"
+                    className="bg-accent/40 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
                   />
                   {f.label}
                 </li>
@@ -145,7 +144,7 @@ export default function SpeakingPage() {
 
           <SectionReveal delay={0.05}>
             <h2 className="text-h3">Topics</h2>
-            <ul className="mt-5 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-wrap gap-2 sm:mt-5">
               {speakingTopics.map((t) => (
                 <li
                   key={t.id}
@@ -171,13 +170,13 @@ export default function SpeakingPage() {
             </p>
           </SectionReveal>
 
-          <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:mt-10 sm:gap-5 md:mt-12 md:grid-cols-2 lg:grid-cols-3">
             {sampleAbstracts.map((a, i) => (
               <SectionReveal key={i} delay={i * 0.05}>
                 <Card className="flex h-full flex-col">
                   <h3 className="text-fg">{a.title}</h3>
-                  <p className="text-muted mt-3 grow text-pretty">{a.body}</p>
-                  <ul className="mt-5 flex flex-wrap gap-1.5">
+                  <p className="text-muted mt-3 grow text-pretty text-small sm:text-base">{a.body}</p>
+                  <ul className="mt-4 flex flex-wrap gap-1.5 sm:mt-5">
                     {a.durations.map((d) => (
                       <li
                         key={d}
@@ -201,7 +200,7 @@ export default function SpeakingPage() {
         <SectionReveal>
           <h2 id="requirements-title">Logistics.</h2>
         </SectionReveal>
-        <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2">
+        <div className="mt-8 grid gap-4 sm:mt-10 sm:gap-5 md:mt-12 md:grid-cols-2">
           {requirements.map((req, i) => (
             <SectionReveal key={req.title} delay={i * 0.05}>
               <Card>
@@ -212,7 +211,7 @@ export default function SpeakingPage() {
                   <req.icon className="h-5 w-5" />
                 </span>
                 <h3 className="text-fg mt-4">{req.title}</h3>
-                <p className="text-muted mt-2 text-pretty">{req.body}</p>
+                <p className="text-muted mt-2 text-pretty text-small sm:text-base">{req.body}</p>
               </Card>
             </SectionReveal>
           ))}
@@ -228,7 +227,7 @@ export default function SpeakingPage() {
             <SectionReveal>
               <h2 id="past-title">Past events.</h2>
             </SectionReveal>
-            <ul className="mt-10 grid gap-3 md:mt-12 md:grid-cols-3">
+            <ul className="mt-8 grid gap-3 sm:mt-10 md:mt-12 md:grid-cols-3">
               {visiblePast.map((e) => (
                 <li key={e.id}>
                   <Card>
@@ -246,7 +245,7 @@ export default function SpeakingPage() {
         </section>
       )}
 
-      <section className="section-y relative isolate overflow-hidden bg-black min-h-[460px] md:min-h-[520px]">
+      <section className="section-y relative isolate overflow-hidden bg-black min-h-[380px] sm:min-h-[460px] md:min-h-[520px]">
         {collageCount > 0 && (
           <div
             aria-hidden="true"
@@ -278,13 +277,13 @@ export default function SpeakingPage() {
 
         <div className="relative mx-auto w-full max-w-3xl px-4 md:px-6">
           <SectionReveal>
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-center shadow-2xl backdrop-blur-xl md:p-10">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-5 text-center shadow-2xl backdrop-blur-xl sm:p-6 md:p-10">
               <h2 className="text-balance text-white">Got an event in mind?</h2>
-              <p className="mt-3 mx-auto max-w-2xl text-pretty text-white/85">
+              <p className="mt-3 mx-auto max-w-2xl text-pretty text-small text-white/85 sm:text-base">
                 Share format, audience, date, and any travel constraints. I&apos;ll get back
                 within a few days.
               </p>
-              <div className="mt-6 inline-flex">
+              <div className="mt-5 inline-flex sm:mt-6">
                 <OpenContactSpeakingButton />
               </div>
               <p className="mt-3 inline-flex items-center gap-1 text-small text-white/65">

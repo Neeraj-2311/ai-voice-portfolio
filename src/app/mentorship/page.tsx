@@ -57,10 +57,10 @@ export default function MentorshipPage() {
               {mentorshipSection.eyebrow}
             </p>
             <h1 className="mt-3 text-balance">{mentorshipSection.heading}</h1>
-            <p className="text-muted mt-5 max-w-2xl text-pretty text-h3 font-normal">
+            <p className="text-muted mt-4 max-w-2xl text-pretty text-h3 font-normal sm:mt-5">
               {mentorshipSection.sub}
             </p>
-            <div className="mt-8 flex flex-col items-start gap-3">
+            <div className="mt-6 flex flex-col items-start gap-3 sm:mt-8">
               <BookCallButton intent="mentor" variant="primary">
                 {mentorshipSection.primaryCtaLabel}
               </BookCallButton>
@@ -81,18 +81,18 @@ export default function MentorshipPage() {
             {mentorshipSection.topicsHeading}.
           </h2>
         </SectionReveal>
-        <ul className="mt-10 space-y-4 md:mt-12">
+        <ul className="mt-8 space-y-3 sm:mt-10 sm:space-y-4 md:mt-12">
           {mentorshipTopics.map((topic, index) => (
             <SectionReveal key={topic.id} delay={index * 0.04}>
               <li
                 data-highlight-id={`mentorship-${topic.id}`}
-                className="border-line bg-elevated text-fg flex items-start gap-3 rounded-xl border p-5 md:p-6"
+                className="border-line bg-elevated text-fg flex items-start gap-2.5 rounded-xl border p-4 sm:gap-3 sm:p-5 md:p-6"
               >
                 <Check
                   className="text-accent mt-1 h-4 w-4 shrink-0"
                   aria-hidden="true"
                 />
-                <span className="text-pretty">{topic.label}</span>
+                <span className="text-pretty text-small sm:text-base">{topic.label}</span>
               </li>
             </SectionReveal>
           ))}
@@ -108,12 +108,12 @@ export default function MentorshipPage() {
             <SectionReveal>
               <h2 id="testimonials-title">What past mentees say.</h2>
             </SectionReveal>
-            <div className="mt-10 grid gap-5 md:grid-cols-2">
+            <div className="mt-8 grid gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2">
               {visibleTestimonials.map((t) => (
                 <SectionReveal key={t.id}>
                   <Card>
                     <Sparkles className="text-accent h-4 w-4" aria-hidden="true" />
-                    <p className="text-fg mt-3 text-pretty">{t.quote}</p>
+                    <p className="text-fg mt-3 text-pretty text-small sm:text-base">{t.quote}</p>
                     <p className="text-muted mt-3 text-small">
                       {t.author}
                       {t.role ? `, ${t.role}` : ''}
@@ -131,11 +131,11 @@ export default function MentorshipPage() {
           <SectionReveal>
             <h2 id="faq-title">Frequently asked.</h2>
           </SectionReveal>
-          <ul className="mt-10 space-y-4 md:mt-12">
+          <ul className="mt-8 space-y-3 sm:mt-10 sm:space-y-4 md:mt-12">
             {faq.map((item, i) => (
               <SectionReveal key={i} delay={i * 0.03}>
-                <details className="group/faq border-line bg-elevated rounded-xl border p-5 md:p-6">
-                  <summary className="text-fg flex cursor-pointer items-center justify-between gap-4 text-pretty font-medium">
+                <details className="group/faq border-line bg-elevated rounded-xl border p-4 sm:p-5 md:p-6">
+                  <summary className="text-fg flex cursor-pointer items-center justify-between gap-3 text-pretty font-medium sm:gap-4">
                     {item.q}
                     <span
                       aria-hidden="true"
@@ -144,7 +144,7 @@ export default function MentorshipPage() {
                       +
                     </span>
                   </summary>
-                  <p className="text-muted mt-3 text-pretty">{item.a}</p>
+                  <p className="text-muted mt-3 text-pretty text-small sm:text-base">{item.a}</p>
                 </details>
               </SectionReveal>
             ))}

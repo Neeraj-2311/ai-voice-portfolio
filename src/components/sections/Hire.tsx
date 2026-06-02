@@ -55,7 +55,7 @@ export function Hire() {
         </SectionReveal>
 
         <SectionReveal delay={0.08}>
-          <div className="border-line bg-elevated mt-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 md:mt-12 md:p-6">
+          <div className="border-line bg-elevated mt-8 flex flex-col gap-4 rounded-2xl border p-4 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5 md:mt-12 md:p-6">
             <div className="min-w-0">
               <p className="text-fg font-medium">{hireSection.quickContact.title}</p>
               <p className="text-muted mt-1 text-small">{hireSection.quickContact.body}</p>
@@ -64,10 +64,12 @@ export function Hire() {
               <li>
                 <Link
                   href={`mailto:${site.email}?subject=Hiring%20enquiry`}
+                  aria-label={`Email ${site.email}`}
                   className="border-line bg-bg text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-2 text-small font-medium transition-colors"
                 >
                   <Mail className="h-4 w-4" aria-hidden="true" />
-                  {site.email}
+                  <span className="sm:hidden">Email</span>
+                  <span className="hidden sm:inline">{site.email}</span>
                 </Link>
               </li>
               <li>
@@ -100,7 +102,7 @@ export function Hire() {
         </SectionReveal>
 
         <SectionReveal delay={0.12}>
-          <div className="mt-10 flex flex-col items-start gap-3 md:mt-12">
+          <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 md:mt-12">
             <BookCallButton
               intent="hire"
               variant="primary"
@@ -113,10 +115,10 @@ export function Hire() {
         </SectionReveal>
 
         <SectionReveal delay={0.16}>
-          <h3 className="text-fg mt-16 text-h3 font-medium md:mt-20">
+          <h3 className="text-fg mt-12 text-h3 font-medium sm:mt-16 md:mt-20">
             {hireSection.engagementsHeading}
           </h3>
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
+          <div className="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {hireEngagementTypes.map((type) => {
               const Icon = ENGAGEMENT_ICONS[type.id] ?? Rocket;
               return (

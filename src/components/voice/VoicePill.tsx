@@ -23,10 +23,11 @@ export function VoicePill({ onClick, initialPulse }: VoicePillProps) {
       data-voice-action="open-voice-tour"
       className={[
         'group fixed bottom-4 right-4 z-50 inline-flex items-center gap-2',
-        'bg-accent text-accent-fg shadow-lg shadow-[var(--accent-glow)]',
+        'bg-accent text-accent-fg ring-1 ring-black/10',
+        'shadow-[0_12px_32px_-8px_rgba(0,0,0,0.55),0_0_24px_-4px_var(--accent-glow)]',
         'rounded-full px-4 py-3 md:px-5 md:py-3.5',
         'text-small font-semibold md:text-body',
-        'hover:bg-accent-hover hover:shadow-xl hover:shadow-[var(--accent-glow)]',
+        'hover:bg-accent-hover hover:shadow-[0_18px_44px_-10px_rgba(0,0,0,0.6),0_0_32px_-4px_var(--accent-glow)]',
         'active:scale-[0.97]',
         'transition-all duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]',

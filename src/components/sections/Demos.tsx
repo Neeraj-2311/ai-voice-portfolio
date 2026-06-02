@@ -77,17 +77,17 @@ export function Demos() {
                 />
               )}
 
-              <div className="bg-bg border-line border-b p-6 md:p-8">
-                <div className="flex flex-wrap items-start gap-4">
+              <div className="bg-bg border-line border-b p-4 sm:p-6 md:p-8">
+                <div className="flex flex-wrap items-start gap-3 sm:gap-4">
                   <span
                     aria-hidden="true"
-                    className="bg-accent/10 text-accent inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                    className="bg-accent/10 text-accent inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12"
                   >
-                    <Mic className="h-6 w-6" />
+                    <Mic className="h-5 w-5 sm:h-6 sm:w-6" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="text-fg">Voice tour</h3>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <h3 className="text-fg text-h3 sm:text-h2">Voice tour</h3>
                       <span className="bg-accent/10 text-accent inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-small font-medium">
                         <span
                           aria-hidden="true"
@@ -96,12 +96,11 @@ export function Demos() {
                         Live
                       </span>
                     </div>
-                    <p className="text-muted mt-2 text-pretty">
-                      LiveKit realtime agent with sub-second per-stage latency, an
-                      English turn detector, and function tools wired into the site.
-                      Same stack featured in the enterprise voice AI case study.
+                    <p className="text-muted mt-2 text-pretty text-small sm:text-base">
+                      <span className="sm:hidden">LiveKit agent with sub-second latency. Function tools wired into the site.</span>
+                      <span className="hidden sm:inline">LiveKit realtime agent with sub-second per-stage latency, an English turn detector, and function tools wired into the site. Same stack featured in the enterprise voice AI case study.</span>
                     </p>
-                    <ul className="mt-4 flex flex-wrap gap-1.5">
+                    <ul className="mt-3 flex flex-wrap gap-1.5 sm:mt-4">
                       {CAPABILITIES.map((c) => (
                         <li
                           key={c}
@@ -115,9 +114,9 @@ export function Demos() {
                 </div>
               </div>
 
-              <div className="bg-bg flex flex-col items-center gap-3 p-6 md:p-8">
+              <div className="bg-bg flex flex-col items-center gap-3 p-4 sm:p-6 md:p-8">
                 <HeroVoiceCTA />
-                <p className="text-subtle text-small inline-flex items-center gap-1.5">
+                <p className="text-subtle text-small hidden items-center gap-1.5 sm:inline-flex">
                   or press
                   <kbd className="border-line bg-elevated text-fg inline-flex items-center justify-center rounded border px-1.5 py-0.5 font-mono text-[11px] font-medium leading-none">
                     /

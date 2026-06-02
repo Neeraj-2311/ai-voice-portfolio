@@ -75,6 +75,7 @@ export function ContactModal() {
           onSuccess={() => {
             window.setTimeout(close, 6000);
           }}
+          onBookCall={close}
         />
       </div>
     </dialog>

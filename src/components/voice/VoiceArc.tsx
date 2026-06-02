@@ -93,7 +93,8 @@ export function VoiceArc({
           'border-line bg-elevated/95 supports-[backdrop-filter]:bg-elevated/80 supports-[backdrop-filter]:backdrop-blur-md',
           'relative overflow-hidden border shadow-2xl',
           // Curved top edge — large radius on top, smaller on bottom for the "arc" feel.
-          'rounded-t-[140px] rounded-b-2xl',
+          'rounded-t-[80px] rounded-b-2xl sm:rounded-t-[140px]',
+          'max-h-[40svh] sm:max-h-none',
           isAgentSpeaking ? 'ring-accent/40 ring-2' : 'ring-0',
           'transition-shadow duration-300',
         ].join(' ')}
@@ -105,11 +106,11 @@ export function VoiceArc({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[var(--accent-glow)] to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[var(--accent-glow)] to-transparent sm:h-24"
           />
         )}
 
-        <div className="flex flex-col gap-4 px-6 pb-5 pt-10">
+        <div className="flex flex-col gap-3 px-4 pb-3 pt-6 sm:gap-4 sm:px-6 sm:pb-5 sm:pt-10">
           {/* Status badge */}
           {showStatusBadge && (
             <div className="flex items-center justify-center">
@@ -150,7 +151,7 @@ export function VoiceArc({
             </div>
           ) : (
             <>
-              <div className="h-16">
+              <div className="h-12 sm:h-16">
                 <AudioVisualizer track={visualizerTrack} mode={visualizerMode} />
               </div>
               <CaptionRail

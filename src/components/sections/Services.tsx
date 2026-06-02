@@ -21,7 +21,7 @@ function FeatureCard({ service }: { service: ServiceItem }) {
   return (
     <Card
       data-highlight-id={service.id}
-      className="bg-elevated relative flex h-full flex-col overflow-hidden p-7 md:p-9"
+      className="bg-elevated relative flex h-full flex-col overflow-hidden p-5 sm:p-7 md:p-9"
     >
       <span
         aria-hidden="true"
@@ -43,22 +43,22 @@ function FeatureCard({ service }: { service: ServiceItem }) {
           </span>
         </div>
 
-        <div className="mt-5 flex items-start gap-4">
+        <div className="mt-4 flex items-start gap-3 sm:mt-5 sm:gap-4">
           <span
             aria-hidden="true"
-            className="bg-accent/12 text-accent inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
+            className="bg-accent/12 text-accent inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14"
           >
-            {Icon ? <Icon className="h-7 w-7" /> : null}
+            {Icon ? <Icon className="h-6 w-6 sm:h-7 sm:w-7" /> : null}
           </span>
           <div className="min-w-0">
-            <CardTitle className="text-h2">{service.title}</CardTitle>
+            <CardTitle className="text-h3 sm:text-h2">{service.title}</CardTitle>
           </div>
         </div>
 
-        <p className="text-muted mt-5 max-w-2xl text-pretty text-body">{service.summary}</p>
+        <p className="text-muted mt-4 max-w-2xl text-pretty text-body sm:mt-5">{service.summary}</p>
 
         {service.highlights && service.highlights.length > 0 && (
-          <ul className="mt-5 flex flex-wrap gap-2">
+          <ul className="mt-4 flex flex-wrap gap-2 sm:mt-5">
             {service.highlights.map((h) => (
               <li
                 key={h}
@@ -70,7 +70,7 @@ function FeatureCard({ service }: { service: ServiceItem }) {
           </ul>
         )}
 
-        <ul className="mt-5 flex flex-wrap gap-1.5">
+        <ul className="mt-4 hidden flex-wrap gap-1.5 sm:mt-5 sm:flex">
           {service.tags.map((tag) => (
             <li
               key={tag}
@@ -81,11 +81,14 @@ function FeatureCard({ service }: { service: ServiceItem }) {
           ))}
         </ul>
 
-        <div className="border-line mt-7 border-t pt-5">
+        <div className="border-line mt-5 border-t pt-4 sm:mt-7 sm:pt-5">
           <p className="text-fg text-small font-medium uppercase tracking-wide">
             From spec to production
           </p>
-          <ul className="mt-3 space-y-2.5">
+          <p className="text-muted mt-2 text-small sm:hidden">
+            POCs first. Scoping with numbers. Production runtime. Evals before traffic. Team handoff.
+          </p>
+          <ul className="mt-3 hidden space-y-2 sm:block sm:space-y-2.5">
             {FEATURE_DELIVERABLES.map((item) => (
               <li
                 key={item}
@@ -102,11 +105,11 @@ function FeatureCard({ service }: { service: ServiceItem }) {
         </div>
 
         {service.cta && (
-          <div className="mt-7">
+          <div className="mt-5 sm:mt-7">
             <Button
               href={service.cta.href}
               variant="primary"
-              className="px-4 py-2 text-small font-medium"
+              className="w-full px-4 py-2 text-small font-medium sm:w-auto"
               trailingIcon={<ArrowRight className="h-4 w-4" />}
             >
               {service.cta.label}

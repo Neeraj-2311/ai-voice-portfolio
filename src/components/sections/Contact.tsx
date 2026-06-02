@@ -25,14 +25,14 @@ export function Contact() {
         </SectionReveal>
 
         <SectionReveal delay={0.1}>
-          <div className="border-line bg-elevated mt-10 rounded-2xl border p-6 md:mt-14 md:p-8">
+          <div className="border-line bg-elevated mt-8 rounded-2xl border p-4 sm:mt-10 sm:p-6 md:mt-14 md:p-8">
             <ContactForm />
           </div>
         </SectionReveal>
 
         <SectionReveal delay={0.15}>
-          <p className="text-subtle mt-8 text-center text-small">
-            Just want to say hi or share something interesting? My DMs on{' '}
+          <p className="text-subtle mt-6 text-center text-small text-pretty sm:mt-8">
+            Just want to say hi? DMs open on{' '}
             {site.socials
               .filter((s) => s.icon === 'Linkedin' || s.icon === 'Twitter')
               .map((s, i, arr) => (
@@ -47,8 +47,8 @@ export function Contact() {
                   </Link>
                   {i < arr.length - 1 ? ' and ' : ''}
                 </span>
-              ))}{' '}
-            are open.
+              ))}
+            .
           </p>
         </SectionReveal>
       </div>

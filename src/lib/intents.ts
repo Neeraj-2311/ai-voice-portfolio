@@ -12,7 +12,7 @@ export const intentMeta: Record<Intent, { label: string; description: string }> 
   hire: { label: 'Hire', description: 'For founders and companies hiring' },
   mentorship: { label: 'Mentorship', description: 'For 1:1 sessions and guidance' },
   speaking: {
-    label: 'Speaking · event',
+    label: 'Speaking',
     description: 'For event organizers (talks, hackathons, judging)',
   },
   other: { label: 'Other', description: 'Anything else' },

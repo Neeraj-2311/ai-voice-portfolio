@@ -32,7 +32,7 @@ export function CaptionRail({ lines, visible, disclaimer }: CaptionRailProps) {
         ref={scrollRef}
         aria-live="polite"
         aria-atomic="false"
-        className="flex max-h-[88px] flex-col gap-1 overflow-y-auto px-1"
+        className="flex max-h-[56px] flex-col gap-1 overflow-y-auto px-1 sm:max-h-[88px]"
       >
         {recent.length === 0 ? (
           <p className="text-subtle text-center text-small italic">Listening…</p>

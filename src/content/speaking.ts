@@ -9,7 +9,7 @@ import type { SpeakingEvent, SpeakingTopic } from '@/types/content';
 export const speakingSection = {
   eyebrow: 'For event organisers',
   heading: 'Talks from an engineer who actually ships voice AI.',
-  sub: 'Hackathons, bootcamps, college lectures, industry panels. London-based, happy to travel or join remotely.',
+  sub: 'Hackathons, bootcamps, college lectures, industry panels. Based in Delhi, India. Happy to travel across India and worldwide, or join remotely.',
   whyMeLine:
     "Most AI talks are slides about demos. Mine come from a production voice platform: ~1.2s median full-turn latency, multi-tenant isolation under load, GDPR-grade. Audiences leave with what the textbooks miss.",
   whatIBring: [

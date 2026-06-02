@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
+import { AlertCircle, Calendar, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
 import { type FieldError, type Path, useForm, useWatch, Controller } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { LinkedinIcon, XIcon } from '@/components/primitives/BrandIcon';
 import { Button } from '@/components/primitives/Button';
 import { site } from '@/content/site';
 import { contactDefaultValues, contactFormSchema, type ContactFormValues } from '@/lib/intents';
+import { useTheme } from '@/lib/theme';
 import type { Intent } from '@/types/content';
 import { IntentPicker } from './IntentPicker';
 
@@ -19,6 +20,10 @@ export interface ContactFormProps {
   prefill?: Partial<Record<keyof ContactFormValues, string>>;
   variant?: 'default' | 'compact';
   onSuccess?: () => void;
+  /** Called when the user clicks the "Book a call" pill. The modal uses this
+   *  to close itself so the Cal popup can take over the screen. Called after
+   *  a short delay so Cal.com captures the click first. */
+  onBookCall?: () => void;
 }
 
 type Phase = 'idle' | 'launching' | 'success';
@@ -28,6 +33,7 @@ export function ContactForm({
   prefill,
   variant = 'default',
   onSuccess,
+  onBookCall,
 }: ContactFormProps) {
   const [isPending, startTransition] = useTransition();
   const [phase, setPhase] = useState<Phase>('idle');
@@ -206,7 +212,7 @@ export function ContactForm({
               </div>
             </fieldset>
 
-            <DirectAlternatives />
+            <DirectAlternatives onBookCall={onBookCall} />
           </motion.form>
         )}
       </AnimatePresence>
@@ -214,7 +220,7 @@ export function ContactForm({
   );
 }
 
-function DirectAlternatives() {
+function DirectAlternatives({ onBookCall }: { onBookCall?: () => void }) {
   const linkedin = site.socials.find((s) => s.icon === 'Linkedin');
   const twitter = site.socials.find((s) => s.icon === 'Twitter');
 
@@ -222,6 +228,9 @@ function DirectAlternatives() {
     <div className="border-line mt-2 border-t pt-5">
       <p className="text-subtle text-small">Or contact directly</p>
       <ul className="mt-3 flex flex-wrap items-center gap-2">
+        <li>
+          <BookCallPill onBookCall={onBookCall} />
+        </li>
         <li>
           <Link
             href={`mailto:${site.email}`}
@@ -259,6 +268,29 @@ function DirectAlternatives() {
         )}
       </ul>
     </div>
+  );
+}
+
+function BookCallPill({ onBookCall }: { onBookCall?: () => void }) {
+  const { theme } = useTheme();
+  const username = process.env.NEXT_PUBLIC_CAL_USERNAME ?? 'hineeraj';
+  return (
+    <button
+      type="button"
+      data-cal-link={`${username}/hire`}
+      data-cal-config={JSON.stringify({ theme })}
+      data-voice-action="open-hire-discovery"
+      onClick={() => {
+        if (!onBookCall) return;
+        // Defer to a macrotask so Cal.com's global click listener registers
+        // first and opens the popup before we close the parent modal.
+        window.setTimeout(onBookCall, 0);
+      }}
+      className="border-accent/40 bg-accent/10 text-accent hover:border-accent hover:bg-accent/15 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small font-medium transition-colors"
+    >
+      <Calendar className="h-4 w-4" aria-hidden="true" />
+      Book a 30-min call
+    </button>
   );
 }
 

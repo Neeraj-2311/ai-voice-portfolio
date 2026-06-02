@@ -14,7 +14,11 @@ export function IntentPicker({ value, onChange, compact }: IntentPickerProps) {
     <div>
       <fieldset>
         <legend className="text-fg text-small font-medium">I&apos;m reaching out about</legend>
-        <div role="radiogroup" aria-label="Reason for contact" className="mt-2 flex flex-wrap gap-2">
+        <div
+          role="radiogroup"
+          aria-label="Reason for contact"
+          className="mt-2 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
+        >
           {intents.map((intent) => {
             const active = intent === value;
             const meta = intentMeta[intent];
@@ -26,7 +30,7 @@ export function IntentPicker({ value, onChange, compact }: IntentPickerProps) {
                 aria-checked={active}
                 onClick={() => onChange(intent)}
                 className={[
-                  'rounded-full border px-4 py-2 text-small transition-colors',
+                  'w-full rounded-full border px-3 py-1.5 text-small transition-colors sm:w-auto sm:px-4 sm:py-2',
                   active
                     ? 'border-accent bg-accent text-accent-fg font-semibold'
                     : 'border-line text-fg hover:border-line-strong hover:text-accent font-medium',

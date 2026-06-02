@@ -2,8 +2,8 @@ import type { HireEngagementType } from '@/types/content';
 
 export const hireSection = {
   eyebrow: 'For founders & companies',
-  heading: 'Voice agents that ship to enterprise, not just demos.',
-  sub: 'Sub-second stage latency, GDPR-grade tenant isolation, and a full-stack engineer to back them up.',
+  heading: 'Production systems that ship to enterprise, not demos.',
+  sub: 'Full-stack engineer for product work, voice AI, and agentic backends. Sub-second stage latency, GDPR-grade tenant isolation, and the engineering to back it all up.',
   primaryCtaLabel: 'Book a 30-min call',
   primaryCtaSubline: "Free, no commitment. We'll figure out scope and fit on the call.",
   quickContact: {

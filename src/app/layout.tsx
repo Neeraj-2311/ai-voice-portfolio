@@ -5,6 +5,7 @@ import { CalProvider } from '@/components/booking/CalProvider';
 import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
+import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { PlausibleAnalytics } from '@/components/seo/PlausibleAnalytics';
 import { VoiceSystem } from '@/components/voice/VoiceSystem';
 import { site } from '@/content/site';
@@ -26,7 +27,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} · Voice AI & Full-Stack Engineer`,
+    default: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -35,16 +36,65 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   keywords: [
-    'Voice AI',
+    // Voice AI
+    'Voice AI engineer',
+    'Voice AI developer',
+    'Voice agents',
+    'Voice agent developer',
+    'Conversational AI engineer',
+    'Realtime voice AI',
+    'Production voice AI',
+    'LiveKit engineer',
+    'LiveKit developer',
+    'Deepgram',
+    'Cartesia',
+    'ElevenLabs',
+    'Retell AI',
+    'STT TTS LLM pipeline',
+
+    // AI / agentic
+    'AI engineer',
+    'AI developer',
+    'Agentic AI engineer',
+    'Agentic systems',
     'AI agents',
-    'agentic systems',
-    'full-stack engineer',
-    'LiveKit',
+    'LLM engineer',
+    'RAG engineer',
+    'Prompt engineering',
     'Azure AI Foundry',
-    'RAG',
-    'Next.js',
-    'mentorship',
-    'speaking',
+    'OpenAI engineer',
+
+    // Full-stack
+    'Full-stack engineer',
+    'Full-stack AI engineer',
+    'Full-stack developer',
+    'TypeScript engineer',
+    'Next.js engineer',
+    'Node.js engineer',
+    'Express engineer',
+    'React engineer',
+    'Python engineer',
+    'FastAPI engineer',
+
+    // Geography & availability
+    'AI engineer Delhi',
+    'AI engineer India',
+    'Voice AI engineer Delhi',
+    'Voice AI engineer India',
+    'Full-stack engineer Delhi',
+    'Full-stack engineer India',
+    'Remote AI engineer',
+    'Remote full-stack engineer',
+    'Hire AI engineer',
+    'Fractional AI engineer',
+    'Contract AI engineer',
+
+    // Other
+    'Mentorship',
+    'AI mentorship',
+    'Tech speaker',
+    'AI speaker',
+    'Neeraj AI',
   ],
   alternates: { canonical: '/' },
   openGraph: {
@@ -52,12 +102,12 @@ export const metadata: Metadata = {
     locale: 'en_GB',
     url: site.url,
     siteName: site.name,
-    title: `${site.name} · Voice AI & Full-Stack Engineer`,
+    title: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     description: site.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} · Voice AI & Full-Stack Engineer`,
+    title: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     description: site.description,
   },
   robots: { index: true, follow: true },
@@ -105,6 +155,7 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
+        <ScrollToTop />
         <VoiceSystem />
         <ContactModal />
         <CalProvider />

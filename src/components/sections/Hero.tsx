@@ -17,12 +17,13 @@ export function Hero() {
       <AmbientVisualizer />
 
       <div className="relative z-20 mx-auto w-full max-w-5xl px-6 text-center">
-        <span className="border-accent/30 bg-accent/10 text-fg inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small">
+        <span className="border-accent/30 bg-accent/10 text-fg inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-small">
           <span
             aria-hidden="true"
-            className="bg-success inline-block h-2 w-2 animate-pulse rounded-full"
+            className="bg-success inline-block h-1.5 w-1.5 animate-pulse rounded-full sm:h-2 sm:w-2"
           />
-          {site.availability}
+          <span className="sm:hidden">Open to work · Remote / hybrid worldwide</span>
+          <span className="hidden sm:inline">{site.availability}</span>
         </span>
 
         <h1

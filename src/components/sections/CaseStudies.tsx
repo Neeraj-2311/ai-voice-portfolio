@@ -56,7 +56,7 @@ export function CaseStudies() {
                     </span>
                   )}
 
-                  <div className="bg-bg border-line relative aspect-[16/9] w-full overflow-hidden border-b">
+                  <div className="bg-bg border-line relative aspect-[2/1] w-full overflow-hidden border-b sm:aspect-[16/9]">
                     <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
                       <CaseStudyCover slug={study.slug} />
                     </div>
@@ -69,7 +69,7 @@ export function CaseStudies() {
                     )}
                   </div>
 
-                  <div className="flex grow flex-col p-5 md:p-6">
+                  <div className="flex grow flex-col p-4 sm:p-5 md:p-6">
                     {study.heroMetric.value.includes('[TODO]') ? (
                       <h3 className="text-fg text-h3 font-medium">{study.title}</h3>
                     ) : (
@@ -86,17 +86,27 @@ export function CaseStudies() {
                       </>
                     )}
 
-                    <p className="text-muted mt-4 grow text-pretty">{study.summary}</p>
+                    <p className="text-muted mt-3 grow text-pretty text-small sm:mt-4 sm:text-base">{study.summary}</p>
 
-                    <ul className="mt-5 flex flex-wrap gap-1.5">
-                      {study.tech.map((tech) => (
+                    <ul className="mt-4 flex flex-wrap gap-1.5 sm:mt-5">
+                      {study.tech.slice(0, 4).map((tech) => (
                         <li key={tech}>
                           <TechBadge name={tech} />
                         </li>
                       ))}
+                      {study.tech.slice(4).map((tech) => (
+                        <li key={tech} className="hidden sm:block">
+                          <TechBadge name={tech} />
+                        </li>
+                      ))}
+                      {study.tech.length > 4 && (
+                        <li className="text-subtle inline-flex items-center text-small sm:hidden">
+                          +{study.tech.length - 4} more
+                        </li>
+                      )}
                     </ul>
 
-                    <span className="text-accent group-hover:text-accent-hover mt-5 inline-flex items-center gap-1 text-small font-medium transition-colors">
+                    <span className="text-accent group-hover:text-accent-hover mt-4 inline-flex items-center gap-1 text-small font-medium transition-colors sm:mt-5">
                       Read case study
                       <ArrowRight
                         className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"

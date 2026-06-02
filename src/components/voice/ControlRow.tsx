@@ -90,12 +90,14 @@ export function ControlRow({
         }
         active={captionsVisible}
       />
-      <ControlButton
-        label={textMode ? 'Use voice' : 'Type instead'}
-        onClick={onToggleTextMode}
-        icon={<Keyboard className="h-4 w-4" />}
-        active={textMode}
-      />
+      <div className="hidden sm:contents">
+        <ControlButton
+          label={textMode ? 'Use voice' : 'Type instead'}
+          onClick={onToggleTextMode}
+          icon={<Keyboard className="h-4 w-4" />}
+          active={textMode}
+        />
+      </div>
       <ControlButton
         label="End call"
         onClick={onEnd}
