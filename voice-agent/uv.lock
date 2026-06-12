@@ -11,7 +11,7 @@ resolution-markers = [
 constraints = [{ name = "yarl", specifier = "<1.24" }]
 
 [[package]]
-name = "agent-starter-python"
+name = "ai-voice-portfolio-agent"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [

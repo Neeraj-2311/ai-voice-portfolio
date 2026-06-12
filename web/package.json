@@ -1,7 +1,31 @@
 {
-  "name": "neeraj-ai-portfolio",
+  "name": "ai-voice-portfolio",
   "version": "1.0.0",
   "private": true,
+  "description": "A portfolio that talks back. An open-source AI voice-agent portfolio: a Next.js site and a Python LiveKit agent that give visitors a guided, spoken tour of your work.",
+  "author": "Neeraj <neeraj.aideveloper@gmail.com> (https://hineeraj.com)",
+  "license": "MIT",
+  "homepage": "https://hineeraj.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neeraj-2311/ai-voice-portfolio.git",
+    "directory": "web"
+  },
+  "bugs": {
+    "url": "https://github.com/Neeraj-2311/ai-voice-portfolio/issues"
+  },
+  "keywords": [
+    "ai",
+    "voice-ai",
+    "voice-agent",
+    "livekit",
+    "nextjs",
+    "react",
+    "typescript",
+    "openai",
+    "deepgram",
+    "portfolio"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
