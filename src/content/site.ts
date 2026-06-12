@@ -8,7 +8,9 @@ export const site: SiteConfig = {
   tagline: 'Full-stack AI engineer. Production systems that ship, not demos.',
   description:
     'Full-stack AI engineer. I build production voice agents, agentic backends, and the full-stack systems behind them. Sub-second latency, GDPR-grade isolation, and the engineering to back it up. Available for hire, mentorship, and speaking. Remote or hybrid worldwide.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NODE_ENV === 'production' ? 'https://hineeraj.com' : 'http://localhost:3000'),
   email: siteEmail,
   location: 'Delhi, India · Remote / hybrid worldwide',
   availability: 'Open to full-time, fractional, and contract · remote or hybrid worldwide',

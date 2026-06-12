@@ -40,7 +40,7 @@ export function Contact() {
                   <Link
                     href={s.href}
                     target="_blank"
-                    rel="noreferrer me"
+                    rel="noopener noreferrer me"
                     className="text-fg hover:text-accent underline-offset-4 hover:underline transition-colors"
                   >
                     {s.label}

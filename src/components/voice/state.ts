@@ -24,6 +24,8 @@ export type VoiceState =
   | 'agent-speaking'
   | 'thinking'
   | 'booking-confirmed'
+  | 'message-sent'
+  | 'callback-requested'
   | 'feedback-prompt'
   | 'thank-you'
   | 'ended'
@@ -50,6 +52,15 @@ export interface BookingPayload {
 export interface FeedbackPayload {
   rating: FeedbackRating;
   quote?: string;
+}
+
+export interface MessageSentPayload {
+  intent?: string;
+  email?: string;
+}
+
+export interface CallbackPayload {
+  name?: string;
 }
 
 export interface VoiceMode {

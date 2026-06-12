@@ -78,20 +78,5 @@ export const speakingFormats: { id: string; label: string }[] = [
   { id: 'workshops', label: 'AI workshops' },
 ];
 
-/** Past events grid. Placeholders until Neeraj provides the real list. */
-export const pastEvents: SpeakingEvent[] = [
-  {
-    id: 'placeholder-1',
-    name: '[TODO: Neeraj] Past event 1',
-    organizer: '[TODO: Organizer]',
-    date: '[TODO: Date]',
-    format: 'in-person',
-  },
-  {
-    id: 'placeholder-2',
-    name: '[TODO: Neeraj] Past event 2',
-    organizer: '[TODO: Organizer]',
-    date: '[TODO: Date]',
-    format: 'virtual',
-  },
-];
+// Past events grid. Empty until populated; the section hides the row while empty.
+export const pastEvents: SpeakingEvent[] = [];

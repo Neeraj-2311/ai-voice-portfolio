@@ -31,31 +31,10 @@ export const mentorshipTopics: MentorshipTopic[] = [
   },
 ];
 
-/**
- * Social proof for the mentorship section. Placeholders until Neeraj
- * collects real testimonials. The UI hides the row entirely if the
- * array is empty after filtering placeholders.
- */
-export const mentorshipTestimonials: Testimonial[] = [
-  {
-    id: 'placeholder-1',
-    quote: '[TODO: Neeraj] Real testimonial from a past mentee.',
-    author: '[TODO: Name]',
-    role: '[TODO: Role / Company]',
-    source: 'mentorship',
-  },
-  {
-    id: 'placeholder-2',
-    quote: '[TODO: Neeraj] Second testimonial.',
-    author: '[TODO: Name]',
-    role: '[TODO: Role / Company]',
-    source: 'mentorship',
-  },
-];
+// Social proof for the mentorship section. Empty by design until real
+// testimonials are collected. The UI hides the row entirely while empty.
+export const mentorshipTestimonials: Testimonial[] = [];
 
-/** Past hackathon / bootcamp / college credibility list. Placeholder. */
-export const mentorshipCredibility: { id: string; name: string; type: string }[] = [
-  { id: 'placeholder-1', name: '[TODO: Neeraj]', type: 'Hackathon mentor' },
-  { id: 'placeholder-2', name: '[TODO: Neeraj]', type: 'Bootcamp speaker' },
-  { id: 'placeholder-3', name: '[TODO: Neeraj]', type: 'College talk' },
-];
+// Past hackathon / bootcamp / college credibility list. Empty until populated;
+// the section hides the line while empty.
+export const mentorshipCredibility: { id: string; name: string; type: string }[] = [];

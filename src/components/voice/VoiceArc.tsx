@@ -4,13 +4,16 @@ import { motion } from 'framer-motion';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { AudioVisualizer } from './AudioVisualizer';
 import { BookingSummaryCard } from './BookingSummaryCard';
+import { CallbackCard, MessageSentCard } from './ConfirmationCards';
 import { CaptionRail } from './CaptionRail';
 import { ControlRow } from './ControlRow';
 import { FeedbackPrompt, FeedbackThankYou } from './FeedbackPanel';
 import { TextFallback } from './TextFallback';
 import type {
   BookingPayload,
+  CallbackPayload,
   FeedbackPayload,
+  MessageSentPayload,
   VoiceState,
 } from './state';
 import type { VoiceTracks } from './useVoiceSession';
@@ -31,8 +34,11 @@ interface VoiceArcProps {
   captionsVisible: boolean;
   micMuted: boolean;
   textMode: boolean;
+  wrappingUp: boolean;
   errorMessage: string | null;
   bookingPayload: BookingPayload | null;
+  messageSentPayload: MessageSentPayload | null;
+  callbackPayload: CallbackPayload | null;
   feedbackPayload: FeedbackPayload | null;
   onToggleMic: () => void;
   onToggleCaptions: () => void;
@@ -40,6 +46,8 @@ interface VoiceArcProps {
   onSendText: (text: string) => void;
   onEnd: () => void;
   onDoneBooking: () => void;
+  onDoneMessageSent: () => void;
+  onDoneCallback: () => void;
   onCloseThanks: () => void;
 }
 
@@ -50,8 +58,11 @@ export function VoiceArc({
   captionsVisible,
   micMuted,
   textMode,
+  wrappingUp,
   errorMessage,
   bookingPayload,
+  messageSentPayload,
+  callbackPayload,
   feedbackPayload,
   onToggleMic,
   onToggleCaptions,
@@ -59,6 +70,8 @@ export function VoiceArc({
   onSendText,
   onEnd,
   onDoneBooking,
+  onDoneMessageSent,
+  onDoneCallback,
   onCloseThanks,
 }: VoiceArcProps) {
   const isAgentSpeaking = state === 'agent-speaking';
@@ -137,9 +150,18 @@ export function VoiceArc({
             </div>
           )}
 
+          {/* Subtle wrap-up cue */}
+          {wrappingUp && state !== 'thank-you' && (
+            <p className="text-subtle text-center text-[11px]">Wrapping up soon</p>
+          )}
+
           {/* Body — switches by state */}
           {state === 'booking-confirmed' && bookingPayload ? (
             <BookingSummaryCard payload={bookingPayload} onDone={onDoneBooking} />
+          ) : state === 'message-sent' && messageSentPayload ? (
+            <MessageSentCard payload={messageSentPayload} onDone={onDoneMessageSent} />
+          ) : state === 'callback-requested' && callbackPayload ? (
+            <CallbackCard payload={callbackPayload} onDone={onDoneCallback} />
           ) : state === 'feedback-prompt' ? (
             <FeedbackPrompt />
           ) : state === 'thank-you' && feedbackPayload ? (
@@ -163,9 +185,13 @@ export function VoiceArc({
           )}
 
           {/* Text fallback row */}
-          {textMode && state !== 'booking-confirmed' && state !== 'thank-you' && (
-            <TextFallback onSubmit={onSendText} disabled={state === 'connecting'} />
-          )}
+          {textMode &&
+            state !== 'booking-confirmed' &&
+            state !== 'message-sent' &&
+            state !== 'callback-requested' &&
+            state !== 'thank-you' && (
+              <TextFallback onSubmit={onSendText} disabled={state === 'connecting'} />
+            )}
 
           {/* Controls */}
           {state !== 'thank-you' && (

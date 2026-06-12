@@ -60,8 +60,6 @@ export function Hero() {
           <SlashHint />
         </div>
 
-        {/* Pulsing waveform strip sits in the CTA area as a calm accent
-            between the slash hint and the speaking line. */}
         <div className="relative mx-auto mt-8 h-16 w-full">
           <LinearWaveStrip />
         </div>

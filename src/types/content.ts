@@ -1,13 +1,9 @@
 /**
- * Shared content types. All /content/*.ts files conform to these so
- * Phase 2 voice/RAG layer can import structured data without parsing JSX.
- *
- * Conventions:
+ * Shared content types. All /content/*.ts files conform to these so the
+ * voice/RAG layer can import structured data without parsing JSX.
  *   - `id` is the stable identifier used for `data-highlight-id` and as
- *     the lookup key for the Phase 2 navigation tool.
+ *     the lookup key for the voice navigation tool.
  *   - `anchor` is the section-level URL fragment (without #).
- *   - Anything still pending real content from Neeraj uses `[TODO: Neeraj]`
- *     as the literal string and is filtered out of UI lists where needed.
  */
 
 export type AnchorId =

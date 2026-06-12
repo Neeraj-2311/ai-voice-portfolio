@@ -60,7 +60,7 @@ export function Button(props: ButtonProps) {
           {...rest}
           href={href}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className={cls}
         >
           {content}

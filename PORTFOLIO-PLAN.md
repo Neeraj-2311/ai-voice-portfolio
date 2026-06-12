@@ -138,17 +138,30 @@ Agent worker lives in a **sibling** directory: `/Users/neeraj/Projects/voice-age
 Agent registers as `neeraj-portfolio`. Frontend mints a token with `RoomAgentDispatch` so LiveKit summons the worker. Agent calls these via `room.local_participant.perform_rpc(...)`:
 
 ```
-navigateTo({sectionId, highlightId?})
-openRoute({path, anchor?, highlightId?})
-openContactForm({intent?, prefill?})
+navigateTo({sectionId, highlightId?, text?})       text = sentence being spoken, paces the slow-scroll
+openRoute({path, anchor?, highlightId?, text?})
+openContactForm({intent?, prefill?})               opens the modal
+prefillContactForm({intent?, name?, email?, message?})  live-fills the OPEN form, field by field
+openBooking({intent})                              opens the Cal.com popup (booking fallback)
 downloadResume({})
 toggleCaptions({on?})
 bookingConfirmed({slotIso, eventTitle, calEventLink?, addToCalendarUrl?, attendeeEmail?})
+voiceMessageSent({intent?, email?})                shows the "message sent" card
+callbackRequested({name?})                         shows the "Neeraj will call you back" card
+wrapUpWarning({})                                  subtle "wrapping up soon" cue
 submitFeedback({rating: 'great'|'good'|'okay'|'bad', quote?})
 endCall({})
 ```
 
-Booking and slot listing happen on the **agent backend** (Cal v2 directly), not via frontend RPC. The frontend only sees `bookingConfirmed` after the agent has already done it.
+All RPCs are best-effort: the agent's `_rpc` helper returns an error dict rather than throwing, so an
+unimplemented method never breaks the call. Frontend ids/paths are allowlisted (`^[a-zA-Z0-9_-]+$` /
+`^/[a-zA-Z0-9/_-]*$`); `text` is free, length-capped, never injected as HTML.
+
+Booking (real Cal v2 slots + bookings), lead capture (Resend email, Google Sheet fallback), callback
+notification, and voice-driven contact send all happen on the **agent backend** (see
+`/Users/neeraj/Projects/voice-agent`), not on Next.js, to keep the free-tier site light. The KB the
+agent narrates from is generated from `src/content/*` by `scripts/build-voice-kb.ts` (runs in
+`prebuild`) into `voice-agent/src/portfolio_kb.json`.
 
 ---
 

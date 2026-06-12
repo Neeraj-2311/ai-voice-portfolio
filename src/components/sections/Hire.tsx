@@ -89,7 +89,7 @@ export function Hire() {
                     <Link
                       href={s.href}
                       target="_blank"
-                      rel="noreferrer me"
+                      rel="noopener noreferrer me"
                       className="border-line bg-bg text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-2 text-small font-medium transition-colors"
                     >
                       <LinkedinIcon className="h-4 w-4" aria-hidden="true" />

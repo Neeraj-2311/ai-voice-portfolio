@@ -22,13 +22,9 @@ import { GithubIcon, LinkedinIcon, XIcon } from '@/components/primitives/BrandIc
 
 export type IconComponent = LucideIcon | ComponentType<SVGProps<SVGSVGElement>>;
 
-/**
- * Central map for resolving icon-by-name references in content/*.ts files.
- * Content stays serialisable (no React imports) and components look up the
- * component here at render time. Brand glyphs (GitHub / LinkedIn / X) are
- * inlined SVGs because lucide-react v1 removed brand marks.
- */
-export const iconMap: Record<string, IconComponent> = {
+// Content files reference icons by string name so they stay serialisable.
+// Components resolve those names here at render time.
+const iconMap: Record<string, IconComponent> = {
   ALargeSmall,
   AlertCircle,
   AudioLines,

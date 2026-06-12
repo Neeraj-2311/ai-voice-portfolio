@@ -3,10 +3,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Calendar, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
-import { useId, useState, useTransition } from 'react';
+import { useEffect, useId, useState, useTransition } from 'react';
 import { type FieldError, type Path, useForm, useWatch, Controller } from 'react-hook-form';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { submitContactAction } from '@/actions/contact';
+import {
+  PREFILL_CONTACT_MODAL_EVENT,
+  type PrefillContactModalDetail,
+} from '@/lib/contact-modal-event';
 import { LinkedinIcon, XIcon } from '@/components/primitives/BrandIcon';
 import { Button } from '@/components/primitives/Button';
 import { site } from '@/content/site';
@@ -38,6 +42,7 @@ export function ContactForm({
   const [isPending, startTransition] = useTransition();
   const [phase, setPhase] = useState<Phase>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const {
     register,
@@ -45,6 +50,7 @@ export function ContactForm({
     control,
     reset,
     setError,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -59,6 +65,25 @@ export function ContactForm({
   const watchedIntent = useWatch({ control, name: 'intent' });
   const intent: Intent = watchedIntent ?? initialIntent ?? 'hire';
 
+  // Live fill from the voice agent: as it collects the message it patches the
+  // open form field by field, so the visitor watches it populate in real time.
+  useEffect(() => {
+    const onPrefill = (event: Event) => {
+      const detail = (event as CustomEvent<PrefillContactModalDetail>).detail ?? {};
+      const apply = (field: Path<ContactFormValues>, value?: string) => {
+        if (typeof value === 'string' && value.length > 0) {
+          setValue(field, value, { shouldDirty: true, shouldValidate: false });
+        }
+      };
+      apply('name', detail.name);
+      apply('email', detail.email);
+      apply('message', detail.message);
+      if (detail.intent) apply('intent', detail.intent);
+    };
+    window.addEventListener(PREFILL_CONTACT_MODAL_EVENT, onPrefill);
+    return () => window.removeEventListener(PREFILL_CONTACT_MODAL_EVENT, onPrefill);
+  }, [setValue]);
+
   const onSubmit = handleSubmit((data) => {
     setErrorMessage(null);
     setPhase('launching');
@@ -66,7 +91,8 @@ export function ContactForm({
     startTransition(async () => {
       const [result] = await Promise.all([
         submitContactAction(payload),
-        // Hold the rocket animation so it always plays in full.
+        // Floor the perceived latency so the loading state is visible even
+        // when Resend responds in <100ms; prevents UI flash.
         new Promise((resolve) => setTimeout(resolve, 1600)),
       ]);
       if (result.ok) {
@@ -93,16 +119,20 @@ export function ContactForm({
         {phase === 'success' ? (
           <motion.div
             key="success"
-            initial={{ opacity: 0, y: 16, scale: 0.96 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -16, scale: 0.96 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -16, scale: 0.96 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="text-fg flex flex-col items-center gap-3 py-10 text-center"
           >
             <motion.div
-              initial={{ scale: 0, rotate: -90 }}
+              initial={prefersReducedMotion ? false : { scale: 0, rotate: -90 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.05, type: 'spring', stiffness: 220, damping: 16 }}
+              transition={
+                prefersReducedMotion
+                  ? { duration: 0 }
+                  : { delay: 0.05, type: 'spring', stiffness: 220, damping: 16 }
+              }
             >
               <CheckCircle2 className="text-success h-12 w-12" aria-hidden="true" />
             </motion.div>
@@ -124,10 +154,10 @@ export function ContactForm({
             onSubmit={onSubmit}
             className="space-y-5"
             aria-busy={isPending}
-            initial={{ opacity: 0, y: 8 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             <fieldset disabled={isPending} className="space-y-5">
               <Controller
@@ -245,7 +275,7 @@ function DirectAlternatives({ onBookCall }: { onBookCall?: () => void }) {
             <Link
               href={linkedin.href}
               target="_blank"
-              rel="noreferrer me"
+              rel="noopener noreferrer me"
               className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small transition-colors"
             >
               <LinkedinIcon className="h-4 w-4" aria-hidden="true" />
@@ -258,7 +288,7 @@ function DirectAlternatives({ onBookCall }: { onBookCall?: () => void }) {
             <Link
               href={twitter.href}
               target="_blank"
-              rel="noreferrer me"
+              rel="noopener noreferrer me"
               aria-label="X (Twitter)"
               className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center justify-center rounded-full border px-3 py-1.5 text-small transition-colors"
             >

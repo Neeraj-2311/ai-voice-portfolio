@@ -126,8 +126,6 @@ export function Nav() {
         <div
           id="mobile-nav-panel"
           className="border-line bg-bg border-t md:hidden"
-          role="dialog"
-          aria-modal="true"
           aria-label="Mobile navigation"
         >
           <ul className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4">

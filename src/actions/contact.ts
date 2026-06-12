@@ -1,6 +1,8 @@
 'use server';
 
-import { contactFormSchema, type ContactFormValues } from '@/lib/intents';
+import { headers } from 'next/headers';
+import { contactFormSchema, intentMeta, type ContactFormValues } from '@/lib/intents';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { site } from '@/content/site';
 
 export type ContactActionResult =
@@ -8,9 +10,9 @@ export type ContactActionResult =
   | { ok: false; error: string; fieldErrors?: Partial<Record<keyof ContactFormValues, string>> };
 
 const INTENT_LABEL: Record<ContactFormValues['intent'], string> = {
-  hire: 'Hire enquiry',
-  mentorship: 'Mentorship request',
-  speaking: 'Speaking enquiry',
+  hire: `${intentMeta.hire.label} enquiry`,
+  mentorship: `${intentMeta.mentorship.label} request`,
+  speaking: `${intentMeta.speaking.label} enquiry`,
   other: 'General message',
 };
 
@@ -28,6 +30,24 @@ const INTENT_LABEL: Record<ContactFormValues['intent'], string> = {
  * straight in their inbox.
  */
 export async function submitContactAction(input: unknown): Promise<ContactActionResult> {
+  // Best-effort per-IP throttle. 3 submissions per minute, 20 per day.
+  const hdrs = await headers();
+  const ip = clientIp(hdrs);
+  const perMinute = rateLimit({ key: `contact:m:${ip}`, limit: 3, windowMs: 60_000 });
+  if (!perMinute.allowed) {
+    return {
+      ok: false,
+      error: 'Too many submissions just now. Please wait a moment and try again.',
+    };
+  }
+  const perDay = rateLimit({ key: `contact:d:${ip}`, limit: 20, windowMs: 24 * 60 * 60_000 });
+  if (!perDay.allowed) {
+    return {
+      ok: false,
+      error: 'Daily submission limit reached. Please email me directly.',
+    };
+  }
+
   const parsed = contactFormSchema.safeParse(input);
   if (!parsed.success) {
     const fieldErrors: Partial<Record<keyof ContactFormValues, string>> = {};

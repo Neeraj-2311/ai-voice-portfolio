@@ -25,13 +25,21 @@ import type {
  * agent-driven UI events without owning the page state itself.
  */
 export interface VoiceSessionHandlers {
-  onNavigate: (sectionId: string, highlightId?: string) => void;
-  onOpenRoute: (path: string, anchor?: string, highlightId?: string) => void;
+  onNavigate: (sectionId: string, highlightId?: string, text?: string) => void;
+  onOpenRoute: (path: string, anchor?: string, highlightId?: string, text?: string) => void;
   onOpenContactForm: (intent?: string, prefill?: Record<string, string>) => void;
+  onPrefillContactForm: (fields: Record<string, string>) => void;
+  onCloseContactForm: () => void;
   onDownloadResume: () => void;
   onToggleCaptions: (on?: boolean) => void;
   onBookingConfirmed: (payload: BookingPayload) => void;
+  onOpenBooking: (intent?: string) => void;
   onSubmitFeedback: (payload: FeedbackPayload) => void;
+  onVoiceMessageSent: (payload: { intent?: string; email?: string }) => void;
+  onCallbackRequested: (payload: { name?: string }) => void;
+  onWrapUpWarning: () => void;
+  /** The agent's streaming speech transcript; drives transcript-based scroll. */
+  onAgentSpeech: (text: string) => void;
   onEndCall: () => void;
 }
 
@@ -145,13 +153,37 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
     const safeReturn = (ok: boolean, info?: Record<string, unknown>) =>
       JSON.stringify({ ok, ...info });
 
+    // Identifier allowlists. The agent is trusted but the room transport isn't,
+    // so we validate any string that flows into navigation or DOM lookup to
+    // block javascript:, data:, external URLs, and CSS-selector injection.
+    const safeIdRe = /^[a-zA-Z0-9_-]+$/;
+    const safePathRe = /^\/[a-zA-Z0-9/_-]*$/;
+    const isSafeId = (s: unknown): s is string =>
+      typeof s === 'string' && s.length > 0 && s.length <= 128 && safeIdRe.test(s);
+    const isSafePath = (s: unknown): s is string =>
+      typeof s === 'string' && s.length > 0 && s.length <= 256 && safePathRe.test(s);
+
+    // Free narration text used only to pace the scroll. Never an id and never
+    // injected as HTML, so it isn't allowlisted, only length-capped and coerced.
+    const asText = (s: unknown): string | undefined =>
+      typeof s === 'string' && s.length > 0 ? s.slice(0, 400) : undefined;
+
     local.registerRpcMethod('navigateTo', async (data) => {
       try {
-        const { sectionId, highlightId } = JSON.parse(data.payload) as {
-          sectionId: string;
-          highlightId?: string;
+        const { sectionId, highlightId, text } = JSON.parse(data.payload) as {
+          sectionId: unknown;
+          highlightId?: unknown;
+          text?: unknown;
         };
-        handlersRef.current.onNavigate(sectionId, highlightId);
+        if (!isSafeId(sectionId)) return safeReturn(false, { error: 'invalid sectionId' });
+        if (highlightId != null && !isSafeId(highlightId)) {
+          return safeReturn(false, { error: 'invalid highlightId' });
+        }
+        handlersRef.current.onNavigate(
+          sectionId,
+          (highlightId as string | undefined) ?? undefined,
+          asText(text),
+        );
         return safeReturn(true);
       } catch (e) {
         return safeReturn(false, { error: String(e) });
@@ -160,12 +192,25 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
 
     local.registerRpcMethod('openRoute', async (data) => {
       try {
-        const { path, anchor, highlightId } = JSON.parse(data.payload) as {
-          path: string;
-          anchor?: string;
-          highlightId?: string;
+        const { path, anchor, highlightId, text } = JSON.parse(data.payload) as {
+          path: unknown;
+          anchor?: unknown;
+          highlightId?: unknown;
+          text?: unknown;
         };
-        handlersRef.current.onOpenRoute(path, anchor, highlightId);
+        if (!isSafePath(path)) return safeReturn(false, { error: 'invalid path' });
+        if (anchor != null && !isSafeId(anchor)) {
+          return safeReturn(false, { error: 'invalid anchor' });
+        }
+        if (highlightId != null && !isSafeId(highlightId)) {
+          return safeReturn(false, { error: 'invalid highlightId' });
+        }
+        handlersRef.current.onOpenRoute(
+          path,
+          (anchor as string | undefined) ?? undefined,
+          (highlightId as string | undefined) ?? undefined,
+          asText(text),
+        );
         return safeReturn(true);
       } catch (e) {
         return safeReturn(false, { error: String(e) });
@@ -183,6 +228,67 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       } catch (e) {
         return safeReturn(false, { error: String(e) });
       }
+    });
+
+    // Live field patches for the open contact form (voice-driven fill).
+    local.registerRpcMethod('prefillContactForm', async (data) => {
+      try {
+        const fields = JSON.parse(data.payload || '{}') as Record<string, unknown>;
+        const clean: Record<string, string> = {};
+        for (const key of ['intent', 'name', 'email', 'message']) {
+          const v = fields[key];
+          if (typeof v === 'string') clean[key] = v.slice(0, 2000);
+        }
+        handlersRef.current.onPrefillContactForm(clean);
+        return safeReturn(true);
+      } catch (e) {
+        return safeReturn(false, { error: String(e) });
+      }
+    });
+
+    local.registerRpcMethod('closeContactForm', async () => {
+      handlersRef.current.onCloseContactForm();
+      return safeReturn(true);
+    });
+
+    // Open the Cal.com booking popup (booking fallback when the live API path
+    // is unavailable).
+    local.registerRpcMethod('openBooking', async (data) => {
+      try {
+        const { intent } = JSON.parse(data.payload || '{}') as { intent?: string };
+        handlersRef.current.onOpenBooking(intent);
+        return safeReturn(true);
+      } catch (e) {
+        return safeReturn(false, { error: String(e) });
+      }
+    });
+
+    local.registerRpcMethod('voiceMessageSent', async (data) => {
+      try {
+        const { intent, email } = JSON.parse(data.payload || '{}') as {
+          intent?: string;
+          email?: string;
+        };
+        handlersRef.current.onVoiceMessageSent({ intent, email });
+        return safeReturn(true);
+      } catch (e) {
+        return safeReturn(false, { error: String(e) });
+      }
+    });
+
+    local.registerRpcMethod('callbackRequested', async (data) => {
+      try {
+        const { name } = JSON.parse(data.payload || '{}') as { name?: string };
+        handlersRef.current.onCallbackRequested({ name });
+        return safeReturn(true);
+      } catch (e) {
+        return safeReturn(false, { error: String(e) });
+      }
+    });
+
+    local.registerRpcMethod('wrapUpWarning', async () => {
+      handlersRef.current.onWrapUpWarning();
+      return safeReturn(true);
     });
 
     local.registerRpcMethod('downloadResume', async () => {
@@ -287,7 +393,13 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
         const from: 'user' | 'agent' =
           participant && isAgent(participant) ? 'agent' : 'user';
-        for (const seg of segments) upsertCaption(seg, from);
+        for (const seg of segments) {
+          upsertCaption(seg, from);
+          // Drive transcript-based scroll/highlight from the agent's speech.
+          if (from === 'agent' && seg.text) {
+            handlersRef.current.onAgentSpeech(seg.text);
+          }
+        }
       });
 
       room.localParticipant.on(ParticipantEvent.IsSpeakingChanged, (speaking) => {

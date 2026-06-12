@@ -9,7 +9,7 @@ import {
   mentorshipTopics,
 } from '@/content/mentorship';
 
-const isPlaceholder = (s: string) => s.includes('[TODO');
+import { isPlaceholderString as isPlaceholder } from '@/lib/placeholders';
 
 export const metadata: Metadata = {
   title: 'Mentorship',

@@ -47,7 +47,7 @@ export function BookingSummaryCard({ payload, onDone }: BookingSummaryCardProps)
           <Link
             href={payload.addToCalendarUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-small transition-colors"
           >
             <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
@@ -58,7 +58,7 @@ export function BookingSummaryCard({ payload, onDone }: BookingSummaryCardProps)
           <Link
             href={payload.calEventLink}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-small transition-colors"
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
