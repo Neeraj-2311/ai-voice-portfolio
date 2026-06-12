@@ -40,7 +40,7 @@ export default async function OpengraphImage() {
               letterSpacing: '-0.01em',
             }}
           >
-            Currently building voice AI at {site.current.company} · {site.location}
+            Building production voice agents · {site.location}
           </span>
         </div>
 
@@ -94,8 +94,9 @@ export default async function OpengraphImage() {
             <span
               style={{
                 fontSize: 20,
-                background: 'rgba(99, 102, 241, 0.18)',
-                color: '#818cf8',
+                background: 'rgba(10, 10, 12, 0.55)',
+                color: '#c7d2fe',
+                border: '1px solid rgba(129, 140, 248, 0.55)',
                 padding: '8px 16px',
                 borderRadius: 999,
                 fontWeight: 500,
