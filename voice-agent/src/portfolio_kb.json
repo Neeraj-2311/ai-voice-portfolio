@@ -1,0 +1,389 @@
+{
+  "version": "1",
+  "generatedAt": "2026-06-12T16:57:21.205Z",
+  "bio": "I am Neeraj, a full-stack AI engineer based in Delhi, India, working remote or hybrid worldwide. I build production voice agents, agentic backends, and the full-stack systems behind them. Most recently I shipped an enterprise voice AI platform at IntellifyAI at around 1.2 second median full-turn latency, multi-tenant and GDPR-grade. I am open to full-time, fractional, and contract work.",
+  "voiceDisclaimer": "This is a clone of my voice, and audio is not stored.",
+  "intros": [
+    "Hey, I'm Neeraj. Want a quick tour of my work, or is there something specific you're after?",
+    "Hi, this is Neeraj. Curious about my work, looking to hire, or want to book a mentorship call?"
+  ],
+  "sections": [
+    {
+      "sectionId": "hero",
+      "label": "the top of the page, who I am at a glance"
+    },
+    {
+      "sectionId": "services",
+      "label": "what I do, my three service lanes"
+    },
+    {
+      "sectionId": "experience",
+      "label": "my work experience timeline"
+    },
+    {
+      "sectionId": "case-studies",
+      "label": "case studies and proof of work"
+    },
+    {
+      "sectionId": "skills",
+      "label": "my skill stack"
+    },
+    {
+      "sectionId": "mentorship",
+      "label": "free thirty minute mentorship calls"
+    },
+    {
+      "sectionId": "speaking",
+      "label": "speaking at events, hackathons, colleges"
+    },
+    {
+      "sectionId": "hire",
+      "label": "the hire me section"
+    },
+    {
+      "sectionId": "contact",
+      "label": "the contact form"
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "label": "homepage"
+    },
+    {
+      "path": "/hire",
+      "label": "dedicated hire page with engagement details"
+    },
+    {
+      "path": "/mentorship",
+      "label": "dedicated mentorship page with the booking calendar"
+    },
+    {
+      "path": "/speaking",
+      "label": "dedicated speaking page"
+    },
+    {
+      "path": "/case-studies/talk-to-my-portfolio",
+      "label": "the talk-to-my-portfolio case study"
+    },
+    {
+      "path": "/case-studies/enterprise-voice-ai",
+      "label": "the enterprise voice AI case study"
+    },
+    {
+      "path": "/case-studies/goreach",
+      "label": "the GoReach case study"
+    },
+    {
+      "path": "/case-studies/sheets-voice-automation",
+      "label": "the sheets voice automation case study"
+    },
+    {
+      "path": "/resume",
+      "label": "my resume PDF"
+    }
+  ],
+  "highlights": [
+    {
+      "highlightId": "services-voice",
+      "sectionId": "services",
+      "route": "/",
+      "label": "Voice AI engineering",
+      "note": "Production voice agents at 1.2s full-turn latency.",
+      "details": [
+        "1.2s full-turn latency",
+        "GDPR-grade isolation",
+        "Multi-tenant under load"
+      ]
+    },
+    {
+      "highlightId": "services-agents",
+      "sectionId": "services",
+      "route": "/",
+      "label": "AI agents & full-stack",
+      "note": "Tool-using agents and RAG pipelines shipped as real products."
+    },
+    {
+      "highlightId": "services-mentorship",
+      "sectionId": "services",
+      "route": "/",
+      "label": "Mentorship & sessions",
+      "note": "1:1 sessions for AI builders, hackathon mentoring, college talks, and workshops."
+    },
+    {
+      "highlightId": "intellifyai",
+      "sectionId": "experience",
+      "route": "/",
+      "label": "IntellifyAI, Full Stack Engineer (Contract) (Sep 2025 to May 2026)",
+      "note": "Shipped an enterprise voice AI platform to production, hitting ~1.2s median full-turn latency (STT, LLM, TTS, VAD combined) with sub-second per-stage targets.",
+      "details": [
+        "Shipped an enterprise voice AI platform to production, hitting ~1.2s median full-turn latency (STT, LLM, TTS, VAD combined) with sub-second per-stage targets.",
+        "Load tested the platform at ~10 concurrent tenants with isolation verified, meeting the multi-tenancy and GDPR bar required for enterprise sign-off.",
+        "Designed and built the platform RBAC system end to end on my own in TypeScript on Node.js and Express, covering role and permission modelling, enforcement across services, and the admin surface to manage it.",
+        "Architected the backend from zero with the founder: Node.js and Express in TypeScript for the main platform (business logic, RBAC, admin, tenant management), Python with FastAPI for the LiveKit voice agent runtime and deployment pipelines.",
+        "Validated the approach through multiple POCs before committing to the full build, then automated per-tenant Azure rollout in Python so onboarding became a repeatable pipeline rather than a manual ops job.",
+        "Led a small team of senior engineers through delivery, then guided them after launch so they could own the platform once I rolled off."
+      ]
+    },
+    {
+      "highlightId": "mindcraft",
+      "sectionId": "experience",
+      "route": "/",
+      "label": "Mindcraft Labs, Fullstack AI Developer (Feb 2025 to Sep 2025)",
+      "note": "Converted multiple multi-step manual onboardings into chatbot and voice agent flows, collapsing human-handled intakes into self-serve conversations.",
+      "details": [
+        "Converted multiple multi-step manual onboardings into chatbot and voice agent flows, collapsing human-handled intakes into self-serve conversations.",
+        "Engineered three voice agent platforms on top of whitelabel providers (ElevenLabs, Retell AI), extending each in TypeScript on Node.js with custom logic, integrations, and workflow scaffolding so they fit real business processes rather than running as stock agents.",
+        "Built a Sheets-to-call automation that placed bulk outbound calls, captured structured results, and triggered downstream workflows, handling ~100 calls per campaign.",
+        "Shipped Node.js microservices, Python scripts, and low-code workflows across the wider automation portfolio to remove daily ops time across the business.",
+        "Owned full-stack delivery on Next.js, Node.js, and Firebase in TypeScript, from data model to UI to monitoring."
+      ]
+    },
+    {
+      "highlightId": "menrva",
+      "sectionId": "experience",
+      "route": "/",
+      "label": "Menrva Technologies, Front-end Developer Intern (Oct 2023 to Jan 2025)",
+      "note": "Delivered agile React development for product interfaces, integrating AI services via APIs with full user-management flows.",
+      "details": [
+        "Delivered agile React development for product interfaces, integrating AI services via APIs with full user-management flows.",
+        "Owned UI feature delivery from Figma to production, including responsive layouts and accessibility.",
+        "Collaborated directly with the founder and leadership on front-end strategy, contributing to project delivery and product decisions.",
+        "Recognised as Best Intern of the Quarter (Oct to Dec 2023) for shipped feature work."
+      ]
+    },
+    {
+      "highlightId": "case-talk-to-my-portfolio",
+      "sectionId": "case-studies",
+      "route": "/",
+      "label": "Talk to my portfolio (Live on this site)",
+      "note": "A voice agent that drives this site over RPC: ask it to open a case study, book a call, or download the resume, and watch the page respond.",
+      "details": [
+        "A voice agent that drives this site over RPC: ask it to open a case study, book a call, or download the resume, and watch the page respond."
+      ]
+    },
+    {
+      "highlightId": "case-enterprise-voice-ai",
+      "sectionId": "case-studies",
+      "route": "/",
+      "label": "Enterprise voice AI platform (1.2s median full-turn latency)",
+      "note": "Shipped a multi-tenant voice agent platform to enterprise production, with 1.2s median full-turn latency and GDPR-grade isolation across tenants.",
+      "details": [
+        "Shipped a multi-tenant voice agent platform to enterprise production, with 1.2s median full-turn latency and GDPR-grade isolation across tenants."
+      ]
+    },
+    {
+      "highlightId": "case-goreach",
+      "sectionId": "case-studies",
+      "route": "/",
+      "label": "GoReach (2.3x lift with voice setup)",
+      "note": "A LinkedIn outreach product that writes in the user's own voice via per-user RAG.",
+      "details": [
+        "A LinkedIn outreach product that writes in the user's own voice via per-user RAG. Live since April 2026 with 102 beta users and a 2.3x quality gap between voice-setup-complete and skipped."
+      ]
+    },
+    {
+      "highlightId": "case-sheets-voice-automation",
+      "sectionId": "case-studies",
+      "route": "/",
+      "label": "Sheets-to-call automation pipeline (1 support role absorbed into automation)",
+      "note": "A Google Sheet automation that turns rows into parallel voice calls and writes structured outcomes back.",
+      "details": [
+        "A Google Sheet automation that turns rows into parallel voice calls and writes structured outcomes back. Built at Mindcraft Labs to absorb a support team's manual dialling work without making them leave their workbook."
+      ]
+    },
+    {
+      "highlightId": "skills-languages",
+      "sectionId": "skills",
+      "route": "/",
+      "label": "Languages",
+      "note": "My languages stack.",
+      "details": [
+        "TypeScript",
+        "JavaScript",
+        "Python",
+        "SQL",
+        "C / C++",
+        "HTML",
+        "CSS"
+      ]
+    },
+    {
+      "highlightId": "skills-ai-ml",
+      "sectionId": "skills",
+      "route": "/",
+      "label": "AI / ML",
+      "note": "My ai / ml stack.",
+      "details": [
+        "LLMs",
+        "RAG",
+        "Agentic AI",
+        "Function Calling",
+        "Voice Orchestration",
+        "LiveKit",
+        "Azure AI Foundry",
+        "Deepgram",
+        "Cartesia",
+        "ElevenLabs",
+        "Retell AI",
+        "Embeddings",
+        "Prompt Engineering"
+      ]
+    },
+    {
+      "highlightId": "skills-frameworks",
+      "sectionId": "skills",
+      "route": "/",
+      "label": "Frameworks",
+      "note": "My frameworks stack.",
+      "details": [
+        "Next.js",
+        "Node.js",
+        "Express",
+        "React",
+        "FastAPI",
+        "Tailwind CSS",
+        "Framer Motion"
+      ]
+    },
+    {
+      "highlightId": "skills-cloud-infra",
+      "sectionId": "skills",
+      "route": "/",
+      "label": "Cloud / Infra",
+      "note": "My cloud / infra stack.",
+      "details": [
+        "Azure",
+        "AWS",
+        "Vercel",
+        "LiveKit Cloud",
+        "Docker",
+        "GitHub Actions",
+        "Linux"
+      ]
+    },
+    {
+      "highlightId": "skills-data",
+      "sectionId": "skills",
+      "route": "/",
+      "label": "Data",
+      "note": "My data stack.",
+      "details": [
+        "PostgreSQL",
+        "pgvector",
+        "MongoDB",
+        "Convex DB",
+        "Firebase"
+      ]
+    },
+    {
+      "highlightId": "mentorship-roadmap",
+      "sectionId": "mentorship",
+      "route": "/",
+      "label": "AI career roadmap: what to build, what to skip, what hiring managers actually look for.",
+      "note": "AI career roadmap: what to build, what to skip, what hiring managers actually look for."
+    },
+    {
+      "highlightId": "mentorship-voice-architecture",
+      "sectionId": "mentorship",
+      "route": "/",
+      "label": "Voice agent architecture: latency budgets, eval harnesses, observability, multi-tenant scale.",
+      "note": "Voice agent architecture: latency budgets, eval harnesses, observability, multi-tenant scale."
+    },
+    {
+      "highlightId": "mentorship-portfolio",
+      "sectionId": "mentorship",
+      "route": "/",
+      "label": "Portfolio and resume teardown: concrete edits, line by line.",
+      "note": "Portfolio and resume teardown: concrete edits, line by line."
+    },
+    {
+      "highlightId": "mentorship-open",
+      "sectionId": "mentorship",
+      "route": "/",
+      "label": "Whatever you're stuck on.",
+      "note": "Whatever you're stuck on. Bring the actual problem."
+    },
+    {
+      "highlightId": "hire-project",
+      "sectionId": "hire",
+      "route": "/",
+      "label": "Voice AI from spec to production",
+      "note": "Take a voice agent from whiteboard to enterprise-ready.",
+      "details": [
+        "Take a voice agent from whiteboard to enterprise-ready. LiveKit, Azure AI Foundry, Node.js, FastAPI, Next.js. Sub-second stage latency, tenant isolation, eval harness, observability, handoff docs. Delivered, not demoed."
+      ]
+    },
+    {
+      "highlightId": "hire-fractional",
+      "sectionId": "hire",
+      "route": "/",
+      "label": "Fractional AI engineering lead",
+      "note": "Embedded with your founding team.",
+      "details": [
+        "Embedded with your founding team. Architecture calls, code review, hands-on work on the critical path, and team mentoring. For startups that need a senior voice or AI engineer without the full-time hire yet."
+      ]
+    },
+    {
+      "highlightId": "hire-discovery",
+      "sectionId": "hire",
+      "route": "/",
+      "label": "Honest discovery call",
+      "note": "Not sure what you need?",
+      "details": [
+        "Not sure what you need? Book the call. I'll give you a straight read on what should be built, what shouldn't, and whether I'm the right person to build it."
+      ]
+    },
+    {
+      "highlightId": "speaking-voice-ai",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "Voice AI in production: latency, isolation, the parts demos skip",
+      "note": "Voice AI in production: latency, isolation, the parts demos skip"
+    },
+    {
+      "highlightId": "speaking-agents",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "Agentic systems and the eval problem nobody wants to solve",
+      "note": "Agentic systems and the eval problem nobody wants to solve"
+    },
+    {
+      "highlightId": "speaking-fullstack-ai",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "Full-stack AI: shipping LLM products end to end",
+      "note": "Full-stack AI: shipping LLM products end to end"
+    },
+    {
+      "highlightId": "speaking-careers",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "Breaking into AI as a developer without faking it",
+      "note": "Breaking into AI as a developer without faking it"
+    },
+    {
+      "highlightId": "speaking-rag",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "RAG architecture in practice, beyond the toy demo",
+      "note": "RAG architecture in practice, beyond the toy demo"
+    },
+    {
+      "highlightId": "speaking-open-source-voice",
+      "sectionId": "speaking",
+      "route": "/",
+      "label": "Open-source voice infrastructure with LiveKit",
+      "note": "Open-source voice infrastructure with LiveKit"
+    }
+  ],
+  "facts": [
+    "Full-stack AI engineer. I build production voice agents, agentic backends, and the full-stack systems behind them. Sub-second latency, GDPR-grade isolation, and the engineering to back it up. Available for hire, mentorship, and speaking. Remote or hybrid worldwide.",
+    "Shipped an enterprise voice AI platform at IntellifyAI, 1.2s median full-turn latency, multi-tenant on LiveKit and Azure AI Foundry.",
+    "I am based in Delhi, India · Remote / hybrid worldwide.",
+    "Open to full-time, fractional, and contract · remote or hybrid worldwide.",
+    "I have three service lanes: voice AI engineering, AI agents and full-stack, and mentorship and speaking.",
+    "Mentorship calls are free, thirty minutes, for students and early-career devs building AI. Not paid, just a real call.",
+    "Hire me for project work, fractional AI engineering, or a free discovery call."
+  ]
+}
