@@ -1,0 +1,7 @@
+# NEXT_PUBLIC_* env vars are inlined into the client bundle by design, so their
+# values legitimately appear in the build output. They are not secrets (the Cal
+# username, contact email, site URL, LiveKit server URL, and Plausible domain are
+# all visible on the live site), so exclude them from Netlify's secret scanner to
+# stop false positives from failing the build.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CAL_USERNAME,NEXT_PUBLIC_LIVEKIT_URL,NEXT_PUBLIC_PLAUSIBLE_DOMAIN,NEXT_PUBLIC_SITE_EMAIL,NEXT_PUBLIC_SITE_URL"
