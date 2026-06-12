@@ -2,13 +2,12 @@
 
 import {
   ConnectionState,
-  createLocalAudioTrack,
+  LocalAudioTrack,
   Participant,
   ParticipantEvent,
   Room,
   RoomEvent,
   Track,
-  type LocalAudioTrack,
   type RemoteAudioTrack,
   type RemoteTrack,
   type TranscriptionSegment,
@@ -78,6 +77,21 @@ function isAgent(participant: Participant): boolean {
     participant.identity.toLowerCase().includes('bot') ||
     !participant.isLocal
   );
+}
+
+/** A human-readable reason the mic could not be acquired, shown in the arc. */
+function micUnavailableMessage(e: unknown): string {
+  const name = (e as { name?: string })?.name;
+  if (name === 'SecurityError' || !window.isSecureContext) {
+    return 'Voice needs a secure (https) connection. You can type instead.';
+  }
+  if (name === 'NotAllowedError' || name === 'NotReadableError') {
+    return 'Microphone blocked. Allow access in your browser settings, then reload. You can type for now.';
+  }
+  if (name === 'NotFoundError') {
+    return 'No microphone found. You can type instead.';
+  }
+  return 'Microphone unavailable. You can type instead.';
 }
 
 export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession {
@@ -434,12 +448,20 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       let micTrack: LocalAudioTrack | null = null;
       if (!textOnly) {
         try {
-          micTrack = await createLocalAudioTrack();
-        } catch {
-          // No mic or permission denied. Drop into text mode so the tour still
-          // works, and tell the user why.
+          // getUserMedia is unavailable off a secure origin (it needs HTTPS or
+          // localhost), so the browser would never prompt. Fail loudly instead.
+          if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+            throw new DOMException('Insecure context', 'SecurityError');
+          }
+          // Call getUserMedia directly as the FIRST await so it stays inside the
+          // user gesture; that is what makes iOS show the permission prompt.
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          micTrack = new LocalAudioTrack(stream.getAudioTracks()[0]);
+        } catch (e) {
+          // No mic, permission denied, or insecure context. Drop into text mode
+          // so the tour still works, and tell the user exactly why.
           micTrack = null;
-          setErrorMessage('Microphone blocked. Type to chat instead.');
+          setErrorMessage(micUnavailableMessage(e));
           handlersRef.current.onMicDenied();
         }
       }
