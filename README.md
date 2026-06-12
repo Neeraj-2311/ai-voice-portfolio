@@ -98,7 +98,7 @@ Nothing real is committed. Both apps ship a `.env.example` and ignore every real
 ## Tech
 
 **Web:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion, MDX, `@livekit/components-react`, Cal.com embed, Resend.
-**Agent:** Python, [LiveKit Agents](https://github.com/livekit/agents), `uv`, a Deepgram ▸ OpenAI ▸ Cartesia voice pipeline via LiveKit Inference, with Cal.com v2, Resend, and Google Sheets integrations.
+**Agent:** Python, [LiveKit Agents](https://github.com/livekit/agents), `uv`, a Deepgram (STT) ▸ OpenAI (LLM + TTS) voice pipeline on your own provider keys, with ai-coustics noise cancellation, Silero VAD, an English turn detector, and Cal.com v2, Resend, and Google Sheets integrations.
 
 ## License
 

@@ -69,6 +69,9 @@ export function AudioVisualizer({
 
     const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const ctx = new Ctx();
+    // iOS creates the context suspended when it is made outside a user gesture;
+    // resume so the bars animate once audio is flowing.
+    void ctx.resume().catch(() => {});
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 128;
     analyser.smoothingTimeConstant = 0.78;

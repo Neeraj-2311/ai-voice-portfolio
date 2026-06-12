@@ -62,10 +62,3 @@ export interface MessageSentPayload {
 export interface CallbackPayload {
   name?: string;
 }
-
-export interface VoiceMode {
-  /** When true, mic is off; user types into the fallback input. */
-  textOnly: boolean;
-  captionsVisible: boolean;
-  micMuted: boolean;
-}

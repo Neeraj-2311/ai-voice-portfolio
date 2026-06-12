@@ -150,6 +150,11 @@ export function VoiceArc({
             </div>
           )}
 
+          {/* Non-fatal notice (e.g. mic blocked, falling back to text) */}
+          {errorMessage && state !== 'error' && (
+            <p className="text-subtle text-center text-[11px]">{errorMessage}</p>
+          )}
+
           {/* Subtle wrap-up cue */}
           {wrappingUp && state !== 'thank-you' && (
             <p className="text-subtle text-center text-[11px]">Wrapping up soon</p>

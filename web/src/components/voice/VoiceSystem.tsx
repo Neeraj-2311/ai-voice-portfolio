@@ -238,6 +238,7 @@ export function VoiceSystem() {
     onCallbackRequested,
     onWrapUpWarning,
     onAgentSpeech,
+    onMicDenied: () => setTextMode(true),
     onEndCall: () => endRef.current(),
   });
 

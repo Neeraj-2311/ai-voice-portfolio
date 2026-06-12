@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { footerLinkGroups } from '@/content/nav';
 import { site } from '@/content/site';
@@ -15,12 +16,21 @@ export function Footer() {
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-12 md:px-6 md:py-16">
         <div className="grid gap-8 sm:gap-10 md:grid-cols-[2fr_3fr]">
           <div>
-            <Link
-              href="/"
-              className="text-fg hover:text-accent text-h3 font-semibold tracking-tight transition-colors"
-            >
-              {site.shortName}
-            </Link>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/user.jpg"
+                alt={site.name}
+                width={44}
+                height={44}
+                className="border-line h-11 w-11 shrink-0 rounded-full border object-cover"
+              />
+              <Link
+                href="/"
+                className="text-fg hover:text-accent text-h3 font-semibold tracking-tight transition-colors"
+              >
+                {site.shortName}
+              </Link>
+            </div>
             <p className="text-muted mt-3 max-w-sm text-small">{site.tagline}</p>
             <ul className="mt-4 flex flex-wrap items-center gap-2 sm:mt-5">
               {site.socials.map((social) => {
