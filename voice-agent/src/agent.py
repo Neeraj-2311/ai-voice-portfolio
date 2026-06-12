@@ -168,7 +168,9 @@ async def session_entrypoint(ctx: JobContext) -> None:
 
     session: AgentSession[Userdata] = AgentSession(
         userdata=userdata,
-        stt=deepgram.STT(model=STT_MODEL, language="en-US"),
+        # smart_format renders spoken numbers as digits in the transcript/captions
+        # (e.g. "+94 67892345", "2024"), instead of spelling them out as words.
+        stt=deepgram.STT(model=STT_MODEL, language="en-US", smart_format=True),
         llm=openai.LLM(model=LLM_MODEL, api_key=os.getenv("OPENAI_API_KEY")),
         tts=openai.TTS(
             model=TTS_MODEL,

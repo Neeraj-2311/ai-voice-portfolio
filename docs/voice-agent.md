@@ -4,7 +4,7 @@ The Python [LiveKit Agents](https://github.com/livekit/agents) worker that power
 
 ## Pipeline
 
-- Speech-to-text, an LLM turn, then text-to-speech, wired through [LiveKit Inference](https://docs.livekit.io/agents/models/inference) (Deepgram STT, an OpenAI LLM, Cartesia TTS by default). The exact model ids live in `src/agent.py`.
+- Speech-to-text, an LLM turn, then text-to-speech: Deepgram STT, an OpenAI LLM, and OpenAI TTS, each called directly on your own provider keys (off LiveKit's metered gateway). Background voice cancellation via ai-coustics and Silero VAD. The exact model ids live in `src/agent.py`.
 - English turn detector for contextually-aware turn taking.
 - Auto-greets on session start.
 - First-person persona grounded in `src/portfolio_kb.json`, which is generated from the site's content (see [architecture.md](architecture.md)).

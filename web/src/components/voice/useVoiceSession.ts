@@ -2,6 +2,7 @@
 
 import {
   ConnectionState,
+  createLocalAudioTrack,
   Participant,
   ParticipantEvent,
   Room,
@@ -40,6 +41,8 @@ export interface VoiceSessionHandlers {
   onWrapUpWarning: () => void;
   /** The agent's streaming speech transcript; drives transcript-based scroll. */
   onAgentSpeech: (text: string) => void;
+  /** Mic permission was denied/unavailable; fall back to text mode. */
+  onMicDenied: () => void;
   onEndCall: () => void;
 }
 
@@ -410,7 +413,7 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
         });
       });
     },
-    [upsertCaption],
+    [upsertCaption, teardownAudio],
   );
 
   const start = useCallback(
@@ -421,6 +424,25 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       captionsRef.current = [];
       activePartialRef.current = { user: null, agent: null };
       setCaptions([]);
+
+      // Acquire the mic INSIDE the user gesture, before any await. iOS Safari
+      // only surfaces the permission prompt when getUserMedia is reached
+      // synchronously from a gesture; requesting it after the token fetch and
+      // room.connect (as we used to) is silently rejected on mobile, so the
+      // agent never hears the user and the arc hangs on "Waking up". We grab the
+      // track here and publish it once the room is connected.
+      let micTrack: LocalAudioTrack | null = null;
+      if (!textOnly) {
+        try {
+          micTrack = await createLocalAudioTrack();
+        } catch {
+          // No mic or permission denied. Drop into text mode so the tour still
+          // works, and tell the user why.
+          micTrack = null;
+          setErrorMessage('Microphone blocked. Type to chat instead.');
+          handlersRef.current.onMicDenied();
+        }
+      }
 
       try {
         const res = await fetch('/api/voice/token', { method: 'POST' });
@@ -440,21 +462,21 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
 
         await room.connect(url, token, { autoSubscribe: true });
 
-        if (!textOnly) {
-          try {
-            await room.localParticipant.setMicrophoneEnabled(true);
-            const pub = room.localParticipant.getTrackPublication(Track.Source.Microphone);
-            if (pub?.audioTrack) {
-              setTracks((t) => ({ ...t, localTrack: pub.audioTrack as LocalAudioTrack }));
-            }
-          } catch {
-            // Mic permission denied or unavailable. Caller falls back to text mode.
-            setErrorMessage('Mic unavailable. Switched to text.');
-          }
+        if (micTrack) {
+          const published = micTrack;
+          await room.localParticipant.publishTrack(published, {
+            source: Track.Source.Microphone,
+          });
+          setTracks((t) => ({ ...t, localTrack: published }));
         }
+
+        // Unlock audio playback for browsers that block autoplay until a
+        // gesture-initiated startAudio() (notably iOS Safari). No-op elsewhere.
+        void room.startAudio().catch(() => {});
 
         setState('agent-joining');
       } catch (err) {
+        micTrack?.stop();
         const message = err instanceof Error ? err.message : 'Could not start voice tour.';
         setErrorMessage(message);
         setState('error');
