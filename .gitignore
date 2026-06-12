@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .mcp.json
+
+# local-only: generates the voice-agent KB across repos, not part of the site build
+scripts/build-voice-kb.ts

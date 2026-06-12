@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run build:voice-kb",
     "build": "next build",
-    "build:voice-kb": "tsx scripts/build-voice-kb.ts",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
