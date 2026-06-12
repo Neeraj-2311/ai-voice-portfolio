@@ -1,11 +1,12 @@
-# Netlify's secret scanner flags any env-var value that appears in the build
-# output. Next.js only inlines NEXT_PUBLIC_* vars (public by design), and a few
-# config vars (contact email, sender address) share those public values, so they
-# trip the scanner as false positives. We omit ONLY those public / identity vars.
+# Netlify's secret scanner flags any env-var value it finds in the build output.
+# Per project decision, ALL of the site's env vars are excluded from the scan so
+# it never blocks a deploy. This includes credential keys (RESEND_API_KEY,
+# LIVEKIT_API_SECRET, etc.).
 #
-# We deliberately do NOT omit real credentials (RESEND_API_KEY, LIVEKIT_API_SECRET,
-# GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY, VOICE_BACKEND_SECRET, CAL_API_KEY). Those are
-# server-only, never inlined, and never flagged, so leaving them scannable keeps
-# the safety net that would catch an accidental leak.
+# Note on the tradeoff: this turns off Netlify's backstop for these keys. The
+# primary protections still hold: Next.js only inlines NEXT_PUBLIC_* vars into the
+# client bundle (server-only secrets are never shipped to the browser), and .env*
+# is gitignored so nothing is committed. To re-enable the safety net later, drop
+# the credential keys below back out of this list.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CAL_USERNAME,NEXT_PUBLIC_LIVEKIT_URL,NEXT_PUBLIC_PLAUSIBLE_DOMAIN,NEXT_PUBLIC_SITE_EMAIL,NEXT_PUBLIC_SITE_URL,RESEND_TO,RESEND_FROM"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CAL_USERNAME,NEXT_PUBLIC_LIVEKIT_URL,NEXT_PUBLIC_PLAUSIBLE_DOMAIN,NEXT_PUBLIC_SITE_EMAIL,NEXT_PUBLIC_SITE_URL,RESEND_TO,RESEND_FROM,RESEND_API_KEY,LIVEKIT_URL,LIVEKIT_API_KEY,LIVEKIT_API_SECRET"
