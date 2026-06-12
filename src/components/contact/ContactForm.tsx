@@ -1,15 +1,21 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Calendar, CheckCircle2, Loader2, Mail, Phone } from 'lucide-react';
+import { AlertCircle, Calendar, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
-import { useId, useState, useTransition } from 'react';
-import { type FieldError, type Path, useForm, useWatch } from 'react-hook-form';
+import { useEffect, useId, useState, useTransition } from 'react';
+import { type FieldError, type Path, useForm, useWatch, Controller } from 'react-hook-form';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { submitContactAction } from '@/actions/contact';
-import { GithubIcon, LinkedinIcon } from '@/components/primitives/BrandIcon';
+import {
+  PREFILL_CONTACT_MODAL_EVENT,
+  type PrefillContactModalDetail,
+} from '@/lib/contact-modal-event';
+import { LinkedinIcon, XIcon } from '@/components/primitives/BrandIcon';
 import { Button } from '@/components/primitives/Button';
 import { site } from '@/content/site';
 import { contactDefaultValues, contactFormSchema, type ContactFormValues } from '@/lib/intents';
+import { useTheme } from '@/lib/theme';
 import type { Intent } from '@/types/content';
 import { IntentPicker } from './IntentPicker';
 
@@ -18,26 +24,33 @@ export interface ContactFormProps {
   prefill?: Partial<Record<keyof ContactFormValues, string>>;
   variant?: 'default' | 'compact';
   onSuccess?: () => void;
+  /** Called when the user clicks the "Book a call" pill. The modal uses this
+   *  to close itself so the Cal popup can take over the screen. Called after
+   *  a short delay so Cal.com captures the click first. */
+  onBookCall?: () => void;
 }
+
+type Phase = 'idle' | 'launching' | 'success';
 
 export function ContactForm({
   initialIntent = 'hire',
   prefill,
   variant = 'default',
   onSuccess,
+  onBookCall,
 }: ContactFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [submitStatus, setSubmitStatus] = useState<
-    { type: 'idle' } | { type: 'error'; message: string } | { type: 'success' }
-  >({ type: 'idle' });
+  const [phase, setPhase] = useState<Phase>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const {
     register,
     handleSubmit,
-    getValues,
     control,
     reset,
     setError,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -49,24 +62,41 @@ export function ContactForm({
     mode: 'onBlur',
   });
 
-  const intent = useWatch({ control, name: 'intent' });
+  const watchedIntent = useWatch({ control, name: 'intent' });
+  const intent: Intent = watchedIntent ?? initialIntent ?? 'hire';
 
-  const handleIntentChange = (next: Intent) => {
-    const { name, email, message } = getValues();
-    reset({ ...contactDefaultValues, intent: next, name, email, message });
-  };
+  // Live fill from the voice agent: as it collects the message it patches the
+  // open form field by field, so the visitor watches it populate in real time.
+  useEffect(() => {
+    const onPrefill = (event: Event) => {
+      const detail = (event as CustomEvent<PrefillContactModalDetail>).detail ?? {};
+      const apply = (field: Path<ContactFormValues>, value?: string) => {
+        if (typeof value === 'string' && value.length > 0) {
+          setValue(field, value, { shouldDirty: true, shouldValidate: false });
+        }
+      };
+      apply('name', detail.name);
+      apply('email', detail.email);
+      apply('message', detail.message);
+      if (detail.intent) apply('intent', detail.intent);
+    };
+    window.addEventListener(PREFILL_CONTACT_MODAL_EVENT, onPrefill);
+    return () => window.removeEventListener(PREFILL_CONTACT_MODAL_EVENT, onPrefill);
+  }, [setValue]);
 
   const onSubmit = handleSubmit((data) => {
-    setSubmitStatus({ type: 'idle' });
+    setErrorMessage(null);
+    setPhase('launching');
+    const payload = { ...data, intent: data.intent ?? 'hire' };
     startTransition(async () => {
-      // Hold the spinner for ~1.5s so the loading state is perceivable
-      // even when the action returns instantly (no Resend configured).
       const [result] = await Promise.all([
-        submitContactAction(data),
-        new Promise((resolve) => setTimeout(resolve, 1500)),
+        submitContactAction(payload),
+        // Floor the perceived latency so the loading state is visible even
+        // when Resend responds in <100ms; prevents UI flash.
+        new Promise((resolve) => setTimeout(resolve, 1600)),
       ]);
       if (result.ok) {
-        setSubmitStatus({ type: 'success' });
+        setPhase('success');
         reset({ ...contactDefaultValues, intent });
         onSuccess?.();
       } else {
@@ -77,266 +107,160 @@ export function ContactForm({
             }
           }
         }
-        setSubmitStatus({ type: 'error', message: result.error });
+        setErrorMessage(result.error);
+        setPhase('idle');
       }
     });
   });
 
-  if (submitStatus.type === 'success') {
-    return (
-      <div className="text-fg flex flex-col items-center gap-3 py-8 text-center">
-        <CheckCircle2 className="text-success h-10 w-10" aria-hidden="true" />
-        <h3 className="text-h3 font-medium">Thanks. Your message is on the way.</h3>
-        <p className="text-muted">I&apos;ll reply from {site.email} within a few days.</p>
-        <Button
-          variant="ghost"
-          onClick={() => setSubmitStatus({ type: 'idle' })}
-          className="mt-2"
-        >
-          Send another
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={onSubmit} className="space-y-5" aria-busy={isPending}>
-      <fieldset disabled={isPending} className="space-y-5">
-      <IntentPicker
-        value={intent}
-        onChange={handleIntentChange}
-        compact={variant === 'compact'}
-      />
-
-      <div aria-hidden="true" className="sr-only">
-        <label>
-          Leave this field empty
-          <input
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            {...register('website')}
-          />
-        </label>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Your name" error={errors.name} required>
-          <input
-            type="text"
-            autoComplete="name"
-            placeholder="Andrej Karpathy"
-            {...register('name')}
-            className={inputClass(!!errors.name)}
-          />
-        </Field>
-        <Field label="Email" error={errors.email} required>
-          <input
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            placeholder="andrej@gpu-poor.dev"
-            {...register('email')}
-            className={inputClass(!!errors.email)}
-          />
-        </Field>
-      </div>
-
-      {intent === 'hire' && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Company" error={errors.company} required>
-            <input
-              type="text"
-              autoComplete="organization"
-              placeholder="Stealth AI startup (or OpenAI, if you're hiring)"
-              {...register('company')}
-              className={inputClass(!!errors.company)}
-            />
-          </Field>
-          <Field label="Project type" error={errors.projectType} required>
-            <input
-              type="text"
-              placeholder="Replace our IVR with a voice agent"
-              {...register('projectType')}
-              className={inputClass(!!errors.projectType)}
-            />
-          </Field>
-          <Field label="Timeline" error={errors.timeline}>
-            <input
-              type="text"
-              placeholder="Yesterday, ideally"
-              {...register('timeline')}
-              className={inputClass(!!errors.timeline)}
-            />
-          </Field>
-          <Field label="Budget range" error={errors.budgetRange}>
-            <input
-              type="text"
-              placeholder="$50k–$150k, or open if you ship"
-              {...register('budgetRange')}
-              className={inputClass(!!errors.budgetRange)}
-            />
-          </Field>
-        </div>
-      )}
-
-      {intent === 'mentorship' && (
-        <div className="grid gap-4">
-          <Field label="What you want help with" error={errors.helpWith} required>
-            <textarea
-              rows={3}
-              placeholder="Break into AI eng without a CS degree. Or: ship my first voice agent without crying."
-              {...register('helpWith')}
-              className={inputClass(!!errors.helpWith)}
-            />
-          </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Your level" error={errors.level}>
-              <input
-                type="text"
-                placeholder="Self-taught, 2 yrs shipping LLM apps"
-                {...register('level')}
-                className={inputClass(!!errors.level)}
+    <div className="relative">
+      <AnimatePresence mode="wait" initial={false}>
+        {phase === 'success' ? (
+          <motion.div
+            key="success"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 16, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -16, scale: 0.96 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="text-fg flex flex-col items-center gap-3 py-10 text-center"
+          >
+            <motion.div
+              initial={prefersReducedMotion ? false : { scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={
+                prefersReducedMotion
+                  ? { duration: 0 }
+                  : { delay: 0.05, type: 'spring', stiffness: 220, damping: 16 }
+              }
+            >
+              <CheckCircle2 className="text-success h-12 w-12" aria-hidden="true" />
+            </motion.div>
+            <h3 className="text-h3 font-medium">Message sent. Thanks.</h3>
+            <p className="text-muted max-w-md text-pretty">
+              I&apos;ll reply from {site.email} within a few days.
+            </p>
+            <Button
+              variant="ghost"
+              onClick={() => setPhase('idle')}
+              className="mt-2 px-3 py-1.5 text-small"
+            >
+              Send another
+            </Button>
+          </motion.div>
+        ) : (
+          <motion.form
+            key="form"
+            onSubmit={onSubmit}
+            className="space-y-5"
+            aria-busy={isPending}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <fieldset disabled={isPending} className="space-y-5">
+              <Controller
+                name="intent"
+                control={control}
+                render={({ field }) => (
+                  <IntentPicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    compact={variant === 'compact'}
+                  />
+                )}
               />
-            </Field>
-            <Field label="Preferred format" error={errors.preferredFormat}>
-              <input
-                type="text"
-                placeholder="60-min architecture deep dive"
-                {...register('preferredFormat')}
-                className={inputClass(!!errors.preferredFormat)}
-              />
-            </Field>
-          </div>
-        </div>
-      )}
 
-      {intent === 'speaking' && (
-        <div className="grid gap-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Event name" error={errors.eventName} required>
               <input
-                type="text"
-                placeholder="AI Engineer Summit 2026"
-                {...register('eventName')}
-                className={inputClass(!!errors.eventName)}
+                type="hidden"
+                {...register('website')}
               />
-            </Field>
-            <Field label="Organizing institution" error={errors.organizer} required>
-              <input
-                type="text"
-                autoComplete="organization"
-                placeholder="Y Combinator / IIT Delhi"
-                {...register('organizer')}
-                className={inputClass(!!errors.organizer)}
-              />
-            </Field>
-            <Field label="Event date" error={errors.eventDate} required>
-              <input
-                type="date"
-                {...register('eventDate')}
-                className={inputClass(!!errors.eventDate)}
-              />
-            </Field>
-            <Field label="Format" error={errors.eventFormat} required>
-              <select
-                {...register('eventFormat')}
-                className={inputClass(!!errors.eventFormat)}
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  Select…
-                </option>
-                <option value="virtual">Virtual</option>
-                <option value="in-person">In person</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
-            </Field>
-            <Field label="Location" error={errors.eventLocation}>
-              <input
-                type="text"
-                placeholder="Mission Bay, SF (or Online)"
-                {...register('eventLocation')}
-                className={inputClass(!!errors.eventLocation)}
-              />
-            </Field>
-            <Field label="Expected audience size" error={errors.audienceSize}>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="Sold out, 400 builders"
-                {...register('audienceSize')}
-                className={inputClass(!!errors.audienceSize)}
-              />
-            </Field>
-          </div>
-          <Field label="Topic of interest" error={errors.topic}>
-            <input
-              type="text"
-              placeholder="Why voice AI is going to eat phone calls"
-              {...register('topic')}
-              className={inputClass(!!errors.topic)}
-            />
-          </Field>
-        </div>
-      )}
 
-      <Field
-        label={intent === 'speaking' ? 'More about the event' : 'Message'}
-        error={errors.message}
-        required
-      >
-        <textarea
-          rows={variant === 'compact' ? 4 : 5}
-          placeholder={messagePlaceholder(intent)}
-          {...register('message')}
-          className={inputClass(!!errors.message)}
-        />
-      </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Your name" error={errors.name} required>
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    placeholder="Andrej Karpathy"
+                    {...register('name')}
+                    className={inputClass(!!errors.name)}
+                  />
+                </Field>
+                <Field label="Email" error={errors.email} required>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="andrej@gpu-poor.dev"
+                    {...register('email')}
+                    className={inputClass(!!errors.email)}
+                  />
+                </Field>
+              </div>
 
-      {submitStatus.type === 'error' && (
-        <p
-          role="alert"
-          className="text-error border-error/50 bg-error/10 flex items-start gap-2 rounded-md border px-3 py-2 text-small"
-        >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          {submitStatus.message}
-        </p>
-      )}
+              <Field label="Message" error={errors.message} required>
+                <textarea
+                  rows={variant === 'compact' ? 4 : 6}
+                  placeholder={messagePlaceholder(intent)}
+                  {...register('message')}
+                  className={inputClass(!!errors.message)}
+                />
+              </Field>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={isPending}
-          aria-disabled={isPending}
-          leadingIcon={
-            isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : null
-          }
-        >
-          {isPending ? 'Sending…' : 'Send message'}
-        </Button>
-        <p className="text-subtle text-small">
-          I usually reply within a few days. For something urgent, email me directly.
-        </p>
-      </div>
-      </fieldset>
 
-      <DirectAlternatives />
-    </form>
+              {errorMessage && (
+                <p
+                  role="alert"
+                  className="text-error border-error/50 bg-error/10 flex items-start gap-2 rounded-md border px-3 py-2 text-small"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  {errorMessage}
+                </p>
+              )}
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isPending}
+                  aria-disabled={isPending}
+                  leadingIcon={
+                    isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Send className="h-4 w-4" aria-hidden="true" />
+                    )
+                  }
+                  className="shrink-0 whitespace-nowrap px-4 py-2 text-small font-medium"
+                >
+                  {isPending ? 'Sending…' : 'Send message'}
+                </Button>
+                <p className="text-subtle text-small text-pretty sm:text-right">
+                  Usually a reply within a few days. For urgent, email me.
+                </p>
+              </div>
+            </fieldset>
+
+            <DirectAlternatives onBookCall={onBookCall} />
+          </motion.form>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
-function DirectAlternatives() {
+function DirectAlternatives({ onBookCall }: { onBookCall?: () => void }) {
   const linkedin = site.socials.find((s) => s.icon === 'Linkedin');
-  const github = site.socials.find((s) => s.icon === 'Github');
+  const twitter = site.socials.find((s) => s.icon === 'Twitter');
 
   return (
     <div className="border-line mt-2 border-t pt-5">
       <p className="text-subtle text-small">Or contact directly</p>
       <ul className="mt-3 flex flex-wrap items-center gap-2">
+        <li>
+          <BookCallPill onBookCall={onBookCall} />
+        </li>
         <li>
           <Link
             href={`mailto:${site.email}`}
@@ -351,7 +275,7 @@ function DirectAlternatives() {
             <Link
               href={linkedin.href}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer me"
               className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small transition-colors"
             >
               <LinkedinIcon className="h-4 w-4" aria-hidden="true" />
@@ -359,41 +283,44 @@ function DirectAlternatives() {
             </Link>
           </li>
         )}
-        {github && (
+        {twitter && (
           <li>
             <Link
-              href={github.href}
+              href={twitter.href}
               target="_blank"
-              rel="noreferrer"
-              className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small transition-colors"
+              rel="noopener noreferrer me"
+              aria-label="X (Twitter)"
+              className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center justify-center rounded-full border px-3 py-1.5 text-small transition-colors"
             >
-              <GithubIcon className="h-4 w-4" aria-hidden="true" />
-              GitHub
+              <XIcon className="h-4 w-4" aria-hidden="true" />
             </Link>
           </li>
         )}
-        {site.phone && (
-          <li className="md:hidden">
-            <Link
-              href={`tel:${site.phone}`}
-              className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small transition-colors"
-            >
-              <Phone className="h-4 w-4" aria-hidden="true" />
-              Call
-            </Link>
-          </li>
-        )}
-        <li>
-          <Link
-            href="#hire"
-            className="border-line text-fg hover:border-line-strong hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small transition-colors"
-          >
-            <Calendar className="h-4 w-4" aria-hidden="true" />
-            Book a call
-          </Link>
-        </li>
       </ul>
     </div>
+  );
+}
+
+function BookCallPill({ onBookCall }: { onBookCall?: () => void }) {
+  const { theme } = useTheme();
+  const username = process.env.NEXT_PUBLIC_CAL_USERNAME ?? 'hineeraj';
+  return (
+    <button
+      type="button"
+      data-cal-link={`${username}/hire`}
+      data-cal-config={JSON.stringify({ theme })}
+      data-voice-action="open-hire-discovery"
+      onClick={() => {
+        if (!onBookCall) return;
+        // Defer to a macrotask so Cal.com's global click listener registers
+        // first and opens the popup before we close the parent modal.
+        window.setTimeout(onBookCall, 0);
+      }}
+      className="border-accent/40 bg-accent/10 text-accent hover:border-accent hover:bg-accent/15 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-small font-medium transition-colors"
+    >
+      <Calendar className="h-4 w-4" aria-hidden="true" />
+      Book a 30-min call
+    </button>
   );
 }
 
@@ -412,7 +339,7 @@ function messagePlaceholder(intent: Intent): string {
 
 function inputClass(hasError: boolean) {
   return [
-    'input-base bg-bg text-fg placeholder:text-subtle w-full rounded-md border transition-colors',
+    'input-base bg-bg text-fg placeholder:text-subtle w-full rounded-md border transition-all duration-200',
     'focus-visible:outline-none focus-visible:ring-2',
     hasError
       ? 'border-error focus-visible:ring-error/20 border-[1.5px]'
@@ -468,4 +395,3 @@ function Field({ label, error, required, children }: FieldProps) {
     </div>
   );
 }
-

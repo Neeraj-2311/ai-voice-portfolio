@@ -5,8 +5,9 @@ import { CalProvider } from '@/components/booking/CalProvider';
 import { ContactModal } from '@/components/contact/ContactModal';
 import { Footer } from '@/components/layout/Footer';
 import { Nav } from '@/components/layout/Nav';
+import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { PlausibleAnalytics } from '@/components/seo/PlausibleAnalytics';
-import { VoiceCTADock } from '@/components/voice/VoiceCTADock';
+import { VoiceSystem } from '@/components/voice/VoiceSystem';
 import { site } from '@/content/site';
 import { THEME_STORAGE_KEY, TEXT_SIZE_STORAGE_KEY } from '@/lib/storage-keys';
 import './globals.css';
@@ -26,7 +27,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} · Voice AI & Full-Stack Engineer`,
+    default: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -35,29 +36,30 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   keywords: [
-    'Voice AI',
-    'AI agents',
-    'agentic systems',
-    'full-stack engineer',
+    'Full-stack AI engineer',
+    'Voice AI engineer',
+    'AI engineer India',
+    'AI engineer Delhi',
+    'Agentic systems',
     'LiveKit',
-    'Azure AI Foundry',
-    'RAG',
-    'Next.js',
-    'mentorship',
-    'speaking',
+    'RAG engineer',
+    'Next.js engineer',
+    'Fractional AI engineer',
+    'Remote AI engineer',
+    'Neeraj AI',
   ],
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    locale: 'en_GB',
+    locale: 'en',
     url: site.url,
     siteName: site.name,
-    title: `${site.name} · Voice AI & Full-Stack Engineer`,
+    title: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     description: site.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} · Voice AI & Full-Stack Engineer`,
+    title: `${site.name} · Full-Stack AI Engineer & Voice AI Developer`,
     description: site.description,
   },
   robots: { index: true, follow: true },
@@ -105,7 +107,8 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
-        <VoiceCTADock />
+        <ScrollToTop />
+        <VoiceSystem />
         <ContactModal />
         <CalProvider />
         <PlausibleAnalytics />

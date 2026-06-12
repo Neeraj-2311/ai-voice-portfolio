@@ -1,23 +1,73 @@
+An outreach product that sounds like the person posting, not like an AI.
+
 ## The problem
 
-LinkedIn content tools generate generic AI slop. The output sounds nothing like the person posting it, and most teams either give up after a week or end up rewriting everything anyway. The real problem isn't generation. It's matching voice. And matching voice is a retrieval problem before it's a generation problem.
+Every AI writing tool for LinkedIn produces the same output. Over-structured, suspiciously enthusiastic, unmistakably artificial. You can spot an AI-written post in the first sentence. The irony is that LinkedIn is one of the most personal professional spaces online. It is where people build reputations, not just content calendars.
+
+The category was already crowded. The gap was not "AI for LinkedIn content". It was AI that actually sounds like the person posting it. Not a generic professional voice. Not a template dressed up with industry keywords. The way you actually write when you are thinking clearly and not staring at a blank box.
+
+I started building GoReach in early 2025. The first version was embarrassingly simple: a prompt, a text box, and a LinkedIn card preview. Even that version pointed at something real. When a post matched how someone actually wrote, the reaction I got was different. Not "this is useful". More like "wait, how did it know that".
 
 ## The approach
 
-GoReach treats every user's past writing as the source of truth. The system ingests your writing samples, builds a personal RAG index over them, and uses that index to ground every generation in your actual phrasing, sentence rhythm, and topic preferences. Prompts are layered: a base writer prompt, a voice-matching prompt grounded in retrieved samples, and a topic-specific prompt for the post angle.
+My first instinct was to treat voice matching as a fine-tuning problem. Train a model on the user's posts, get output that sounds like them. That collapsed quickly. Most people have written fifteen to thirty LinkedIn posts in their life, which is not enough to fine-tune anything meaningfully. And fine-tuning per user is economically absurd at any scale.
 
-The full stack is mine end-to-end: Next.js on the front, FastAPI on the back, AWS for infra, GitHub Actions for CI/CD with Docker. CI/CD ships changes to production on every merge to main with no manual steps.
+The shift came when I reframed voice matching as a context injection problem, not a training problem. The model already knows how to write in thousands of different styles. What it does not know is which style is yours. Give it your actual posts as context, tell it to write like that person, and the problem changes shape.
+
+The first version I shipped that worked used two retrieval layers in the same prompt. Three to five of the user's own posts injected as in-context examples, plus five to eight high-performing LinkedIn posts pulled by semantic similarity to the topic. One anchors style, one anchors what good structure looks like in that topic area. Neither alone was sufficient. Together they produced output users stopped editing before posting, which is the only metric I actually care about.
+
+I designed the onboarding to make that retrieval possible. Step one asks why you are here so the dashboard surfaces the right thing first. Step two collects topic tags so the idea engine can be relevant rather than generic LinkedIn noise. Step three is voice setup: paste your past posts, the system embeds them and holds them, and at generation time they become the context that shapes output. Step four connects LinkedIn for direct publishing.
+
+I made voice setup skippable but prominently nudged. Users who skip it generate posts they rate positively at less than half the rate of users who complete it. That gap is the entire product thesis in one statistic.
 
 ## Tech decisions worth noting
 
-- **FastAPI over Next.js API routes for the AI layer.** Easier to scale the inference and retrieval workloads independently of the UI.
-- **RAG over fine-tuning for voice matching.** Cheaper to update, easier to debug, and the retrieved context is visible in the output for trust.
-- **Self-hosted on AWS rather than a managed AI platform.** Full control over latency, cost, and data flow.
+- **Split the AI layer into its own Python service.** Prompt architecture, model choice, retrieval logic, and embedding strategy change frequently and on a different cadence than auth, billing, and scheduling. Coupling them means every prompt experiment touches the same codebase as user management. Separating them means the RAG service can be iterated on aggressively without anything else moving.
+- **TypeScript on the main app, Python only for AI.** One language across Next.js frontend and Node.js backend keeps product iteration fast. Python only earns its place inside the RAG and generation service.
+- **RAG over fine-tuning for voice matching.** Cheaper to update, easier to debug, the retrieved context is visible in the output for trust. And users do not have the post volume that fine-tuning would need anyway.
+- **AWS end to end with ElastiCache Serverless for caching.** One billing console, one IAM, one set of VPC rules. The team had to be live in the first week and could not afford to be debugging Redis configuration while handling real users. Complexity has a human cost that does not show up in architecture diagrams.
 
 ## Outcome
 
-[TODO: Neeraj] Traction metrics. Sign-ups, posts generated, active users, retention, etc. Even early numbers are fine: "live since July 2025, X users, Y posts generated".
+Live since 28 April 2026. 102 users across the beta. 300+ posts generated in the first weeks, averaging roughly three posts per active user, which suggests a meaningful subset coming back more than once.
+
+The metric that actually gets watched is posts published without editing. Roughly 40% of generations users rate thumbs-up get published within ten minutes with no manual changes. That percentage is what every prompt improvement, every retrieval tuning, every voice studio decision is aimed at moving up.
+
+Users who complete voice setup generate posts they rate positively at roughly 2.3x the rate of users who skip it. Same model, same retrieval pipeline. The difference is whether the system has something true to work with.
+
+## Where it is going
+
+Content generation is the entry point, not the product. My bigger bet is workflows and agentic systems that simplify the whole LinkedIn game for everyone who lives on it. Founders building in public. Company owners running their own pipeline. Recruiters and HR running outreach at volume. Operators who need LinkedIn to work without spending hours on it.
+
+That means the same retrieval and voice infrastructure powering post generation extends into adjacent surfaces I am actively building: comment drafting that sounds like the user, inbound message triage and reply suggestions, lead discovery agents that surface the right people for the user's specific positioning, scheduled posting flows tuned to when their audience actually reads. Each reuses the per-user context the voice setup already builds. The asset compounds.
+
+I am iterating on the product continuously, not freezing features. New surfaces, new agents, and new automations ship on a fast cadence with the same retrieval-grounded approach: nothing generic, everything anchored in the user's actual voice and intent.
 
 ## What I learned
 
-The hardest part of building a personalisation product is not the model. It's the cold-start problem. Users land with no writing samples and want quality output immediately. We solved it with a guided "writing sample" onboarding that asks for three short paragraphs in their voice. The flow took longer to design than the rest of the generation pipeline.
+My internal benchmark for the product is not "the user liked it" or "they published it". One beta user pasted eight of their past posts. Four were about failure, written in a specific register: short sentences, no softening language, no lessons-learned coda. They asked GoReach to write about consistency. The output opened with "I missed thirty days of posting last year. Not because I was busy. Because I was embarrassed." They had not written that. They had not prompted for it. The message back was just "okay this is actually unsettling".
+
+<figure>
+  <img
+    src="/images/case-studies/goreach-1.png"
+    alt='A GoReach composer card showing the generated line "I missed thirty days of posting last year. Not because I was busy. Because I was embarrassed." with a small handwritten note next to it that reads "okay this is actually unsettling".'
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>The user moment that became the internal quality bar.</figcaption>
+</figure>
+
+That reaction, unsettling in a good way, became the bar. Did the output feel enough like them that it is mildly disconcerting an AI produced it. Once you have a benchmark that specific, prompt and retrieval work stops being vibes-driven and starts being a search problem with a target.
+
+The honest second lesson is about the eval loop. Every generation captures a thumbs rating against the retrieval metadata: which user posts were pulled, which viral references, which topic, which model. The data is there. The automation that re-ranks future retrieval based on historical ratings is not yet. Today it is a weekly review of the distribution. The schema is built for the compound moat. The model that turns rating history into retrieval weights is the next thing to ship.
+
+<figure>
+  <img
+    src="/images/case-studies/goreach-2.jpg"
+    alt='A diagram showing two streams flowing into a central Generation node. The left stream, labeled Voice Context, is five cards representing the user past posts in purple. The right stream, labeled Topic Context, is five cards representing high-performing reference posts. Both streams converge into a glowing hexagonal Generation node, which outputs to a single LinkedIn post card labeled "LinkedIn post in user voice".'
+    className="border-line w-full rounded-xl border"
+    loading="lazy"
+  />
+  <figcaption>Two retrieval streams, one prompt. Voice context anchors style, topic context anchors structure.</figcaption>
+</figure>
+

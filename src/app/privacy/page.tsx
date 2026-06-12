@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         <p className="text-muted mt-4">Last updated 9 May 2026</p>
       </header>
 
-      <div className="text-fg/95 mt-10 space-y-8 [&_h2]:mt-10 [&_h2]:text-h3 [&_p]:text-pretty [&_p]:text-muted [&_p]:mt-3 [&_a]:text-accent [&_a:hover]:text-accent-hover [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:text-muted [&_ul_li]:mt-1.5">
+      <div className="text-fg/95 mt-8 space-y-6 sm:mt-10 sm:space-y-8 [&_h2]:mt-8 sm:[&_h2]:mt-10 [&_h2]:text-h3 [&_p]:text-pretty [&_p]:text-muted [&_p]:mt-3 [&_p]:text-small sm:[&_p]:text-base [&_a]:text-accent [&_a:hover]:text-accent-hover [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:text-muted [&_ul]:text-small sm:[&_ul]:text-base [&_ul_li]:mt-1.5">
         <section>
           <p>
             This site is a personal portfolio operated by {site.name} ({site.email}). It is not

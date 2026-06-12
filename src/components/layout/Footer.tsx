@@ -12,8 +12,8 @@ export function Footer() {
       role="contentinfo"
       aria-label="Site footer"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
-        <div className="grid gap-10 md:grid-cols-[2fr_3fr]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-12 md:px-6 md:py-16">
+        <div className="grid gap-8 sm:gap-10 md:grid-cols-[2fr_3fr]">
           <div>
             <Link
               href="/"
@@ -22,7 +22,7 @@ export function Footer() {
               {site.shortName}
             </Link>
             <p className="text-muted mt-3 max-w-sm text-small">{site.tagline}</p>
-            <ul className="mt-5 flex flex-wrap items-center gap-2">
+            <ul className="mt-4 flex flex-wrap items-center gap-2 sm:mt-5">
               {site.socials.map((social) => {
                 const Icon = getIcon(social.icon);
                 return (
@@ -46,7 +46,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-8">
             {footerLinkGroups.map((group) => (
               <div key={group.title}>
                 <h2 className="text-fg text-small font-medium uppercase tracking-wide">
@@ -69,7 +69,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="border-line text-subtle mt-12 flex flex-col gap-2 border-t pt-6 text-small md:flex-row md:items-center md:justify-between">
+        <div className="border-line text-subtle mt-10 flex flex-col gap-2 border-t pt-5 text-small sm:mt-12 sm:pt-6 md:flex-row md:items-center md:justify-between">
           <p>
             &copy; {year} {site.name}. Built with Next.js + LiveKit voice AI.
           </p>

@@ -29,6 +29,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       />
     ),
     hr: () => <hr className="border-line my-10" />,
+    img: (props) => (
+      // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+      <img
+        className="border-line my-8 w-full rounded-xl border"
+        loading="lazy"
+        {...props}
+      />
+    ),
+    figure: (props) => <figure className="my-8" {...props} />,
+    figcaption: (props) => (
+      <figcaption className="text-subtle mt-3 text-center text-small" {...props} />
+    ),
     ...components,
   };
 }

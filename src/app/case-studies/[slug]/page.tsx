@@ -7,6 +7,7 @@ import { caseStudies } from '@/content/case-studies';
 import type { ComponentType } from 'react';
 
 const mdxModules: Record<string, () => Promise<{ default: ComponentType }>> = {
+  'talk-to-my-portfolio': () => import('@/content/case-studies/talk-to-my-portfolio.mdx'),
   'enterprise-voice-ai': () => import('@/content/case-studies/enterprise-voice-ai.mdx'),
   goreach: () => import('@/content/case-studies/goreach.mdx'),
   'sheets-voice-automation': () =>
@@ -56,16 +57,16 @@ export default async function CaseStudyPage({
           Back to case studies
         </Link>
 
-        <header className="mt-8">
+        <header className="mt-6 sm:mt-8">
           <p className="text-accent text-small font-medium uppercase tracking-wide">
             Case study
           </p>
           <h1 className="mt-3 text-balance">{study.title}</h1>
-          <p className="text-muted mt-5 max-w-2xl text-pretty text-h3 font-normal">
+          <p className="text-muted mt-4 max-w-2xl text-pretty text-h3 font-normal sm:mt-5">
             {study.summary}
           </p>
 
-          <div className="border-line mt-8 grid gap-6 rounded-2xl border p-6 sm:grid-cols-2 md:p-8">
+          <div className="border-line mt-6 grid gap-5 rounded-2xl border p-5 sm:mt-8 sm:grid-cols-2 sm:gap-6 sm:p-6 md:p-8">
             <div>
               <p className="text-subtle text-small font-medium uppercase tracking-wide">
                 Headline metric
@@ -90,14 +91,14 @@ export default async function CaseStudyPage({
           </div>
 
           {study.status === 'placeholder' && (
-            <p className="text-warning bg-warning/10 border-warning/30 mt-6 rounded-md border px-3 py-2 text-small">
+            <p className="text-warning bg-warning/10 border-warning/30 mt-5 rounded-md border px-3 py-2 text-small sm:mt-6">
               Write-up in progress. Concrete metrics and the architecture diagram drop in
               soon.
             </p>
           )}
         </header>
 
-        <div className="mt-12">
+        <div className="mt-10 sm:mt-12">
           <Body />
         </div>
       </div>

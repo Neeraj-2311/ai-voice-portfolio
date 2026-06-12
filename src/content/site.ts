@@ -1,37 +1,38 @@
 import type { SiteConfig } from '@/types/content';
 
-const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'hello@example.com';
+const siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL ?? 'neeraj.aideveloper@gmail.com';
 
 export const site: SiteConfig = {
   name: 'Neeraj',
   shortName: 'Neeraj',
-  tagline: 'Voice AI & full-stack engineer building agentic systems for enterprise.',
+  tagline: 'Full-stack AI engineer. Production systems that ship, not demos.',
   description:
-    'Voice AI and full-stack engineer. I build production voice agents, agentic systems, and full-stack AI products. Available for hire, mentorship, and speaking.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+    'Full-stack AI engineer. I build production voice agents, agentic backends, and the full-stack systems behind them. Sub-second latency, GDPR-grade isolation, and the engineering to back it up. Available for hire, mentorship, and speaking. Remote or hybrid worldwide.',
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NODE_ENV === 'production' ? 'https://hineeraj.com' : 'http://localhost:3000'),
   email: siteEmail,
-  location: 'London, UK',
-  availability: 'Available from 7 May 2026 · open to full-time, fractional, and contract',
-  mostRecentLine: 'Most recently shipped a production voice AI platform at IntellifyAI · London.',
+  location: 'Delhi, India · Remote / hybrid worldwide',
+  availability: 'Open to full-time, fractional, and contract · remote or hybrid worldwide',
+  mostRecentLine: 'Shipped an enterprise voice AI platform at IntellifyAI, 1.2s median full-turn latency, multi-tenant on LiveKit and Azure AI Foundry.',
   current: {
     role: 'Full Stack Engineer (Contract)',
     company: 'IntellifyAI',
   },
   socials: [
-    { label: 'GitHub', href: 'https://github.com/Neeraj-2311', icon: 'Github' },
     {
       label: 'LinkedIn',
-      href: 'https://linkedin.com/in/neeraj', // [TODO: Neeraj] update
+      href: 'https://www.linkedin.com/in/neeraj-ai-guy/',
       icon: 'Linkedin',
     },
     {
       label: 'X',
-      href: 'https://x.com/neeraj', // [TODO: Neeraj] update
+      href: 'https://x.com/NeerajGoesAi',
       icon: 'Twitter',
     },
     { label: 'Email', href: `mailto:${siteEmail}`, icon: 'Mail' },
   ],
   cal: {
-    username: process.env.NEXT_PUBLIC_CAL_USERNAME ?? null,
+    username: process.env.NEXT_PUBLIC_CAL_USERNAME ?? "hineeraj",
   },
 };

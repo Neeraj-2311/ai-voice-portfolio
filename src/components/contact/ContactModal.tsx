@@ -3,6 +3,7 @@
 import { X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  CLOSE_CONTACT_MODAL_EVENT,
   OPEN_CONTACT_MODAL_EVENT,
   type OpenContactModalDetail,
 } from '@/lib/contact-modal-event';
@@ -32,8 +33,12 @@ export function ContactModal() {
       if (!dialog.open) dialog.showModal();
     };
     window.addEventListener(OPEN_CONTACT_MODAL_EVENT, handler);
-    return () => window.removeEventListener(OPEN_CONTACT_MODAL_EVENT, handler);
-  }, []);
+    window.addEventListener(CLOSE_CONTACT_MODAL_EVENT, close);
+    return () => {
+      window.removeEventListener(OPEN_CONTACT_MODAL_EVENT, handler);
+      window.removeEventListener(CLOSE_CONTACT_MODAL_EVENT, close);
+    };
+  }, [close]);
 
   // Backdrop click only. Ignore bubbled clicks from descendants. A click
   // on a child sets target = child; a click on the ::backdrop sets target
@@ -75,6 +80,7 @@ export function ContactModal() {
           onSuccess={() => {
             window.setTimeout(close, 6000);
           }}
+          onBookCall={close}
         />
       </div>
     </dialog>

@@ -57,7 +57,7 @@ const faq = [
   },
   {
     q: 'Locations and timezones?',
-    a: 'Based in London (BST/GMT). Comfortable working with teams in EU, India, and US East. US West works for occasional sprint windows.',
+    a: 'Based in Delhi, India (IST). Remote-first, comfortable working with teams in India, EU, UK, and US East. US West works for occasional sprint windows. Open to hybrid or on-site visits where it fits.',
   },
   {
     q: 'Equity / retainer hybrid?',
@@ -75,14 +75,14 @@ export default function HirePage() {
               {hireSection.eyebrow}
             </p>
             <h1 className="mt-3 text-balance">{hireSection.heading}</h1>
-            <p className="text-muted mt-5 max-w-2xl text-pretty text-h3 font-normal">
+            <p className="text-muted mt-4 max-w-2xl text-pretty text-h3 font-normal sm:mt-5">
               {hireSection.sub}
             </p>
             <p className="text-muted mt-4 inline-flex items-start gap-2 text-small">
               <ShieldCheck className="text-accent mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{hireTrustLine}</span>
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-2 sm:mt-8 sm:gap-3">
               <BookCallButton
                 intent="hire"
                 variant="primary"
@@ -132,7 +132,7 @@ export default function HirePage() {
           <SectionReveal>
             <h2 id="engagements-title">{hireSection.engagementsHeading}.</h2>
           </SectionReveal>
-          <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 md:mt-12 lg:grid-cols-3">
             {hireEngagementTypes.map((type, index) => (
               <SectionReveal key={type.id} delay={index * 0.05}>
                 <Card
@@ -140,7 +140,7 @@ export default function HirePage() {
                   className="flex h-full flex-col"
                 >
                   <h3 className="text-fg">{type.title}</h3>
-                  <p className="text-muted mt-2 text-pretty">{type.description}</p>
+                  <p className="text-muted mt-2 text-pretty text-small sm:text-base">{type.description}</p>
                 </Card>
               </SectionReveal>
             ))}
@@ -155,10 +155,10 @@ export default function HirePage() {
         <SectionReveal>
           <h2 id="process-title">How a project runs.</h2>
         </SectionReveal>
-        <ol className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 md:mt-12 lg:grid-cols-4">
           {process.map((step, i) => (
             <SectionReveal key={step.n} delay={i * 0.05}>
-              <li className="border-line bg-elevated rounded-xl border p-5 md:p-6">
+              <li className="border-line bg-elevated rounded-xl border p-4 sm:p-5 md:p-6">
                 <span className="text-accent text-small font-mono font-medium">{step.n}</span>
                 <h3 className="text-fg mt-2">{step.title}</h3>
                 <p className="text-muted mt-2 text-pretty text-small">{step.body}</p>
@@ -173,11 +173,11 @@ export default function HirePage() {
           <SectionReveal>
             <h2 id="faq-title">Frequently asked.</h2>
           </SectionReveal>
-          <ul className="mt-10 space-y-4 md:mt-12">
+          <ul className="mt-8 space-y-3 sm:mt-10 sm:space-y-4 md:mt-12">
             {faq.map((item, i) => (
               <SectionReveal key={i} delay={i * 0.03}>
-                <details className="group/faq border-line bg-bg rounded-xl border p-5 md:p-6">
-                  <summary className="text-fg flex cursor-pointer items-center justify-between gap-4 text-pretty font-medium">
+                <details className="group/faq border-line bg-bg rounded-xl border p-4 sm:p-5 md:p-6">
+                  <summary className="text-fg flex cursor-pointer items-center justify-between gap-3 text-pretty font-medium sm:gap-4">
                     {item.q}
                     <span
                       aria-hidden="true"
@@ -186,7 +186,7 @@ export default function HirePage() {
                       +
                     </span>
                   </summary>
-                  <p className="text-muted mt-3 text-pretty">{item.a}</p>
+                  <p className="text-muted mt-3 text-pretty text-small sm:text-base">{item.a}</p>
                 </details>
               </SectionReveal>
             ))}
