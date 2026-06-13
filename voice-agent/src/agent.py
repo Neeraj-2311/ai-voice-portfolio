@@ -212,12 +212,14 @@ async def session_entrypoint(ctx: JobContext) -> None:
         logger.warning("background_audio.start_failed")
 
     intro = (
-        KB.intros[0] if KB.intros else "Hey, I'm Neeraj. Want a quick tour of my work?"
+        KB.intros[0]
+        if KB.intros
+        else "Hey! I'm an AI stand-in for Neeraj, here to show you his work. Want a quick tour?"
     )
     await session.generate_reply(
         instructions=(
-            f"Greet the visitor warmly in first person as Neeraj. Use this line or a close "
-            f'paraphrase: "{intro}". Then wait for them to respond.'
+            f"Greet the visitor warmly. Use this line or a close paraphrase, keeping the upfront "
+            f'note that you are an AI stand-in for Neeraj: "{intro}". Then wait for them to respond.'
         )
     )
 
