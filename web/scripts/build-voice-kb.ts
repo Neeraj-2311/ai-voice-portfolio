@@ -208,10 +208,14 @@ function build(): VoiceKb {
     version: '1',
     generatedAt: new Date().toISOString(),
     bio,
-    voiceDisclaimer: 'This is a clone of my voice, and audio is not stored.',
+    voiceDisclaimer:
+      "I'm an AI stand-in for Neeraj, not his real voice. A voice clone isn't built yet, so I just " +
+      "represent him here and walk you through his work. Audio isn't stored.",
     intros: [
-      "Hey, I'm Neeraj. Want a quick tour of my work, or is there something specific you're after?",
-      'Hi, this is Neeraj. Curious about my work, looking to hire, or want to book a mentorship call?',
+      "Hey! Quick heads-up: I'm an AI stand-in for Neeraj, basically his digital representative here " +
+        'to show you his work. Want a quick tour, or something specific in mind?',
+      "Hi! I'm Neeraj's AI stand-in, here to walk you through his work or help you hire him or book a " +
+        'mentorship call. What brings you by?',
     ],
     sections: SECTIONS,
     routes: ROUTES,
