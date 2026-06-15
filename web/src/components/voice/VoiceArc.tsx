@@ -184,7 +184,7 @@ export function VoiceArc({
               <CaptionRail
                 lines={captions}
                 visible={captionsVisible}
-                disclaimer="Voice is a clone of Neeraj's. Audio is not stored."
+                disclaimer="AI voice · audio not stored"
               />
             </>
           )}
