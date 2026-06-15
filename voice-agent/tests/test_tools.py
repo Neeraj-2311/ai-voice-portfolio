@@ -26,7 +26,7 @@ class FakeCal:
         self.booked = None
         self._raise_once = raise_once
 
-    async def list_slots(self, intent, *, days=7, limit=6):
+    async def list_slots(self, intent, **kwargs):
         return self.slots
 
     async def create_booking(self, intent, slot, *, name, email, notes=None, **kwargs):

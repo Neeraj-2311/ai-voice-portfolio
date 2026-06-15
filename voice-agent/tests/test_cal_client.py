@@ -63,6 +63,38 @@ def test_parse_slots_tolerates_garbage():
     assert len(slots) == 1
 
 
+def test_parse_slots_spreads_across_days():
+    # A busy first day plus a couple later days. per_day must keep later dates
+    # from being starved by the first day's slots.
+    data = {
+        "data": {
+            "2026-06-13": [
+                {"start": f"2026-06-13T{h:02d}:00:00+05:30"} for h in range(9, 17)
+            ],
+            "2026-06-16": [{"start": "2026-06-16T11:00:00+05:30"}],
+            "2026-06-19": [{"start": "2026-06-19T15:00:00+05:30"}],
+        }
+    }
+    slots = parse_slots(data, duration_min=30, tz=IST, limit=6, per_day=2)
+    days = {s.start_time.date() for s in slots}
+    # Without per_day this would be 6 slots all on 2026-06-13; now it spans days.
+    assert len(days) == 3
+    assert sum(1 for s in slots if s.start_time.date().day == 13) == 2
+
+
+async def test_list_slots_start_in_days_shifts_window():
+    data = json.loads(FIX.read_text())
+    t = FakeTransport((200, data))
+    c = CalClient(
+        "k", tz="Asia/Kolkata", event_type_ids={"hire": 111, "mentor": 222}, transport=t
+    )
+    await c.list_slots("hire", start_in_days=7, days=7)
+    params = t.calls[0]["params"]
+    today = datetime.datetime.now(IST).date()
+    assert params["start"] == (today + datetime.timedelta(days=7)).isoformat()
+    assert params["end"] == (today + datetime.timedelta(days=14)).isoformat()
+
+
 async def test_list_slots_headers_and_event_id():
     data = json.loads(FIX.read_text())
     t = FakeTransport((200, data))
