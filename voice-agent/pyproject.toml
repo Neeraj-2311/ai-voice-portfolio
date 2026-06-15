@@ -14,9 +14,19 @@ dependencies = [
     "google-auth>=2.53.0",
     "livekit-agents[silero,turn-detector]==1.5.12",
     "livekit-plugins-ai-coustics~=0.2",
+    "livekit-plugins-cartesia>=1.5.12",
     "livekit-plugins-deepgram>=1.5.12",
     "livekit-plugins-openai>=1.5.12",
     "python-dotenv",
+]
+
+[project.optional-dependencies]
+# Kokoro pulls in torch (~hundreds of MB). Only install it when you actually use
+# the open-weight CPU voice: `uv sync --extra kokoro`. Keeps the default install
+# (and the deployed image) lean for the OpenAI/Cartesia backends.
+kokoro = [
+    "kokoro>=0.9.4",
+    "soundfile>=0.14.0",
 ]
 
 [project.urls]

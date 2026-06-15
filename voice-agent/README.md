@@ -6,6 +6,8 @@
 
 A complete starter project for building voice AI apps with [LiveKit Agents for Python](https://github.com/livekit/agents) and [LiveKit Cloud](https://cloud.livekit.io/).
 
+> **This fork (AI Voice Portfolio):** the pipeline runs on your own provider keys (not LiveKit Inference), and **TTS is pluggable via the `TTS_BACKEND` env var** — `openai` (default), `cartesia`, `kokoro` (open weights, CPU, `uv sync --extra kokoro`), or `cerebrium`. The agent also auto-ends on idle. See [`../docs/voice-agent.md`](../docs/voice-agent.md) and [`.env.example`](.env.example).
+
 The starter project includes:
 
 - A simple voice AI assistant, ready for extension and customization

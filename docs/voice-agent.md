@@ -4,10 +4,23 @@ The Python [LiveKit Agents](https://github.com/livekit/agents) worker that power
 
 ## Pipeline
 
-- Speech-to-text, an LLM turn, then text-to-speech: Deepgram STT, an OpenAI LLM, and OpenAI TTS, each called directly on your own provider keys (off LiveKit's metered gateway). Background voice cancellation via ai-coustics and Silero VAD. The exact model ids live in `src/agent.py`.
+- Speech-to-text, an LLM turn, then text-to-speech: Deepgram STT, an OpenAI LLM, and a **pluggable TTS** (OpenAI by default), each called directly on your own provider keys (off LiveKit's metered gateway). Background voice cancellation via ai-coustics and Silero VAD. The exact model ids live in `src/agent.py`.
 - English turn detector for contextually-aware turn taking.
-- Auto-greets on session start.
+- Auto-greets on session start, and ends the call gracefully after a configurable idle timeout when the visitor goes quiet (`IDLE_*` env vars).
 - First-person persona grounded in `src/portfolio_kb.json`, which is generated from the site's content (see [architecture.md](architecture.md)).
+
+## Text-to-speech backends
+
+TTS is swappable via the `TTS_BACKEND` env var, set a backend and its key, no code change:
+
+| `TTS_BACKEND` | Provider | Notes |
+|---|---|---|
+| `openai` *(default)* | OpenAI `gpt-4o-mini-tts` | expressive, low latency; uses the existing `OPENAI_API_KEY` |
+| `cartesia` | Cartesia Sonic | hosted streaming + instant voice cloning; needs `CARTESIA_API_KEY` (+ optional `CARTESIA_VOICE_ID`) |
+| `kokoro` | Kokoro-82M (open weights) | runs in-process on CPU, no key, ~free. Install the extra first: `uv sync --extra kokoro`; choose a voice with `KOKORO_VOICE` |
+| `cerebrium` | self-hosted XTTS service | streaming voice clone over WebSocket on your own GPU; needs `CEREBRIUM_*` |
+
+Kokoro pulls in `torch`, so it's an **optional dependency** installed only when you opt in (`--extra kokoro`); the other backends keep the base install lean. All backend keys/options are annotated in [`voice-agent/.env.example`](../voice-agent/.env.example).
 
 ## Structure
 
@@ -16,6 +29,8 @@ voice-agent/
 ├── src/
 │   ├── agent.py            entrypoint (keep this as the entrypoint; the Dockerfile runs it)
 │   ├── root_agent.py       agent definition, tools, instructions
+│   ├── cerebrium_tts.py    optional TTS plugin: self-hosted XTTS clone over WebSocket
+│   ├── kokoro_tts.py       optional TTS plugin: in-process Kokoro-82M (open weights)
 │   ├── rpc.py              best-effort RPC helper that drives the web UI
 │   ├── portfolio.py        persona / portfolio knowledge wiring
 │   ├── portfolio_kb.json   generated knowledge base (built from web/src/content/*)

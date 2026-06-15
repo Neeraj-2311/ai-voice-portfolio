@@ -108,12 +108,21 @@ def cal_available() -> bool:
 
 
 def parse_slots(
-    data: dict, *, duration_min: int, tz: datetime.tzinfo, limit: int | None = None
+    data: dict,
+    *,
+    duration_min: int,
+    tz: datetime.tzinfo,
+    limit: int | None = None,
+    per_day: int | None = None,
 ) -> list[AvailableSlot]:
     """Flatten Cal's date-keyed slot map into a sorted list of AvailableSlot.
 
     Defensive: tolerates the documented `{data: {date: [{start}]}}` shape and the
     alternative `{data: {slots: {...}}}` nesting; ignores malformed entries.
+
+    `per_day` caps how many slots are kept per calendar day BEFORE `limit`, so the
+    result spreads across several days instead of clustering on the first
+    available one (otherwise a busy first day eats the whole `limit`).
     """
     payload = data.get("data", data)
     if (
@@ -144,6 +153,16 @@ def parse_slots(
                     )
                 )
     slots.sort(key=lambda s: s.start_time)
+    if per_day:
+        kept: list[AvailableSlot] = []
+        seen: dict[datetime.date, int] = {}
+        for s in slots:
+            d = s.start_time.date()
+            if seen.get(d, 0) >= per_day:
+                continue
+            seen[d] = seen.get(d, 0) + 1
+            kept.append(s)
+        slots = kept
     return slots[:limit] if limit else slots
 
 
@@ -198,12 +217,26 @@ class CalClient:
         }
 
     async def list_slots(
-        self, intent: str, *, days: int = 7, limit: int = 6
+        self,
+        intent: str,
+        *,
+        days: int = 14,
+        limit: int = 8,
+        per_day: int = 2,
+        start_in_days: int = 0,
     ) -> list[AvailableSlot]:
+        """Open slots for `intent`, spread across days so later dates surface.
+
+        - `days`: size of the look-ahead window (default two weeks).
+        - `start_in_days`: skip ahead this many days before listing, so the agent
+          can fetch later times when the visitor wants "next week" etc.
+        - `per_day` / `limit`: at most `per_day` per calendar day, `limit` total.
+        """
         event_id = self._event_type_id(intent)
         now = datetime.datetime.now(self._tz)
-        start = now.date().isoformat()
-        end = (now + datetime.timedelta(days=days)).date().isoformat()
+        base = now + datetime.timedelta(days=max(0, start_in_days))
+        start = base.date().isoformat()
+        end = (base + datetime.timedelta(days=days)).date().isoformat()
         status, data = await self._transport(
             "GET",
             f"{BASE}/slots",
@@ -218,7 +251,11 @@ class CalClient:
         if status >= 400:
             raise CalError(f"slots request failed status={status} body={data}")
         return parse_slots(
-            data, duration_min=self._duration_min, tz=self._tz, limit=limit
+            data,
+            duration_min=self._duration_min,
+            tz=self._tz,
+            limit=limit,
+            per_day=per_day,
         )
 
     async def create_booking(

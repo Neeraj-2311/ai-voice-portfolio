@@ -131,7 +131,7 @@ The agent narrates from a knowledge base generated out of the site's own content
 
 **Frontend** — Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion, MDX, `@livekit/components-react`, Cal.com embed, Resend.
 
-**Voice agent** — Python, [LiveKit Agents](https://github.com/livekit/agents), `uv`. A Deepgram (STT) ▸ OpenAI (LLM + TTS) pipeline on your own provider keys, with ai-coustics noise cancellation, Silero VAD, an English turn detector, and Cal.com v2 / Resend / Google Sheets integrations.
+**Voice agent** — Python, [LiveKit Agents](https://github.com/livekit/agents), `uv`. A Deepgram (STT) ▸ OpenAI (LLM) pipeline with a **pluggable TTS** (OpenAI, Cartesia, or open-weight Kokoro, switched via `TTS_BACKEND`) on your own provider keys, with ai-coustics noise cancellation, Silero VAD, an English turn detector, an idle-timeout auto hang-up, and Cal.com v2 / Resend / Google Sheets integrations.
 
 **Infra** — Netlify (site), LiveKit Cloud (agent worker), Docker.
 
@@ -198,7 +198,18 @@ See [`web/.env.example`](web/.env.example) for the annotated list.
 <details>
 <summary><b>Voice-agent environment variables</b></summary>
 
-Required at minimum: `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, plus your STT/LLM/TTS provider keys (OpenAI, Deepgram) and tool keys (Cal.com, Resend, Google Sheets). See [`voice-agent/.env.example`](voice-agent/.env.example).
+Required at minimum: `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, plus your STT/LLM keys (Deepgram, OpenAI) and tool keys (Cal.com, Resend, Google Sheets).
+
+**TTS is pluggable** via `TTS_BACKEND` — pick a provider and set its key, no code change:
+
+| `TTS_BACKEND` | Provider | Needs |
+|---|---|---|
+| `openai` *(default)* | OpenAI `gpt-4o-mini-tts` | `OPENAI_API_KEY` (already set) |
+| `cartesia` | Cartesia Sonic (streaming + cloning) | `CARTESIA_API_KEY` |
+| `kokoro` | Kokoro-82M (open weights, CPU, free) | `uv sync --extra kokoro` |
+| `cerebrium` | self-hosted XTTS clone | `CEREBRIUM_*` |
+
+See [`voice-agent/.env.example`](voice-agent/.env.example) for the full annotated list.
 </details>
 
 <br/>

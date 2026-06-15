@@ -223,13 +223,19 @@ class NeerajAgent(Agent):
     # --- Booking (real Cal.com) ------------------------------------------------
 
     @function_tool()
-    async def offer_booking_times(self, context: RunContext, intent: str) -> str:
+    async def offer_booking_times(
+        self, context: RunContext, intent: str, start_in_days: int = 0
+    ) -> str:
         """Fetch Neeraj's real open times and offer them. Use for genuine hire interest
         (intent "hire") or a mentorship request (intent "mentor"). After they pick one and
         give their name and email, call book_slot.
 
         Args:
             intent: "hire" for project / hiring interest, "mentor" for a mentorship call.
+            start_in_days: 0 for the soonest times. If the visitor wants a later date
+                ("next week", "the week after", "later this month"), pass the number of
+                days to skip ahead (about 7 for next week, 14 for two weeks out) and the
+                offered times start from there.
         """
         ud: Userdata = context.userdata
         norm = "mentor" if intent in ("mentor", "mentorship") else "hire"
@@ -238,19 +244,25 @@ class NeerajAgent(Agent):
             await perform_rpc("openBooking", {"intent": norm})
             return "The live calendar is unavailable; tell them you've opened the booking calendar on screen."
         try:
-            slots = await ud.cal.list_slots(norm)
+            slots = await ud.cal.list_slots(norm, start_in_days=max(0, start_in_days))
         except Exception:
             logger.exception("booking.list_slots_failed intent=%s", norm)
             await perform_rpc("openBooking", {"intent": norm})
             return "Could not reach the calendar; tell them you've opened it on screen to pick a time."
         if not slots:
             await perform_rpc("openBooking", {"intent": norm})
-            return "No open times came back; tell them you've opened the calendar on screen."
+            return (
+                "No open times in that range; either offer to look further out by calling "
+                "offer_booking_times again with a larger start_in_days, or say you've opened "
+                "the calendar on screen."
+            )
         ud.booking_slots = {s.slot_id: s for s in slots}
         return (
-            "Offer the first two or three of these times naturally and ask which works. Never say the "
-            "codes aloud. When they pick one and give name + email, call book_slot with that code. "
-            "Times (code: time) -> " + format_slots(slots)
+            "These span a few different days. Offer two or three naturally (ideally a couple of "
+            "different days) and ask which works. If they want something later, call offer_booking_times "
+            "again with a larger start_in_days. Never say the codes aloud. When they pick one and give "
+            "name + email, call book_slot with that code. Times (code: time) -> "
+            + format_slots(slots)
         )
 
     @function_tool()
