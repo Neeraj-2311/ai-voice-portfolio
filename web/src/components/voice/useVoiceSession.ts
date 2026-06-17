@@ -79,6 +79,11 @@ function isAgent(participant: Participant): boolean {
   );
 }
 
+// If the agent hasn't joined within this window, re-dispatch with a fresh room
+// (a cold worker, woken by the first attempt, joins fast on the retry).
+const AGENT_JOIN_TIMEOUT_MS = 15_000;
+const MAX_JOIN_ATTEMPTS = 3; // initial + 2 retries, then error
+
 /** A human-readable reason the mic could not be acquired, shown in the arc. */
 function micUnavailableMessage(e: unknown): string {
   const name = (e as { name?: string })?.name;
@@ -107,6 +112,16 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
   // Audio elements created by track.attach(). LiveKit needs an explicit element
   // for playback; subscribing alone doesn't pipe audio to the speaker.
   const audioElementsRef = useRef<Map<string, HTMLMediaElement>>(new Map());
+
+  // Mic track, acquired once in the user gesture and reused across retries.
+  // Published only once the agent joins, so nothing said while waking up is lost.
+  const micTrackRef = useRef<LocalAudioTrack | null>(null);
+  const joinTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const attemptRef = useRef(0);
+  // Set while swapping rooms on a retry, so the Disconnected handler doesn't
+  // snap the UI to idle mid-retry.
+  const retryingRef = useRef(false);
+  const connectRoomRef = useRef<() => Promise<void>>(async () => {});
 
   const [state, setState] = useState<VoiceState>('idle');
   const [captions, setCaptions] = useState<CaptionLine[]>([]);
@@ -361,11 +376,19 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
     (room: Room) => {
       room.on(RoomEvent.ConnectionStateChanged, (cs) => {
         if (cs === ConnectionState.Disconnected) {
+          // Mid-retry: a fresh room is taking over, don't reset the UI.
+          if (retryingRef.current) return;
           // Single point of truth for "session over": clean up tracks
           // and snap back to idle so the arc collapses to the pill.
+          if (joinTimerRef.current) {
+            clearTimeout(joinTimerRef.current);
+            joinTimerRef.current = null;
+          }
           teardownAudio();
           setTracks({ localTrack: null, agentTrack: null });
           setMicMutedState(false);
+          micTrackRef.current?.stop();
+          micTrackRef.current = null;
           roomRef.current = null;
           setState('idle');
         }
@@ -373,6 +396,21 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
 
       room.on(RoomEvent.ParticipantConnected, (p) => {
         if (isAgent(p)) {
+          // Agent is in the room: stop the join watchdog and reset retries.
+          if (joinTimerRef.current) {
+            clearTimeout(joinTimerRef.current);
+            joinTimerRef.current = null;
+          }
+          attemptRef.current = 0;
+          // Publish the mic NOW (not at connect time), so the visitor's first
+          // words aren't lost and the mic isn't live during "Waking up…".
+          const mic = micTrackRef.current;
+          if (mic && roomRef.current) {
+            void roomRef.current.localParticipant
+              .publishTrack(mic, { source: Track.Source.Microphone })
+              .then(() => setTracks((t) => ({ ...t, localTrack: mic })))
+              .catch(() => {});
+          }
           setState((prev) => (prev === 'agent-joining' ? 'listening' : prev));
           p.on(ParticipantEvent.IsSpeakingChanged, (speaking) => {
             setState((prev) => {
@@ -430,6 +468,90 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
     [upsertCaption, teardownAudio],
   );
 
+  const clearJoinTimer = useCallback(() => {
+    if (joinTimerRef.current) {
+      clearTimeout(joinTimerRef.current);
+      joinTimerRef.current = null;
+    }
+  }, []);
+
+  // Open a fresh room (which dispatches the agent) and wait for it to join.
+  // Used for the initial connect and each retry; tears down any previous room
+  // first (guarded), arms the join watchdog, and handles its own errors so
+  // callers never need a try/catch.
+  const connectRoom = useCallback(async () => {
+    const prev = roomRef.current;
+    if (prev) {
+      retryingRef.current = true;
+      roomRef.current = null;
+      try {
+        await prev.disconnect();
+      } catch {
+        /* ignore */
+      }
+      retryingRef.current = false;
+    }
+
+    attemptRef.current += 1;
+
+    try {
+      const res = await fetch('/api/voice/token', { method: 'POST' });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `Token request failed (${res.status})`);
+      }
+      const { token, url } = (await res.json()) as { token: string; url: string };
+
+      const room = new Room({ adaptiveStream: true, dynacast: true });
+      roomRef.current = room;
+      wireRoom(room);
+      registerRpc(room);
+
+      await room.connect(url, token, { autoSubscribe: true });
+
+      // Unlock audio playback for browsers that block autoplay until a
+      // gesture-initiated startAudio() (notably iOS Safari). No-op elsewhere.
+      void room.startAudio().catch(() => {});
+
+      setState('agent-joining');
+
+      // If the agent doesn't join in time, retry with a fresh dispatch (the
+      // worker is warm now), or surface an error after MAX_JOIN_ATTEMPTS.
+      clearJoinTimer();
+      joinTimerRef.current = setTimeout(() => {
+        joinTimerRef.current = null;
+        if (attemptRef.current >= MAX_JOIN_ATTEMPTS) {
+          setErrorMessage('The assistant is taking too long to join. Please tap to try again.');
+          setState('error');
+          micTrackRef.current?.stop();
+          micTrackRef.current = null;
+          const stale = roomRef.current;
+          roomRef.current = null;
+          retryingRef.current = true;
+          void stale?.disconnect().finally(() => {
+            retryingRef.current = false;
+          });
+          return;
+        }
+        void connectRoomRef.current();
+      }, AGENT_JOIN_TIMEOUT_MS);
+    } catch (err) {
+      clearJoinTimer();
+      const message = err instanceof Error ? err.message : 'Could not start voice tour.';
+      setErrorMessage(message);
+      setState('error');
+      const stale = roomRef.current;
+      roomRef.current = null;
+      void stale?.disconnect().catch(() => {});
+      micTrackRef.current?.stop();
+      micTrackRef.current = null;
+    }
+  }, [registerRpc, wireRoom, clearJoinTimer]);
+
+  useEffect(() => {
+    connectRoomRef.current = connectRoom;
+  }, [connectRoom]);
+
   const start = useCallback(
     async (textOnly = false) => {
       if (roomRef.current) return;
@@ -438,13 +560,12 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       captionsRef.current = [];
       activePartialRef.current = { user: null, agent: null };
       setCaptions([]);
+      attemptRef.current = 0;
 
       // Acquire the mic INSIDE the user gesture, before any await. iOS Safari
       // only surfaces the permission prompt when getUserMedia is reached
-      // synchronously from a gesture; requesting it after the token fetch and
-      // room.connect (as we used to) is silently rejected on mobile, so the
-      // agent never hears the user and the arc hangs on "Waking up". We grab the
-      // track here and publish it once the room is connected.
+      // synchronously from a gesture. We hold the track and publish it once the
+      // AGENT joins (see ParticipantConnected), reusing it across retries.
       let micTrack: LocalAudioTrack | null = null;
       if (!textOnly) {
         try {
@@ -453,8 +574,6 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
           if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
             throw new DOMException('Insecure context', 'SecurityError');
           }
-          // Call getUserMedia directly as the FIRST await so it stays inside the
-          // user gesture; that is what makes iOS show the permission prompt.
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           micTrack = new LocalAudioTrack(stream.getAudioTracks()[0]);
         } catch (e) {
@@ -465,54 +584,21 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
           handlersRef.current.onMicDenied();
         }
       }
+      micTrackRef.current = micTrack;
 
-      try {
-        const res = await fetch('/api/voice/token', { method: 'POST' });
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body?.error || `Token request failed (${res.status})`);
-        }
-        const { token, url } = (await res.json()) as { token: string; url: string };
-
-        const room = new Room({
-          adaptiveStream: true,
-          dynacast: true,
-        });
-        roomRef.current = room;
-        wireRoom(room);
-        registerRpc(room);
-
-        await room.connect(url, token, { autoSubscribe: true });
-
-        if (micTrack) {
-          const published = micTrack;
-          await room.localParticipant.publishTrack(published, {
-            source: Track.Source.Microphone,
-          });
-          setTracks((t) => ({ ...t, localTrack: published }));
-        }
-
-        // Unlock audio playback for browsers that block autoplay until a
-        // gesture-initiated startAudio() (notably iOS Safari). No-op elsewhere.
-        void room.startAudio().catch(() => {});
-
-        setState('agent-joining');
-      } catch (err) {
-        micTrack?.stop();
-        const message = err instanceof Error ? err.message : 'Could not start voice tour.';
-        setErrorMessage(message);
-        setState('error');
-        roomRef.current?.disconnect();
-        roomRef.current = null;
-      }
+      await connectRoom();
     },
-    [registerRpc, wireRoom],
+    [connectRoom],
   );
 
   const end = useCallback(async () => {
+    clearJoinTimer();
+    attemptRef.current = 0;
     const room = roomRef.current;
     if (!room) {
       // Already disconnected (e.g. unexpected drop). Snap UI to idle.
+      micTrackRef.current?.stop();
+      micTrackRef.current = null;
       setState('idle');
       return;
     }
@@ -529,7 +615,9 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
       // Ignore: state is already idle, listener will tidy what it can.
     }
     roomRef.current = null;
-  }, [teardownAudio]);
+    micTrackRef.current?.stop();
+    micTrackRef.current = null;
+  }, [teardownAudio, clearJoinTimer]);
 
   const setMicMuted = useCallback(async (muted: boolean) => {
     const room = roomRef.current;
@@ -569,8 +657,11 @@ export function useVoiceSession(handlers: VoiceSessionHandlers): UseVoiceSession
 
   useEffect(() => {
     return () => {
+      if (joinTimerRef.current) clearTimeout(joinTimerRef.current);
       roomRef.current?.disconnect();
       roomRef.current = null;
+      micTrackRef.current?.stop();
+      micTrackRef.current = null;
     };
   }, []);
 

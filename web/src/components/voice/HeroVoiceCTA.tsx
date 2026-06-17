@@ -2,12 +2,17 @@
 
 import { Mic } from 'lucide-react';
 import { openVoiceArc } from '@/lib/voice-event';
+import { warmVoiceAgent } from '@/lib/voice-warmup';
 
 export function HeroVoiceCTA() {
   return (
     <button
       type="button"
       onClick={openVoiceArc}
+      // Wake the worker the moment they reach for the button (throttled).
+      onPointerEnter={warmVoiceAgent}
+      onFocus={warmVoiceAgent}
+      onTouchStart={warmVoiceAgent}
       data-voice-action="open-voice-tour"
       className={[
         'group inline-flex items-center justify-center gap-2 rounded-lg',

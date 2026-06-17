@@ -176,6 +176,17 @@ export function VoiceArc({
               <AlertCircle className="h-4 w-4" aria-hidden="true" />
               <span>{errorMessage ?? 'Something went wrong.'}</span>
             </div>
+          ) : state === 'connecting' || state === 'agent-joining' ? (
+            // While waking up: no mic/visualizer (it isn't listening yet) — just
+            // set expectations, since a cold start can take a few seconds.
+            <div className="flex min-h-[5.5rem] flex-col items-center justify-center gap-1.5 px-2 text-center sm:min-h-[6.5rem]">
+              <p className="text-subtle text-small">
+                Waking up the assistant…
+              </p>
+              <p className="text-muted text-[11px] leading-snug">
+                The first connection can take a few seconds. Hang tight.
+              </p>
+            </div>
           ) : (
             <>
               <div className="h-12 sm:h-16">
