@@ -10,6 +10,7 @@ import {
 } from '@/lib/contact-modal-event';
 import { openCalPopup } from '@/lib/cal-popup';
 import { useTheme } from '@/lib/theme';
+import { warmVoiceAgent } from '@/lib/voice-warmup';
 import {
   cancelVoiceScroll,
   scrollElementIntoViewPaced,
@@ -65,6 +66,20 @@ export function VoiceSystem() {
   // End-of-call handler is wired after the hook is constructed; use a ref so
   // the RPC method registered at room-connect time can call into the latest closure.
   const endRef = useRef<() => void>(() => {});
+
+  // Wake the agent worker on the visitor's first interaction, so it's warm by
+  // the time they tap "Talk". One-shot listener; warmVoiceAgent throttles.
+  useEffect(() => {
+    const events = ['pointerdown', 'keydown', 'touchstart', 'scroll'] as const;
+    const onFirst = () => {
+      warmVoiceAgent();
+      events.forEach((e) => window.removeEventListener(e, onFirst));
+    };
+    events.forEach((e) =>
+      window.addEventListener(e, onFirst, { once: true, passive: true }),
+    );
+    return () => events.forEach((e) => window.removeEventListener(e, onFirst));
+  }, []);
 
   const clearHighlight = useCallback(() => {
     if (activeHighlightRef.current) {

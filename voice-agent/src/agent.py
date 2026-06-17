@@ -319,6 +319,12 @@ async def _on_session_end(ctx: JobContext) -> None:
 async def session_entrypoint(ctx: JobContext) -> None:
     ctx.log_context_fields = {"room": ctx.room.name}
 
+    # Warm-up dispatch (from POST /api/voice/warmup): spin the worker up ahead of
+    # a real call, then exit immediately so the replica stays warm. No session.
+    if ctx.room.name.startswith("warmup"):
+        logger.info("warmup dispatch room=%s; worker warm, exiting", ctx.room.name)
+        return
+
     userdata = Userdata(
         kb=KB,
         notifier=Notifier.from_env(),
